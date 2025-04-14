@@ -36,3 +36,11 @@ npm run build
 You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+
+Inspired by :
+
+- https://www.atlassian.com/blog/platform/scrum-poker-for-agile-projects
+- https://www.mountaingoatsoftware.com/agile/planning-poker
+- https://fr.wikipedia.org/wiki/Planning_poker
+- https://github.com/rangzen/poker-sliders
+- https://www.pointingpoker.com/
