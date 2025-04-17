@@ -109,6 +109,7 @@
       <button onclick={sendMessage}>Send</button>
     </div>
     <div>
+      <!-- eslint-disable-next-line svelte/require-each-key todo redo this page -->
       {#each messages as message}
         <p>{message}</p>
       {/each}
@@ -122,6 +123,7 @@
         <td>Effort</td>
         <td>Uncertainty</td>
       </tr>
+      <!-- eslint-disable-next-line svelte/require-each-key todo redo this page -->
       {#each tableData as row}
         <tr>
           <td>{row.pointValue}</td>
