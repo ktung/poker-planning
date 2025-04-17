@@ -3,14 +3,14 @@
   "private": true,
   "version": "0.0.1",
   "type": "module",
-  "packageManager": "pnpm@9.15.4",
+  "packageManager": "pnpm@10.8.1",
   "engines": {
     "node": ">=22.13.1",
-    "pnpm": ">=9.15.4"
+    "pnpm": ">=10.8.1"
   },
   "volta": {
     "node": "22.13.1",
-    "pnpm": "9.15.4"
+    "pnpm": "10.8.1"
   },
   "scripts": {
     "dev": "vite dev",
@@ -26,6 +26,7 @@
     "@eslint/compat": "^1.2.8",
     "@eslint/js": "^9.24.0",
     "@sveltejs/adapter-auto": "^6.0.0",
+    "@sveltejs/adapter-vercel": "^5.7.0",
     "@sveltejs/kit": "^2.20.5",
     "@sveltejs/vite-plugin-svelte": "^5.0.3",
     "eslint": "^9.24.0",
@@ -43,10 +44,13 @@
   },
   "dependencies": {
     "@inlang/paraglide-js": "^2.0.11",
-    "@supabase/supabase-js": "^2.49.4"
+    "@supabase/supabase-js": "^2.49.4",
+    "@vercel/analytics": "^1.5.0",
+    "@vercel/speed-insights": "^1.2.0"
   },
   "pnpm": {
     "onlyBuiltDependencies": [
+      "@vercel/speed-insights",
       "esbuild",
       "supabase"
     ]

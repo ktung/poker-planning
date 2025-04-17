@@ -1,5 +1,10 @@
 <script>
   import Footer from '$lib/components/footer.svelte';
+  import { injectAnalytics } from '@vercel/analytics/sveltekit';
+  import { injectSpeedInsights } from '@vercel/speed-insights';
+
+  injectAnalytics();
+  injectSpeedInsights();
 </script>
 
 <h1>Welcome to SvelteKit</h1>
