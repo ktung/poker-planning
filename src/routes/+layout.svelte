@@ -10,12 +10,25 @@
   injectSpeedInsights();
 </script>
 
-<main>
+<svelte:head>
+  <title>Poker Planning</title>
+</svelte:head>
+
+
+<header>
+  <a href="/">Poker Planning</a>
   <LanguageSelector />
-
-  <div>
+</header>
+<main>
     {@render children()}
-  </div>
-
-  <Footer />
 </main>
+<Footer />
+
+
+<style>
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+</style>
