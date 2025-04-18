@@ -24,6 +24,10 @@ pnpm supabase migration list --local
 pnpm supabase migration up --local
 ```
 
+### pg_cron
+
+https://supabase.com/docs/guides/cron
+
 ## Supabase realtime
 
 https://supabase.com/docs/guides/realtime/concepts
