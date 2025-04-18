@@ -21,8 +21,8 @@
 - [node](https://github.com/nodejs/node/blob/main/CHANGELOG.md)
 - [pnpm](https://github.com/pnpm/pnpm/releases)
 - [@vercel/analytics](https://github.com/vercel/analytics/releases)
-  <!-- - [@vercel/speed-insights](https://github.com/vercel/speed-insights/releases) -->
-  [lucide-svelte](https://github.com/lucide-icons/lucide/releases)
+- [@vercel/speed-insights](https://github.com/vercel/speed-insights/releases)
+- [lucide-svelte](https://github.com/lucide-icons/lucide/releases)
 
 ## Update
 
