@@ -1,13 +1,9 @@
 <script lang="ts">
-  import { supabase } from '$lib/supabaseClient';
-  import { onDestroy } from 'svelte';
   import type { PageData } from './$types';
+  import Chat from '$lib/components/chat.svelte';
 
   const { data }: { data: PageData } = $props();
   const { slug } = data;
-
-  let messageInput = $state('');
-  let messages: string[] = $state([]);
 
   const tableData = [
     {
@@ -77,44 +73,11 @@
       uncertainty: 'no unknows'
     }
   ];
-
-  supabase
-    .channel(slug)
-    .on('broadcast', { event: 'shout' }, (payload) => {
-      const msg = payload['payload']['message'] as string;
-      messages.push(msg);
-    })
-    .subscribe();
-
-  const sendMessage = () => {
-    supabase.channel(slug).send({
-      type: 'broadcast',
-      event: 'shout',
-      payload: { message: messageInput }
-    });
-
-    messageInput = '';
-  };
-
-  onDestroy(() => {
-    supabase.removeAllChannels();
-  });
 </script>
 
 <div>
-  <div>
-    <h2>Chat éphémère</h2>
-    <div>
-      <input type="text" placeholder="Message..." bind:value={messageInput} />
-      <button onclick={sendMessage}>Send</button>
-    </div>
-    <div>
-      <!-- eslint-disable-next-line svelte/require-each-key todo redo this page -->
-      {#each messages as message}
-        <p>{message}</p>
-      {/each}
-    </div>
-  </div>
+  <Chat {slug} />
+
   <table>
     <tbody>
       <tr>
