@@ -17,11 +17,25 @@ Studio URL: http://localhost:54323
 
 ## DB
 
+### DB Data types
+
+https://supabase.com/docs/guides/database/tables?queryGroups=language&language=js#data-types
+
+### Commands
+
 ```sh
 pnpm supabase migration new <name>
 
 pnpm supabase migration list --local
 pnpm supabase migration up --local
+
+pnpm supabase db reset --local
+```
+
+```sh
+pnpm supabase link
+pnpm supabase migration list --linked
+pnpm supabase migration up --linked
 ```
 
 ### pg_cron

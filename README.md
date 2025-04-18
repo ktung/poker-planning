@@ -27,11 +27,13 @@ You can preview the production build with `npm run preview`.
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
 
 ## Run locally
+
 ```sh
 pnpm supabase start
 # fill .env.local
 npm run dev
 ```
+
 - Localhost URL : http://localhost:5173
 - Studio URL: http://localhost:54323
 

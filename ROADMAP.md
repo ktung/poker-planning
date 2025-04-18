@@ -32,3 +32,5 @@ https://commitlint.js.org/reference/rules.html
 https://commitizen-tools.github.io/commitizen/
 
 ---
+
+automatic names

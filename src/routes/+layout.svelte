@@ -30,4 +30,9 @@
     padding: 0;
     box-sizing: border-box;
   }
+
+  header {
+    border-bottom: 1px solid #ccc;
+    padding: 1rem;
+  }
 </style>

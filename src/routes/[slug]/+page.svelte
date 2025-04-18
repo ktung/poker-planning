@@ -3,9 +3,46 @@
   import Chat from '$lib/components/chat.svelte';
   import { m } from '$lib/paraglide/messages';
   import { pointsValues, tableData } from '$lib/assets/data';
+  import { supabase } from '$lib/supabaseClient';
+  import { onDestroy, onMount } from 'svelte';
+  import { upsertVote } from '$lib/db/votes';
+  import { logger } from '$lib/util/logger';
 
   const { data }: { data: PageData } = $props();
-  const { slug } = data;
+  const { roomId, slug, sessionId } = data;
+
+  const channel = supabase.channel(slug);
+
+  let showChat = $state(false);
+
+  onMount(() => {
+    showChat = true;
+
+    channel
+      .on('broadcast', { event: 'clearVotes' }, () => {
+        activeCell = {
+          complexity: null,
+          effort: null,
+          uncertainty: null
+        };
+      })
+      .subscribe();
+
+    return () => {
+      channel.unsubscribe();
+    };
+  });
+
+  onDestroy(async () => {
+    const { error } = await supabase.from('users').delete().match({
+      room_id: roomId,
+      session_id: sessionId
+    });
+
+    if (error) {
+      logger.error('Error deleting user:', error);
+    }
+  });
 
   let activeCell = $state({
     complexity: null as number | null,
@@ -34,7 +71,7 @@
     return pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
   });
 
-  function handleClick(
+  async function handleClick(
     event: MouseEvent,
     type: 'complexity' | 'effort' | 'uncertainty',
     index: number
@@ -49,12 +86,48 @@
         selectedPointsValues[type] = parseFloat(pointValue);
       }
     }
+
+    const { error } = await upsertVote(sessionId, roomId, type, selectedPointsValues[type]);
+    if (error) {
+      logger.error('Error upserting vote', error);
+    }
+  }
+
+  let savedVotes = $state({});
+  function showVotes() {
+    supabase
+      .from('votes')
+      .select('*')
+      .eq('room_id', roomId)
+      .then(({ data, error }) => {
+        if (error) {
+          logger.error('Error fetching votes:', error);
+        } else {
+          logger.debug('Votes:', data);
+          savedVotes = data;
+        }
+      });
+  }
+  function clearVote() {
+    supabase.channel(slug).send({
+      type: 'broadcast',
+      event: 'clearVotes',
+      payload: {}
+    });
   }
 </script>
 
 <div>
-  <Chat {slug} />
+  Invite your team to the room: <strong>http://localhost:5173/?join={slug}</strong>
 
+  {#if showChat}
+    <Chat {slug} />
+  {/if}
+
+  <button onclick={showVotes}>Show votes</button>
+  <button onclick={clearVote}>Clear votes</button>
+
+  Saved votes {JSON.stringify(savedVotes)}
   Mean {mean}
   Point over mean {pointValueOverMean}
 
