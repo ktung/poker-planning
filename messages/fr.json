@@ -1,4 +1,9 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "hello_world": "Bonjour, {name} en fr!"
+  "hello_world": "Bonjour, {name} en fr!",
+  "points": "Points",
+  "complexity": "Complexité",
+  "effort": "Effort",
+  "uncertainty": "Incertitude",
+  "easy": "Facile"
 }

@@ -37,6 +37,13 @@ You can preview the production build with `npm run preview`.
 
 > To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
 
+## i18n
+
+```
+pnpx @inlang/cli lint --project project.inlang
+pnpx @inlang/cli machine translate --project project.inlang
+```
+
 Inspired by :
 
 - https://www.atlassian.com/blog/platform/scrum-poker-for-agile-projects

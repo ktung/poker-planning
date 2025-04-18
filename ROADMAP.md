@@ -18,6 +18,9 @@
     - can vote
   - have voted indicator
 - Show nerd stats
+  - min value
+  - max value
+  - mean value
 - Auto delete data (24h ?)
 - Password protected rooms
 

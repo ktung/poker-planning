@@ -14,16 +14,14 @@
   <title>Poker Planning</title>
 </svelte:head>
 
-
 <header>
   <a href="/">Poker Planning</a>
   <LanguageSelector />
 </header>
 <main>
-    {@render children()}
+  {@render children()}
 </main>
 <Footer />
-
 
 <style>
   * {

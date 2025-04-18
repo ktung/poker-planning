@@ -1,98 +1,88 @@
 <script lang="ts">
   import type { PageData } from './$types';
   import Chat from '$lib/components/chat.svelte';
+  import { m } from '$lib/paraglide/messages';
+  import { pointsValues, tableData } from '$lib/assets/data';
 
   const { data }: { data: PageData } = $props();
   const { slug } = data;
 
-  const tableData = [
-    {
-      pointValue: 0,
-      complexity: 'easy',
-      effort: '< 2h',
-      uncertainty: 'no unknows'
-    },
-    {
-      pointValue: 0.5,
-      complexity: 'easy',
-      effort: '2h-4h',
-      uncertainty: 'no unknows'
-    },
-    {
-      pointValue: 1,
-      complexity: 'easy',
-      effort: '2h-4h',
-      uncertainty: 'no unknows'
-    },
-    {
-      pointValue: 2,
-      complexity: 'easy',
-      effort: '2h-4h',
-      uncertainty: 'no unknows'
-    },
-    {
-      pointValue: 3,
-      complexity: 'easy',
-      effort: '2h-4h',
-      uncertainty: 'no unknows'
-    },
-    {
-      pointValue: 5,
-      complexity: 'easy',
-      effort: '2h-4h',
-      uncertainty: 'no unknows'
-    },
-    {
-      pointValue: 8,
-      complexity: 'easy',
-      effort: '2h-4h',
-      uncertainty: 'no unknows'
-    },
-    {
-      pointValue: 13,
-      complexity: 'easy',
-      effort: '2h-4h',
-      uncertainty: 'no unknows'
-    },
-    {
-      pointValue: 20,
-      complexity: 'easy',
-      effort: '2h-4h',
-      uncertainty: 'no unknows'
-    },
-    {
-      pointValue: 40,
-      complexity: 'easy',
-      effort: '2h-4h',
-      uncertainty: 'no unknows'
-    },
-    {
-      pointValue: 100,
-      complexity: 'easy',
-      effort: '2h-4h',
-      uncertainty: 'no unknows'
+  let activeCell = $state({
+    complexity: null as number | null,
+    effort: null as number | null,
+    uncertainty: null as number | null
+  });
+
+  let selectedPointsValues = $state({
+    complexity: null as number | null,
+    effort: null as number | null,
+    uncertainty: null as number | null
+  });
+
+  let mean = $derived.by(() => {
+    const nbSelected = Object.values(activeCell).filter((value) => value !== null).length;
+
+    const mean =
+      ((selectedPointsValues.complexity || 0) +
+        (selectedPointsValues.effort || 0) +
+        (selectedPointsValues.uncertainty || 0)) /
+      nbSelected;
+    return mean;
+  });
+
+  let pointValueOverMean = $derived.by(() => {
+    return pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
+  });
+
+  function handleClick(
+    event: MouseEvent,
+    type: 'complexity' | 'effort' | 'uncertainty',
+    index: number
+  ) {
+    activeCell[type] = activeCell[type] === index ? null : index;
+
+    const target = event.target as HTMLTableCellElement;
+    const row = target.parentElement;
+    if (row) {
+      const pointValue = row.children[0].textContent;
+      if (pointValue) {
+        selectedPointsValues[type] = parseFloat(pointValue);
+      }
     }
-  ];
+  }
 </script>
 
 <div>
   <Chat {slug} />
 
+  Mean {mean}
+  Point over mean {pointValueOverMean}
+
   <table>
-    <tbody>
+    <thead>
       <tr>
-        <td>Points</td>
-        <td>Complexity</td>
-        <td>Effort</td>
-        <td>Uncertainty</td>
+        <th>{m.points()}</th>
+        <th>{m.complexity()}</th>
+        <th>{m.effort()}</th>
+        <th>{m.uncertainty()}</th>
       </tr>
-      <!-- eslint-disable-next-line svelte/require-each-key todo redo this page -->
-      {#each tableData as row}
+    </thead>
+    <tbody>
+      {#each tableData as row, index (row.pointValue)}
         <tr>
           <td>{row.pointValue}</td>
-          <td>{row.complexity}</td>
-          <td>{row.effort}</td>
-          <td>{row.uncertainty}</td>
+          <td
+            class:active={activeCell.complexity === index}
+            onclick={(ev) => handleClick(ev, 'complexity', index)}>{row.complexity}</td
+          >
+          <td
+            class:active={activeCell.effort === index}
+            onclick={(ev) => handleClick(ev, 'effort', index)}>{row.effort}</td
+          >
+          <td
+            class:active={activeCell.uncertainty === index}
+            onclick={(ev) => handleClick(ev, 'uncertainty', index)}>{row.uncertainty}</td
+          >
         </tr>
       {/each}
     </tbody>
@@ -100,17 +90,49 @@
 </div>
 
 <style>
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  table {
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
   }
 
-  td:not(:first-child) {
-    cursor: pointer;
+  td,
+  th {
+    padding: 12px 15px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+  }
+  tr:nth-child(even) {
+    background-color: #f8f9fa;
   }
 
-  td:not(:first-child):hover {
-    background-color: #007bff;
+  tr:hover {
+    background-color: #f0f0f0;
+  }
+
+  thead {
+    tr:first-child {
+      background-color: #007bff;
+      color: white;
+      font-weight: bold;
+    }
+  }
+
+  tbody {
+    td:not(:first-child) {
+      cursor: pointer;
+
+      &.active,
+      &:hover {
+        background-color: #007bff;
+        color: white;
+        transition: all 0.3s ease;
+      }
+    }
   }
 </style>
