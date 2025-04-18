@@ -1,69 +1,71 @@
+import { m } from '$lib/paraglide/messages';
+
 export const tableData = [
   {
     pointValue: 0,
-    complexity: 'No idea',
-    effort: 'No idea',
-    uncertainty: 'No idea'
+    complexity: m['dcom.complexity0'](),
+    effort: m['dcom.effort0'](),
+    uncertainty: m['dcom.uncertainty0']()
   },
   {
     pointValue: 0.5,
-    complexity: 'Single straightforward task',
-    effort: '< 2h',
-    uncertainty: 'Clear requirements & solution'
+    complexity: m['dcom.complexity05'](),
+    effort: m['dcom.effort05'](),
+    uncertainty: m['dcom.uncertainty05']()
   },
   {
     pointValue: 1,
-    complexity: 'Simple task with known solution',
-    effort: '2h-4h',
-    uncertainty: 'Minor clarifications needed'
+    complexity: m['dcom.complexity1'](),
+    effort: m['dcom.effort1'](),
+    uncertainty: m['dcom.uncertainty1']()
   },
   {
     pointValue: 2,
-    complexity: 'Multiple simple tasks',
-    effort: '4-8 hours',
-    uncertainty: 'Some unknowns exist'
+    complexity: m['dcom.complexity2'](),
+    effort: m['dcom.effort2'](),
+    uncertainty: m['dcom.uncertainty2']()
   },
   {
     pointValue: 3,
-    complexity: 'Multiple interconnected tasks',
-    effort: '1-2 days',
-    uncertainty: 'Several unknowns'
+    complexity: m['dcom.complexity3'](),
+    effort: m['dcom.effort3'](),
+    uncertainty: m['dcom.uncertainty3']()
   },
   {
     pointValue: 5,
-    complexity: 'Complex problem, clear approach',
-    effort: '2-3 days',
-    uncertainty: 'Significant unknowns'
+    complexity: m['dcom.complexity5'](),
+    effort: m['dcom.effort5'](),
+    uncertainty: m['dcom.uncertainty5']()
   },
   {
     pointValue: 8,
-    complexity: 'Complex problem, multiple approaches',
-    effort: '2h-4h',
-    uncertainty: 'Many dependencies'
+    complexity: m['dcom.complexity8'](),
+    effort: m['dcom.effort8'](),
+    uncertainty: m['dcom.uncertainty8']()
   },
   {
     pointValue: 13,
-    complexity: 'System-wide changes needed',
-    effort: '3-5 days',
-    uncertainty: 'Technical feasibility unclear'
+    complexity: m['dcom.complexity13'](),
+    effort: m['dcom.effort13'](),
+    uncertainty: m['dcom.uncertainty13']()
   },
   {
     pointValue: 20,
-    complexity: 'Multiple system interactions',
-    effort: '1-2 weeks',
-    uncertainty: 'High risk areas identified'
+    complexity: m['dcom.complexity20'](),
+    effort: m['dcom.effort20'](),
+    uncertainty: m['dcom.uncertainty20']()
   },
   {
     pointValue: 40,
-    complexity: 'Architectural changes required',
-    effort: '3-4 weeks',
-    uncertainty: 'Major unknown dependencies'
+    complexity: m['dcom.complexity40'](),
+    effort: m['dcom.effort40'](),
+    uncertainty: m['dcom.uncertainty40']()
   },
   {
     pointValue: 100,
-    complexity: 'Too complex to estimate',
-    effort: '> 1 month',
-    uncertainty: 'Cannot estimate confidently'
+    complexity: m['dcom.complexity100'](),
+    effort: m['dcom.effort100'](),
+    uncertainty: m['dcom.uncertainty100']()
   }
 ];
 
