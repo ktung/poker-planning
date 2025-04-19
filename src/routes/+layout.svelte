@@ -16,6 +16,7 @@
 
 <header>
   <a href="/">Poker Planning</a>
+  <a href="/about">About</a>
   <LanguageSelector />
 </header>
 <main>
