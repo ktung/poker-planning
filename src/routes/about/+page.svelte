@@ -1,1 +1,1 @@
-I don't care about your data, everything is voting session is deleted everyday.
+I don't care about your data, every voting session is deleted everyday.
