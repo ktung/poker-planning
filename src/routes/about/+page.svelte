@@ -1,1 +1,7 @@
-I don't care about your data, every voting session is deleted everyday.
+<script>
+  import { m } from '$lib/paraglide/messages';
+</script>
+
+<section>
+  {m['aboutPage.text']()}
+</section>

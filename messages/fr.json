@@ -1,6 +1,6 @@
 {
   "$schema": "https://inlang.com/schema/inlang-message-format",
-  "hello_world": "Bonjour, {name} en fr!",
+  "hello_world": "Bonjour {name}",
   "points": "Points",
   "complexity": "Complexité",
   "effort": "Effort",
@@ -40,5 +40,12 @@
     "complexity100": "Trop complexe à estimer",
     "effort100": "> 1 mois",
     "uncertainty100": "Je ne peux pas estimer avec certitude"
-  }
+  },
+  "about": "A Propos",
+  "aboutPage": {
+    "text": "Vos données ne sont pas collectées et chaque session de vote est supprimée tous les jours."
+  },
+  "createRoom": "Créer une nouvelle salle",
+  "joinRoom": "Rejoignez la salle {roomId}",
+  "username": "Nom d'utilisateur"
 }

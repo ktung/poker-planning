@@ -118,11 +118,10 @@
 </script>
 
 <div>
-  Invite your team to the room: <strong>http://localhost:5173/?join={slug}</strong>
-
-  {#if showChat}
-    <Chat {slug} />
-  {/if}
+  <p>
+    Invite your team to the room: <span class="invite-link">http://localhost:5173/?join={slug}</span
+    >
+  </p>
 
   <button onclick={showVotes}>Show votes</button>
   <button onclick={clearVote}>Clear votes</button>
@@ -160,9 +159,49 @@
       {/each}
     </tbody>
   </table>
+
+  {#if showChat}
+    <Chat {slug} />
+  {/if}
 </div>
 
 <style>
+  div {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+
+  .invite-link {
+    background: #f8f9fa;
+    padding: 1rem;
+    border-radius: 6px;
+    margin-bottom: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  button {
+    padding: 0.8rem 1.5rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+
+  button:hover {
+    background-color: #0056b3;
+    transform: translateY(-1px);
+  }
+
+  button:active {
+    transform: translateY(0);
+  }
+
   table {
     width: 100%;
     max-width: 800px;
@@ -180,6 +219,7 @@
     text-align: center;
     border-bottom: 1px solid #ddd;
   }
+
   tr:nth-child(even) {
     background-color: #f8f9fa;
   }
@@ -188,24 +228,36 @@
     background-color: #f0f0f0;
   }
 
-  thead {
-    tr:first-child {
-      background-color: #007bff;
-      color: white;
-      font-weight: bold;
-    }
+  thead tr:first-child {
+    background-color: #007bff;
+    color: white;
+    font-weight: 500;
   }
 
-  tbody {
-    td:not(:first-child) {
-      cursor: pointer;
+  tbody td:not(:first-child) {
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
 
-      &.active,
-      &:hover {
-        background-color: #007bff;
-        color: white;
-        transition: all 0.3s ease;
-      }
+  tbody td:not(:first-child).active,
+  tbody td:not(:first-child):hover {
+    background-color: #007bff;
+    color: white;
+  }
+
+  @media (max-width: 768px) {
+    div {
+      padding: 1rem;
+    }
+
+    button {
+      width: 100%;
+    }
+
+    td,
+    th {
+      padding: 8px;
+      font-size: 0.875rem;
     }
   }
 </style>
