@@ -1,8 +1,14 @@
+# 1.0.0
+
+- Auto delete data (24h ?)
+- About
+  - Not data collected, rooms expired
+
+# Backlog
+
 - How to use ?
   - Click on table
   - Discuss to reach consensus
-- About
-  - Not data collected, rooms expired
 - Pro tips
   - Compare with others tickets/sessions
   - Ask and write questions to clarify things
@@ -21,16 +27,14 @@
   - min value
   - max value
   - mean value
-- Auto delete data (24h ?)
 - Password protected rooms
-
----
-
-conventional commit
-https://dev.to/ghacosta/definitive-guide-for-commitizen-commitlint-husky-3of9
-https://commitlint.js.org/reference/rules.html
-https://commitizen-tools.github.io/commitizen/
-
----
-
-automatic names
+- random names
+- fix presence
+  - https://supabase.com/docs/guides/realtime/presence?queryGroups=language&language=js
+  - https://github.com/supabase/realtime/blob/main/demo/pages/%5B...slug%5D.tsx
+- add timer
+- use ReadableStream / EventSource
+- conventional commit again
+  - https://dev.to/ghacosta/definitive-guide-for-commitizen-commitlint-husky-3of9
+  - https://commitlint.js.org/reference/rules.html
+  - https://commitizen-tools.github.io/commitizen/
