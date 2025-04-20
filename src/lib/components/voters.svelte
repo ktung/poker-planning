@@ -1,0 +1,36 @@
+<script lang="ts">
+  import { logger } from '$lib/util/logger';
+
+  const { votes, selectedType, selectedValue } = $props();
+
+  const usernames = $derived.by(() => {
+    const selectedVotes = votes.filter((vote) => vote[selectedType] === selectedValue);
+    logger.debug('selected votes', selectedVotes);
+    return selectedVotes.map((vote) => vote.users.username);
+  });
+</script>
+
+<div>
+  <ul>
+    {#each usernames as username}
+      <li>{username}</li>
+    {/each}
+  </ul>
+</div>
+
+<style>
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+      display: inline;
+      padding: 0.3rem;
+      gap: 10px;
+      background-color: #007bff;
+      color: white;
+      margin: 2px;
+    }
+  }
+</style>

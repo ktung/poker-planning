@@ -15,18 +15,15 @@ export const upsertVote = async (
     throw new Error('User not found with session_id ' + sessionId);
   }
 
+  let data = {
+    room_id: roomId,
+    user_id: userId.id
+  };
+  data[type] = value;
   return supabase
     .from('votes')
-    .upsert(
-      {
-        room_id: roomId,
-        user_id: userId.id,
-        type: type,
-        value: value
-      },
-      {
-        onConflict: 'room_id, user_id, type'
-      }
-    )
+    .upsert(data, {
+      onConflict: 'room_id, user_id'
+    })
     .select();
 };

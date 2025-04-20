@@ -16,9 +16,10 @@ create table users (
 create table votes (
   room_id uuid not null references rooms(id) on delete cascade,
   user_id uuid not null references users(id) on delete cascade,
-  type text not null,
-  value text not null,
-  primary key (room_id, user_id, type)
+  complexity float8,
+  effort float8,
+  uncertainty float8,
+  primary key (room_id, user_id)
 );
 
 -- Enable real-time for all tables

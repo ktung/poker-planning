@@ -28,12 +28,10 @@
 <div>
   <h1>{m.hello_world({ name: username })}</h1>
   {#if !roomId}
-    <h1>{m.createRoom()}</h1>
     <label for="username">{m.username()}</label>
     <input id="username" type="text" placeholder="Username" bind:value={username} />
     <button onclick={redirectRandomRoom}>{m.createRoom()}</button>
   {:else}
-    <h1>{m.joinRoom({ roomId })}</h1>
     <label for="username">{m.username()}</label>
     <input id="username" type="text" placeholder="Username" bind:value={username} />
     <button onclick={joinRoom}>{m.joinRoom({ roomId })}</button>

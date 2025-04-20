@@ -7,6 +7,7 @@
   import { onDestroy, onMount } from 'svelte';
   import { upsertVote } from '$lib/db/votes';
   import { logger } from '$lib/util/logger';
+  import Voters from '$lib/components/voters.svelte';
 
   const { data }: { data: PageData } = $props();
   const { roomId, slug, sessionId } = data;
@@ -93,11 +94,11 @@
     }
   }
 
-  let savedVotes = $state({});
+  let savedVotes = $state([]);
   function showVotes() {
     supabase
       .from('votes')
-      .select('*')
+      .select('complexity, effort, uncertainty, users (username)')
       .eq('room_id', roomId)
       .then(({ data, error }) => {
         if (error) {
@@ -105,6 +106,12 @@
         } else {
           logger.debug('Votes:', data);
           savedVotes = data;
+
+          activeCell = {
+            complexity: null,
+            effort: null,
+            uncertainty: null
+          };
         }
       });
   }
@@ -117,7 +124,7 @@
   }
 </script>
 
-<div>
+<section>
   <p>
     Invite your team to the room: <span class="invite-link">http://localhost:5173/?join={slug}</span
     >
@@ -126,9 +133,10 @@
   <button onclick={showVotes}>Show votes</button>
   <button onclick={clearVote}>Clear votes</button>
 
-  Saved votes {JSON.stringify(savedVotes)}
-  Mean {mean}
-  Point over mean {pointValueOverMean}
+  <div>
+    Mean {mean}
+    Point over mean {pointValueOverMean}
+  </div>
 
   <table>
     <thead>
@@ -145,16 +153,23 @@
           <td>{row.pointValue}</td>
           <td
             class:active={activeCell.complexity === index}
-            onclick={(ev) => handleClick(ev, 'complexity', index)}>{row.complexity}</td
+            onclick={(ev) => handleClick(ev, 'complexity', index)}
           >
+            {row.complexity}
+            <Voters votes={savedVotes} selectedType="complexity" selectedValue={row.pointValue} />
+          </td>
           <td
             class:active={activeCell.effort === index}
-            onclick={(ev) => handleClick(ev, 'effort', index)}>{row.effort}</td
-          >
+            onclick={(ev) => handleClick(ev, 'effort', index)}
+            >{row.effort}
+            <Voters votes={savedVotes} selectedType="effort" selectedValue={row.pointValue} />
+          </td>
           <td
             class:active={activeCell.uncertainty === index}
-            onclick={(ev) => handleClick(ev, 'uncertainty', index)}>{row.uncertainty}</td
-          >
+            onclick={(ev) => handleClick(ev, 'uncertainty', index)}
+            >{row.uncertainty}
+            <Voters votes={savedVotes} selectedType="uncertainty" selectedValue={row.pointValue} />
+          </td>
         </tr>
       {/each}
     </tbody>
@@ -163,10 +178,10 @@
   {#if showChat}
     <Chat {slug} />
   {/if}
-</div>
+</section>
 
 <style>
-  div {
+  section {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
