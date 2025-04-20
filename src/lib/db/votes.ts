@@ -15,7 +15,7 @@ export const upsertVote = async (
     throw new Error('User not found with session_id ' + sessionId);
   }
 
-  let data = {
+  const data = {
     room_id: roomId,
     user_id: userId.id
   };

@@ -12,7 +12,7 @@
 
 <div>
   <ul>
-    {#each usernames as username}
+    {#each usernames as username, i (i)}
       <li>{username}</li>
     {/each}
   </ul>

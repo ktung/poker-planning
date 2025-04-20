@@ -38,3 +38,5 @@
   - https://dev.to/ghacosta/definitive-guide-for-commitizen-commitlint-husky-3of9
   - https://commitlint.js.org/reference/rules.html
   - https://commitizen-tools.github.io/commitizen/
+- add https://logflare.app/
+- Use chat to notify when user changes votes if show votes enabled

@@ -52,8 +52,6 @@
 </script>
 
 <div class="chat-container">
-  <h2>Chat éphémère</h2>
-
   <div class="messages" bind:this={messagesContainer}>
     {#each messages as message, index (index)}
       <div class="message">{message}</div>
@@ -80,16 +78,8 @@
     margin: 1rem 0;
   }
 
-  h2 {
-    padding: 1rem;
-    margin: 0;
-    border-bottom: 1px solid #eaeaea;
-    font-size: 1.2rem;
-    color: #333;
-  }
-
   .messages {
-    height: 300px;
+    height: 15vh;
     overflow-y: auto;
     padding: 1rem;
     display: flex;
@@ -133,7 +123,7 @@
     }
 
     .messages {
-      height: 250px;
+      height: 15vh;
     }
   }
 </style>
