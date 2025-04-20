@@ -8,6 +8,7 @@
   import { upsertVote } from '$lib/db/votes';
   import { logger } from '$lib/util/logger';
   import Voters from '$lib/components/voters.svelte';
+  import { REALTIME_LISTEN_TYPES } from '@supabase/supabase-js';
 
   const { data }: { data: PageData } = $props();
   const { roomId, slug, sessionId } = data;
@@ -20,7 +21,7 @@
     showChat = true;
 
     channel
-      .on('broadcast', { event: 'clearVotes' }, () => {
+      .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
         activeCell = {
           complexity: null,
           effort: null,

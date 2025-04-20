@@ -1,7 +1,7 @@
 <script lang="ts">
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
-  import type { RealtimeChannel } from '@supabase/supabase-js';
+  import { REALTIME_LISTEN_TYPES, type RealtimeChannel } from '@supabase/supabase-js';
   import { onMount } from 'svelte';
 
   const { slug } = $props();
@@ -14,7 +14,7 @@
     logger.debug('mount chat', slug);
     channel = supabase
       .channel(slug)
-      .on('broadcast', { event: 'shout' }, (payload) => {
+      .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'shout' }, (payload) => {
         const msg = payload['payload']['message'] as string;
         messages.push(msg);
         setTimeout(scrollToBottom, 0);

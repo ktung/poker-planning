@@ -1,5 +1,6 @@
 import { supabase } from '$lib/supabaseClient.js';
 import { logger } from '$lib/util/logger';
+import { REALTIME_LISTEN_TYPES } from '@supabase/supabase-js';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
@@ -24,7 +25,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
   supabase
     .channel(slug)
-    .on('broadcast', { event: 'clearVotes' }, () => {
+    .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
       supabase
         .from('votes')
         .delete()
