@@ -55,13 +55,7 @@
   </div>
 
   <div class="input-container">
-    <input
-      class="message-input"
-      type="text"
-      placeholder="Message..."
-      bind:value={messageInput}
-      onkeydown={handleKeyDown}
-    />
+    <input class="message-input" type="text" placeholder="Message..." bind:value={messageInput} onkeydown={handleKeyDown} />
   </div>
 </div>
 

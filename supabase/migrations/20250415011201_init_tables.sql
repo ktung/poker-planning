@@ -1,6 +1,6 @@
 create table rooms (
   id uuid not null default uuid_generate_v4() primary key,
-  name text not null unique CHECK (length(name) <= 6),
+  name text not null unique CHECK (length(name) <= 22),
   created_at timestamp not null default now(),
   updated_at timestamp not null default now()
 );

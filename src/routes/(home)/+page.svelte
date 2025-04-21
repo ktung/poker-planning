@@ -2,6 +2,7 @@
   import { m } from '$lib/paraglide/messages';
   import { onMount } from 'svelte';
   import type { PageData } from './$types';
+  import { nanoid } from 'nanoid';
 
   const { data }: { data: PageData } = $props();
   const roomId = data.join;
@@ -12,9 +13,7 @@
   });
 
   function redirectRandomRoom() {
-    const array = new Uint32Array(1);
-    crypto.getRandomValues(array);
-    const randomRoomId = array[0].toString(36).substring(0, 6);
+    const randomRoomId = nanoid();
     window.localStorage.setItem('username', username);
     window.location.href = `/${randomRoomId}`;
   }

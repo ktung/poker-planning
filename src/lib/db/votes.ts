@@ -6,11 +6,7 @@ export const upsertVote = async (
   type: 'complexity' | 'effort' | 'uncertainty',
   value: number | null
 ) => {
-  const { data: userId } = await supabase
-    .from('users')
-    .select('id')
-    .eq('session_id', sessionId)
-    .single();
+  const { data: userId } = await supabase.from('users').select('id').eq('session_id', sessionId).single();
   if (!userId || !userId.id) {
     throw new Error('User not found with session_id ' + sessionId);
   }

@@ -8,17 +8,49 @@
   import { upsertVote } from '$lib/db/votes';
   import { logger } from '$lib/util/logger';
   import Voters from '$lib/components/voters.svelte';
-  import { REALTIME_LISTEN_TYPES, REALTIME_PRESENCE_LISTEN_EVENTS } from '@supabase/supabase-js';
+  import { REALTIME_LISTEN_TYPES, REALTIME_PRESENCE_LISTEN_EVENTS, REALTIME_SUBSCRIBE_STATES } from '@supabase/supabase-js';
+  import { round2 } from '$lib/util/math';
 
   const { data }: { data: PageData } = $props();
   const { roomId, slug, sessionId } = data;
-
-  const roomChannel = supabase.channel(slug);
 
   let showChat = $state(false);
 
   onMount(() => {
     showChat = true;
+    const roomChannel = supabase.channel(slug);
+    const channelPresence = supabase.channel(`presence:${slug}`, {
+      config: {
+        presence: {
+          key: slug
+        }
+      }
+    });
+
+    channelPresence
+      .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
+        const state = channelPresence.presenceState();
+        logger.debug('sync', state);
+      })
+      .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.JOIN }, ({ key, newPresences }) => {
+        logger.debug('join', key, newPresences);
+      })
+      .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.LEAVE }, ({ key, leftPresences }) => {
+        logger.debug('leave', key, leftPresences);
+      })
+      .subscribe(async (status) => {
+        if (status !== REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
+          logger.error(`Error subscribing to presence channel: ${status}`);
+          return;
+        }
+
+        const userStatus = {
+          userId: sessionId,
+          online_at: new Date().toISOString()
+        };
+        const presenceTrackStatus = await channelPresence.track(userStatus);
+        logger.debug('presence status', presenceTrackStatus);
+      });
 
     roomChannel
       .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
@@ -32,6 +64,8 @@
 
     return () => {
       roomChannel.unsubscribe();
+      channelPresence.untrack();
+      channelPresence.unsubscribe();
     };
   });
 
@@ -63,22 +97,15 @@
     logger.debug('selectedPointsValues', $state.snapshot(selectedPointsValues));
     logger.debug('nbSelected', nbSelected);
     const mean =
-      ((selectedPointsValues.complexity || 0) +
-        (selectedPointsValues.effort || 0) +
-        (selectedPointsValues.uncertainty || 0)) /
-      nbSelected;
-    return mean;
+      ((selectedPointsValues.complexity || 0) + (selectedPointsValues.effort || 0) + (selectedPointsValues.uncertainty || 0)) / nbSelected;
+    return round2(mean);
   });
 
   let pointValueOverMean = $derived.by(() => {
     return pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
   });
 
-  async function handleClick(
-    event: MouseEvent,
-    type: 'complexity' | 'effort' | 'uncertainty',
-    index: number
-  ) {
+  async function handleClick(event: MouseEvent, type: 'complexity' | 'effort' | 'uncertainty', index: number) {
     if (activeCell[type] === index) {
       activeCell[type] = null;
       selectedPointsValues[type] = null;
@@ -134,9 +161,7 @@
 
 <section>
   <div>
-    <span>Invite your team to the room: </span><span class="invite-link"
-      >http://localhost:5173/?join={slug}</span
-    >
+    <span>Invite your team to the room: </span><span class="invite-link">http://localhost:5173/?join={slug}</span>
     <button onclick={showVotes}>Show votes</button>
     <button onclick={clearVote}>Clear votes</button>
   </div>
@@ -184,22 +209,15 @@
       {#each tableData as row, index (row.pointValue)}
         <tr>
           <td>{row.pointValue}</td>
-          <td
-            class:active={activeCell.complexity === index}
-            onclick={(ev) => handleClick(ev, 'complexity', index)}
-          >
+          <td class:active={activeCell.complexity === index} onclick={(ev) => handleClick(ev, 'complexity', index)}>
             {row.complexity}
             <Voters votes={savedVotes} selectedType="complexity" selectedValue={row.pointValue} />
           </td>
-          <td
-            class:active={activeCell.effort === index}
-            onclick={(ev) => handleClick(ev, 'effort', index)}
+          <td class:active={activeCell.effort === index} onclick={(ev) => handleClick(ev, 'effort', index)}
             >{row.effort}
             <Voters votes={savedVotes} selectedType="effort" selectedValue={row.pointValue} />
           </td>
-          <td
-            class:active={activeCell.uncertainty === index}
-            onclick={(ev) => handleClick(ev, 'uncertainty', index)}
+          <td class:active={activeCell.uncertainty === index} onclick={(ev) => handleClick(ev, 'uncertainty', index)}
             >{row.uncertainty}
             <Voters votes={savedVotes} selectedType="uncertainty" selectedValue={row.pointValue} />
           </td>
