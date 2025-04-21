@@ -1,18 +1,21 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { m } from '$lib/paraglide/messages';
-  import { nanoid } from 'nanoid';
   import { onMount } from 'svelte';
 
+  const { data } = $props();
+  const { slug } = data;
+
+  let roomId: string = $state(slug);
   let username = $state('');
+
   onMount(() => {
     username = window.localStorage.getItem('username') ?? '';
   });
 
-  function redirectRandomRoom() {
-    const randomRoomId = nanoid();
+  function joinRoom() {
     window.localStorage.setItem('username', username);
-    goto(`/${randomRoomId}`);
+    goto(`/${roomId}`);
   }
 </script>
 
@@ -20,7 +23,7 @@
   <h1>{m.hello_world({ name: username })}</h1>
   <label for="username">{m.username()}</label>
   <input id="username" type="text" placeholder="Username" bind:value={username} />
-  <button onclick={redirectRandomRoom}>{m.createRoom()}</button>
+  <button onclick={joinRoom}>{m.joinRoom({ roomId })}</button>
 </div>
 
 <style>
@@ -69,7 +72,7 @@
   }
 
   button:hover {
-    background-color: var(----primary-color-active);
+    background-color: var(--primary-color-active);
   }
 
   button:active {

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { REALTIME_LISTEN_TYPES, REALTIME_PRESENCE_LISTEN_EVENTS, REALTIME_SUBSCRIBE_STATES } from '@supabase/supabase-js';
+  import { page } from '$app/stores';
   import { pointsValues, tableData } from '$lib/assets/data';
   import Chat from '$lib/components/chat.svelte';
   import Voters from '$lib/components/voters.svelte';
@@ -161,7 +162,7 @@
 
 <section>
   <div>
-    <span>Invite your team to the room: </span><span class="invite-link">http://localhost:5173/?join={slug}</span>
+    <span>Invite your team to the room: </span><span class="invite-link">{$page.url.href}/join</span>
     <button onclick={showVotes}>Show votes</button>
     <button onclick={clearVote}>Clear votes</button>
   </div>

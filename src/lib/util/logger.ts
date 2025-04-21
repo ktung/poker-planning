@@ -7,7 +7,7 @@ export const logger = {
       console.log(message, ...args);
     }
   },
-  error: (message: string, error?: Error) => {
+  error: (message: string, error?: Error | null) => {
     console.error(message, error);
   }
 };
