@@ -1,11 +1,8 @@
 <script lang="ts">
-  import { logger } from '$lib/util/logger';
-
   const { votes, selectedType, selectedValue } = $props();
 
   const usernames = $derived.by(() => {
     const selectedVotes = votes.filter((vote) => vote[selectedType] === selectedValue);
-    logger.debug('selected votes', selectedVotes);
     return selectedVotes.map((vote) => vote.users.username);
   });
 </script>

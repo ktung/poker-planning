@@ -8,19 +8,19 @@
   import { upsertVote } from '$lib/db/votes';
   import { logger } from '$lib/util/logger';
   import Voters from '$lib/components/voters.svelte';
-  import { REALTIME_LISTEN_TYPES } from '@supabase/supabase-js';
+  import { REALTIME_LISTEN_TYPES, REALTIME_PRESENCE_LISTEN_EVENTS } from '@supabase/supabase-js';
 
   const { data }: { data: PageData } = $props();
   const { roomId, slug, sessionId } = data;
 
-  const channel = supabase.channel(slug);
+  const roomChannel = supabase.channel(slug);
 
   let showChat = $state(false);
 
   onMount(() => {
     showChat = true;
 
-    channel
+    roomChannel
       .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
         activeCell = {
           complexity: null,
@@ -31,7 +31,7 @@
       .subscribe();
 
     return () => {
-      channel.unsubscribe();
+      roomChannel.unsubscribe();
     };
   });
 
