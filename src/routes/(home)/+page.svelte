@@ -1,16 +1,18 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { page } from '$app/stores';
   import { m } from '$lib/paraglide/messages';
   import { nanoid } from 'nanoid';
   import { onMount } from 'svelte';
   import type { PageData } from './$types';
 
-  const { data }: { data: PageData } = $props();
-  const roomId = data.join;
+  let roomId: string = $state('');
 
   let username = $state('');
   onMount(() => {
     username = window.localStorage.getItem('username') ?? '';
+
+    roomId = $page.url.searchParams.get('join') ?? '';
   });
 
   function redirectRandomRoom() {
@@ -84,7 +86,7 @@
   }
 
   button:hover {
-    background-color: #0056b3;
+    background-color: var(----primary-color-active);
   }
 
   button:active {

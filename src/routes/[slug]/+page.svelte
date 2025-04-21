@@ -266,7 +266,7 @@
   }
 
   button:hover {
-    background-color: var(----primary-color-active);
+    background-color: var(--primary-color-active);
     transform: translateY(-1px);
   }
 
