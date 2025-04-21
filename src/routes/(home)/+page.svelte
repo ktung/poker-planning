@@ -1,8 +1,9 @@
 <script lang="ts">
+  import { goto } from '$app/navigation';
   import { m } from '$lib/paraglide/messages';
+  import { nanoid } from 'nanoid';
   import { onMount } from 'svelte';
   import type { PageData } from './$types';
-  import { nanoid } from 'nanoid';
 
   const { data }: { data: PageData } = $props();
   const roomId = data.join;
@@ -15,12 +16,12 @@
   function redirectRandomRoom() {
     const randomRoomId = nanoid();
     window.localStorage.setItem('username', username);
-    window.location.href = `/${randomRoomId}`;
+    goto(`/${randomRoomId}`);
   }
 
   function joinRoom() {
     window.localStorage.setItem('username', username);
-    window.location.href = `/${roomId}`;
+    goto(`/${roomId}`);
   }
 </script>
 

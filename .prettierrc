@@ -6,7 +6,7 @@
   "singleQuote": true,
   "trailingComma": "none",
   "printWidth": 140,
-  "plugins": ["prettier-plugin-svelte"],
+  "plugins": ["prettier-plugin-svelte", "@ianvs/prettier-plugin-sort-imports"],
   "overrides": [
     {
       "files": "*.svelte",

@@ -1,6 +1,6 @@
+import { REALTIME_LISTEN_TYPES } from '@supabase/supabase-js';
 import { supabase } from '$lib/supabaseClient.js';
 import { logger } from '$lib/util/logger';
-import { REALTIME_LISTEN_TYPES } from '@supabase/supabase-js';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {

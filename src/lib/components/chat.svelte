@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { supabase } from '$lib/supabaseClient';
   import { REALTIME_LISTEN_TYPES, type RealtimeChannel } from '@supabase/supabase-js';
+  import { supabase } from '$lib/supabaseClient';
   import { onMount } from 'svelte';
 
   const { slug } = $props();

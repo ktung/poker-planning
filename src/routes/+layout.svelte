@@ -1,8 +1,8 @@
 <script>
-  import '../app.css';
   import Footer from '$lib/components/footer.svelte';
   import LanguageSelector from '$lib/components/language-selector.svelte';
   import { m } from '$lib/paraglide/messages';
+  import '../app.css';
   import { injectAnalytics } from '@vercel/analytics/sveltekit';
   import { injectSpeedInsights } from '@vercel/speed-insights';
 

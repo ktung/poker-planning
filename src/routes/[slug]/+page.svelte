@@ -1,15 +1,15 @@
 <script lang="ts">
-  import type { PageData } from './$types';
-  import Chat from '$lib/components/chat.svelte';
-  import { m } from '$lib/paraglide/messages';
-  import { pointsValues, tableData } from '$lib/assets/data';
-  import { supabase } from '$lib/supabaseClient';
-  import { onDestroy, onMount } from 'svelte';
-  import { upsertVote } from '$lib/db/votes';
-  import { logger } from '$lib/util/logger';
-  import Voters from '$lib/components/voters.svelte';
   import { REALTIME_LISTEN_TYPES, REALTIME_PRESENCE_LISTEN_EVENTS, REALTIME_SUBSCRIBE_STATES } from '@supabase/supabase-js';
+  import { pointsValues, tableData } from '$lib/assets/data';
+  import Chat from '$lib/components/chat.svelte';
+  import Voters from '$lib/components/voters.svelte';
+  import { upsertVote } from '$lib/db/votes';
+  import { m } from '$lib/paraglide/messages';
+  import { supabase } from '$lib/supabaseClient';
+  import { logger } from '$lib/util/logger';
   import { round2 } from '$lib/util/math';
+  import { onDestroy, onMount } from 'svelte';
+  import type { PageData } from './$types';
 
   const { data }: { data: PageData } = $props();
   const { roomId, slug, sessionId } = data;
