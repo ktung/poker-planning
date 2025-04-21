@@ -168,11 +168,33 @@
       payload: {}
     });
   }
+
+  let copyFeedback = $state(false);
+  async function copyInviteLink() {
+    try {
+      await navigator.clipboard.writeText(`${currentHref}/join`);
+      copyFeedback = true;
+      setTimeout(() => {
+        copyFeedback = false;
+      }, 2000);
+    } catch (err) {
+      logger.error('Failed to copy invite link:', err);
+    }
+  }
 </script>
 
 <section>
   <div>
-    <span>Invite your team to the room: </span><span class="invite-link">{currentHref}/join</span>
+    <span>Invite your team to the room: </span><span
+      class="invite-link"
+      class:copied={copyFeedback}
+      onclick={copyInviteLink}
+      role="button"
+      tabindex="0"
+      >{currentHref}/join{#if copyFeedback}
+        <span class="tooltip">Copied!</span>
+      {/if}
+    </span>
     <button onclick={showVotes}>Show votes</button>
     <button onclick={clearVote}>Clear votes</button>
   </div>
@@ -260,9 +282,32 @@
   }
 
   .invite-link {
-    background: #f8f9fa;
-    border-radius: 6px;
-    margin-bottom: 2rem;
+    position: relative;
+    cursor: pointer;
+  }
+
+  .tooltip {
+    position: absolute;
+    bottom: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.875rem;
+    animation: fadeIn 0.2s ease;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translate(-50%, -10px);
+    }
+    to {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
   }
 
   button {
