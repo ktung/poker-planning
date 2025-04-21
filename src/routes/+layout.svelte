@@ -1,4 +1,5 @@
 <script>
+  import '../app.css';
   import Footer from '$lib/components/footer.svelte';
   import LanguageSelector from '$lib/components/language-selector.svelte';
   import { m } from '$lib/paraglide/messages';
@@ -34,7 +35,7 @@
   }
 
   :global(body) {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    font-family: BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.5;
     background-color: #f5f5f5;
   }
@@ -46,7 +47,7 @@
     display: flex;
     align-items: center;
     gap: 2rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 2px var(--shadow);
   }
 
   header a {
@@ -57,7 +58,7 @@
   }
 
   header a:hover {
-    color: #007bff;
+    color: var(--primary-color);
   }
 
   main {

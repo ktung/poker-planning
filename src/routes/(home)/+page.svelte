@@ -44,7 +44,7 @@
     padding: 2rem;
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px var(--shadow);
     text-align: center;
   }
 
@@ -67,13 +67,13 @@
 
   input:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: var(--primary-color);
   }
 
   button {
     width: 100%;
     padding: 0.8rem;
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 6px;

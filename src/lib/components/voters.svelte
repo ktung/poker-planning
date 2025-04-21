@@ -25,7 +25,7 @@
       display: inline;
       padding: 0.3rem;
       gap: 10px;
-      background-color: #007bff;
+      background-color: var(--primary-color);
       color: white;
       margin: 2px;
     }

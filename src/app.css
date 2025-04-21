@@ -1,0 +1,7 @@
+:root {
+  --primary-color: #007bff;
+  --primary-color-active: #0056b3;
+  --primary-color-focus: #007bff;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow-dark: rgba(0, 0, 0, 0.1);
+}

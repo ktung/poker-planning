@@ -237,7 +237,7 @@
   .stats {
     margin: 1rem 0;
     background: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px var(--shadow);
     border-radius: 8px;
     padding: 1rem;
   }
@@ -256,7 +256,7 @@
 
   button {
     padding: 0.8rem 1.5rem;
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     border: none;
     border-radius: 6px;
@@ -266,7 +266,7 @@
   }
 
   button:hover {
-    background-color: #0056b3;
+    background-color: var(----primary-color-active);
     transform: translateY(-1px);
   }
 
@@ -279,7 +279,7 @@
     margin: 20px auto;
     border-collapse: collapse;
     background-color: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 3px var(--shadow-dark);
     border-radius: 8px;
     overflow: hidden;
   }
@@ -300,7 +300,7 @@
   }
 
   thead tr:first-child {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
     font-weight: 500;
   }
@@ -312,7 +312,7 @@
 
   tbody td:not(:first-child).active,
   tbody td:not(:first-child):hover {
-    background-color: #007bff;
+    background-color: var(--primary-color);
     color: white;
   }
 

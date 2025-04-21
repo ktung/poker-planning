@@ -63,7 +63,7 @@
   .chat-container {
     background: white;
     border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px var(--shadow);
     max-width: 400px;
     margin: 1rem 0;
   }
@@ -103,7 +103,7 @@
 
   .message-input:focus {
     outline: none;
-    border-color: #007bff;
+    border-color: var(--primary-color-focus);
   }
 
   @media (max-width: 480px) {
