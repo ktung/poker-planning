@@ -11,6 +11,7 @@
 
   onMount(() => {
     username = window.localStorage.getItem('username') ?? '';
+    window.sessionStorage.removeItem('roomId');
   });
 
   function joinRoom() {

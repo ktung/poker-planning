@@ -1,6 +1,7 @@
 <script lang="ts">
   import { REALTIME_LISTEN_TYPES, REALTIME_PRESENCE_LISTEN_EVENTS, REALTIME_SUBSCRIBE_STATES } from '@supabase/supabase-js';
-  import { page } from '$app/stores';
+  import { goto } from '$app/navigation';
+  import { page } from '$app/state';
   import { pointsValues, tableData } from '$lib/assets/data';
   import Chat from '$lib/components/chat.svelte';
   import Voters from '$lib/components/voters.svelte';
@@ -15,9 +16,18 @@
   const { data }: { data: PageData } = $props();
   const { roomId, slug, sessionId } = data;
 
+  const currentHref = page.url.href;
+
   let showChat = $state(false);
 
   onMount(() => {
+    const sessionRoomId = window.sessionStorage.getItem('roomId');
+    if (!!sessionRoomId && sessionRoomId === slug) {
+      goto(`${currentHref}/join`);
+    } else {
+      window.sessionStorage.setItem('roomId', slug);
+    }
+
     showChat = true;
     const roomChannel = supabase.channel(slug);
     const channelPresence = supabase.channel(`presence:${slug}`, {
@@ -106,7 +116,7 @@
     return pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
   });
 
-  async function handleClick(event: MouseEvent, type: 'complexity' | 'effort' | 'uncertainty', index: number) {
+  async function handleClick(event: MouseEvent, type: VoteType, index: number) {
     if (activeCell[type] === index) {
       activeCell[type] = null;
       selectedPointsValues[type] = null;
@@ -162,7 +172,7 @@
 
 <section>
   <div>
-    <span>Invite your team to the room: </span><span class="invite-link">{$page.url.href}/join</span>
+    <span>Invite your team to the room: </span><span class="invite-link">{currentHref}/join</span>
     <button onclick={showVotes}>Show votes</button>
     <button onclick={clearVote}>Clear votes</button>
   </div>
