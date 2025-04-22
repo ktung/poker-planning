@@ -3,11 +3,17 @@
   import { m } from '$lib/paraglide/messages';
   import { nanoid } from 'nanoid';
   import { onMount } from 'svelte';
+  import type { Snapshot } from './$types';
 
   let username = $state('');
   onMount(() => {
     username = window.localStorage.getItem('username') ?? '';
   });
+
+  export const snapshot: Snapshot<string> = {
+    capture: () => username,
+    restore: (value) => (username = value)
+  };
 
   function redirectRandomRoom() {
     const randomRoomId = nanoid();

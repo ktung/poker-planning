@@ -14,6 +14,11 @@
     window.sessionStorage.removeItem('roomId');
   });
 
+  export const snapshot: Snapshot<string> = {
+    capture: () => username,
+    restore: (value) => (username = value)
+  };
+
   function joinRoom() {
     window.localStorage.setItem('username', username);
     goto(`/${roomId}`);
