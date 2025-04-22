@@ -1,10 +1,17 @@
 <script lang="ts">
-  import { REALTIME_LISTEN_TYPES, REALTIME_PRESENCE_LISTEN_EVENTS, REALTIME_SUBSCRIBE_STATES } from '@supabase/supabase-js';
+  import {
+    REALTIME_LISTEN_TYPES,
+    REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
+    REALTIME_PRESENCE_LISTEN_EVENTS,
+    REALTIME_SUBSCRIBE_STATES
+  } from '@supabase/supabase-js';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
   import { pointsValues, tableData } from '$lib/assets/data';
   import Chat from '$lib/components/chat.svelte';
+  import UsersStatus from '$lib/components/users-status.svelte';
   import Voters from '$lib/components/voters.svelte';
+  import { pushMessage } from '$lib/db/messages';
   import { upsertVote } from '$lib/db/votes';
   import { m } from '$lib/paraglide/messages';
   import { supabase } from '$lib/supabaseClient';
@@ -14,11 +21,14 @@
   import type { PageData } from './$types';
 
   const { data }: { data: PageData } = $props();
-  const { roomId, slug, sessionId } = data;
+  const { roomId, slug, sessionId, userId, username } = data;
 
   const currentHref = page.url.href;
 
-  let showChat = $state(false);
+  let usersStatuses = [
+    { username: 'ptung', complexity: '✅', effort: '🤔', uncertainty: '✅' },
+    { username: 'ptung', complexity: '✅', effort: '🤔', uncertainty: '✅' }
+  ];
 
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
@@ -28,7 +38,6 @@
       window.sessionStorage.setItem('roomId', slug);
     }
 
-    showChat = true;
     const roomChannel = supabase.channel(slug);
     const channelPresence = supabase.channel(`presence:${slug}`, {
       config: {
@@ -37,6 +46,17 @@
         }
       }
     });
+
+    const userStatusChannel = supabase
+      .channel(`users_status:${slug}`)
+      .on(
+        REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+        { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, schema: 'public', table: 'users' },
+        (payload) => {
+          logger.debug('user status', payload);
+        }
+      )
+      .subscribe();
 
     channelPresence
       .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
@@ -61,6 +81,7 @@
         };
         const presenceTrackStatus = await channelPresence.track(userStatus);
         logger.debug('presence status', presenceTrackStatus);
+        pushMessage(roomId, userId, `${username} joined the room`).then();
       });
 
     roomChannel
@@ -81,6 +102,8 @@
   });
 
   onDestroy(async () => {
+    pushMessage(roomId, userId, `${username} left the room`).then();
+
     const { error } = await supabase.from('users').delete().match({
       room_id: roomId,
       session_id: sessionId
@@ -200,29 +223,8 @@
   </div>
 
   <div class="infos">
-    {#if showChat}
-      <Chat {slug} />
-    {/if}
-    <div>
-      <table>
-        <thead>
-          <tr>
-            <th>Username</th>
-            <th>Complexity</th>
-            <th>Effort</th>
-            <th>Uncertainty</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>ptung</td>
-            <td>✅</td>
-            <td>🤔</td>
-            <td>✅</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+    <Chat {roomId} {slug} {userId} />
+    <UsersStatus {usersStatuses} />
     <div class="stats">
       Mean {mean}
       Point over mean {pointValueOverMean}

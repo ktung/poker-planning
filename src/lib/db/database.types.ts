@@ -1,8 +1,72 @@
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[];
 
 export type Database = {
+  graphql_public: {
+    Tables: {
+      [_ in never]: never;
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      graphql: {
+        Args: {
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+          extensions?: Json;
+        };
+        Returns: Json;
+      };
+    };
+    Enums: {
+      [_ in never]: never;
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
+      messages: {
+        Row: {
+          created_at: string;
+          id: string;
+          message: string;
+          room_id: string;
+          user_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          id?: string;
+          message: string;
+          room_id: string;
+          user_id: string;
+        };
+        Update: {
+          created_at?: string;
+          id?: string;
+          message?: string;
+          room_id?: string;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'messages_room_id_fkey';
+            columns: ['room_id'];
+            isOneToOne: false;
+            referencedRelation: 'rooms';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
+          }
+        ];
+      };
       rooms: {
         Row: {
           created_at: string;
@@ -58,22 +122,25 @@ export type Database = {
       };
       votes: {
         Row: {
+          complexity: number | null;
+          effort: number | null;
           room_id: string;
-          type: string;
+          uncertainty: number | null;
           user_id: string;
-          value: string;
         };
         Insert: {
+          complexity?: number | null;
+          effort?: number | null;
           room_id: string;
-          type: string;
+          uncertainty?: number | null;
           user_id: string;
-          value: string;
         };
         Update: {
+          complexity?: number | null;
+          effort?: number | null;
           room_id?: string;
-          type?: string;
+          uncertainty?: number | null;
           user_id?: string;
-          value?: string;
         };
         Relationships: [
           {
@@ -81,6 +148,13 @@ export type Database = {
             columns: ['room_id'];
             isOneToOne: false;
             referencedRelation: 'rooms';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'votes_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
             referencedColumns: ['id'];
           }
         ];
@@ -194,6 +268,9 @@ export type CompositeTypes<
     : never;
 
 export const Constants = {
+  graphql_public: {
+    Enums: {}
+  },
   public: {
     Enums: {}
   }

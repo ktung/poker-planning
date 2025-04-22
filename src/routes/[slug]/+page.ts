@@ -1,5 +1,5 @@
-import { browser } from '$app/environment';
-import { upsertUser } from '$lib/db/users';
+import { selectUsers, upsertUser } from '$lib/db/users';
+import { getUsername } from '$lib/store/username';
 import { logger } from '$lib/util/logger';
 import type { PageLoad } from './$types';
 
@@ -9,20 +9,22 @@ export const load: PageLoad = async ({ data, parent }) => {
   const slug = data.slug;
   const roomId = data.roomId;
 
-  const { error } = await upsertUser(sessionId, roomId, getUsername());
-  if (error) {
+  const { data: currentUser, error } = await upsertUser(sessionId, roomId, getUsername());
+  if (error || !currentUser) {
     logger.error('Error upserting users', error);
+    throw new Error('Error upserting users');
+  }
+
+  const { data: users, error: errorSelect } = await selectUsers(roomId);
+  if (errorSelect) {
+    logger.error('Error selecting users', errorSelect);
+    throw new Error('Error selecting users');
   }
 
   return {
     slug: slug,
-    roomId: roomId
+    roomId: roomId,
+    userId: currentUser.id,
+    username: currentUser.username
   };
-};
-
-const getUsername = () => {
-  if (browser) {
-    return window.localStorage.getItem('username') || '' + Math.floor(Math.random() * 1000);
-  }
-  return '' + Math.floor(Math.random() * 1000);
 };

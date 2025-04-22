@@ -1,8 +1,8 @@
 create table rooms (
   id uuid not null default uuid_generate_v4() primary key,
   name text not null unique CHECK (length(name) <= 22),
-  created_at timestamp not null default now(),
-  updated_at timestamp not null default now()
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
 );
 
 create table users (
@@ -10,7 +10,7 @@ create table users (
   session_id uuid not null,
   room_id uuid not null references rooms(id) on delete cascade,
   username text not null,
-  created_at timestamp not null default now()
+  created_at timestamptz not null default now()
 );
 
 create table votes (
@@ -22,6 +22,15 @@ create table votes (
   primary key (room_id, user_id)
 );
 
+create table messages (
+  id uuid not null default uuid_generate_v4() primary key,
+  room_id uuid not null references rooms(id) on delete cascade,
+  user_id uuid not null references users(id) on delete cascade,
+  created_at timestamptz not null default now(),
+  message text not null
+);
+
 -- Enable real-time for all tables
 alter publication supabase_realtime add table users;
 alter publication supabase_realtime add table votes;
+alter publication supabase_realtime add table messages;

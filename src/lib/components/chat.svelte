@@ -1,56 +1,79 @@
 <script lang="ts">
-  import { REALTIME_LISTEN_TYPES, type RealtimeChannel } from '@supabase/supabase-js';
+  import { REALTIME_LISTEN_TYPES, REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, type RealtimeChannel } from '@supabase/supabase-js';
+  import { getMessages, pushMessage } from '$lib/db/messages';
   import { supabase } from '$lib/supabaseClient';
   import { onMount } from 'svelte';
 
-  const { slug } = $props();
-  let channel: RealtimeChannel;
+  const { roomId, slug, userId } = $props();
+  let chatChannel: RealtimeChannel;
 
   let messageInput = $state('');
-  let messages: string[] = $state([]);
+
+  type Message = {
+    message: string;
+    created_at: Date;
+  };
+
+  let messages: Message[] = $state([]);
 
   onMount(() => {
-    channel = supabase
-      .channel(slug)
-      .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'shout' }, (payload) => {
-        const msg = payload['payload']['message'] as string;
-        messages.push(msg);
-        setTimeout(scrollToBottom, 0);
-      })
+    chatChannel = supabase
+      .channel(`messages:${slug}`)
+      .on(
+        REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+        { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT, schema: 'public', table: 'messages' },
+        (payload) => {
+          messages.push({
+            message: payload.new.message,
+            created_at: new Date(payload.new.created_at)
+          });
+          setTimeout(scrollToBottom, 0);
+        }
+      )
       .subscribe();
 
+    (async () => {
+      const { data: fetchmessages } = await getMessages(roomId);
+      fetchmessages?.forEach((message) => {
+        messages.push({
+          message: message.message,
+          created_at: new Date(message.created_at)
+        });
+      });
+    })();
+
     return () => {
-      channel.unsubscribe();
+      chatChannel.unsubscribe();
     };
   });
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter' && messageInput.trim() !== '') {
-      sendMessage();
+      pushMessage(roomId, userId, messageInput).then();
       messageInput = '';
     }
   };
-
-  const sendMessage = () => {
-    supabase.channel(slug).send({
-      type: 'broadcast',
-      event: 'shout',
-      payload: { message: messageInput }
-    });
-  };
-
   let messagesContainer: HTMLDivElement;
   function scrollToBottom() {
     if (messagesContainer) {
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
   }
+
+  function formatTime(date: Date): string {
+    return new Intl.DateTimeFormat('en-CA', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
+    }).format(date);
+  }
 </script>
 
 <div class="chat-container">
   <div class="messages" bind:this={messagesContainer}>
     {#each messages as message, index (index)}
-      <div class="message">{message}</div>
+      <div class="message">{message.message} - {formatTime(message.created_at)}</div>
     {/each}
   </div>
 

@@ -31,6 +31,7 @@ pnpm supabase migration up --local
 
 pnpm supabase db reset --local
 
+pnpm supabase gen types typescript --local > src/lib/db/database.types.ts
 LINKED_PROJECT_ID=$(pnpm supabase projects list -o json | jq -r '.[] | select(.linked==true) | .id')
 pnpm supabase gen types typescript --project-id $LINKED_PROJECT_ID > src/lib/db/database.types.ts
 ```
