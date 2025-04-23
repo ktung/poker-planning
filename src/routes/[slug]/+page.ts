@@ -15,7 +15,7 @@ export const load: PageLoad = async ({ data, parent }) => {
     throw new Error('Error upserting users');
   }
 
-  const { data: users, error: errorSelect } = await selectUsers(roomId);
+  const { error: errorSelect } = await selectUsers(roomId);
   if (errorSelect) {
     logger.error('Error selecting users', errorSelect);
     throw new Error('Error selecting users');

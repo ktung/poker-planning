@@ -98,6 +98,7 @@
       roomChannel.unsubscribe();
       channelPresence.untrack();
       channelPresence.unsubscribe();
+      userStatusChannel.unsubscribe();
     };
   });
 

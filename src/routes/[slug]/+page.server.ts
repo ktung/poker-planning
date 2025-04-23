@@ -46,7 +46,7 @@ export const load: PageServerLoad = async ({ params }) => {
     .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.LEAVE }, async () => {
       const state = await presenceChannel.presenceState();
       if (Object.keys(state).length === 0) {
-        const { data } = await supabase.from('rooms').delete().eq('name', slug);
+        supabase.from('rooms').delete().eq('name', slug).then();
         votesChannel.unsubscribe();
         presenceChannel.unsubscribe();
       }

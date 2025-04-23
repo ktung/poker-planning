@@ -2,19 +2,23 @@
   import { REALTIME_LISTEN_TYPES, REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, type RealtimeChannel } from '@supabase/supabase-js';
   import { getMessages, pushMessage } from '$lib/db/messages';
   import { supabase } from '$lib/supabaseClient';
+  import { formatTime } from '$lib/util/date';
   import { onMount } from 'svelte';
 
-  const { roomId, slug, userId } = $props();
-  let chatChannel: RealtimeChannel;
-
-  let messageInput = $state('');
-
-  type Message = {
+  interface Props {
+    roomId: string;
+    slug: string;
+    userId: string;
+  }
+  interface Message {
     message: string;
     created_at: Date;
-  };
+  }
 
+  const { roomId, slug, userId }: Props = $props();
+  let messageInput = $state('');
   let messages: Message[] = $state([]);
+  let chatChannel: RealtimeChannel;
 
   onMount(() => {
     chatChannel = supabase
@@ -58,15 +62,6 @@
     if (messagesContainer) {
       messagesContainer.scrollTop = messagesContainer.scrollHeight;
     }
-  }
-
-  function formatTime(date: Date): string {
-    return new Intl.DateTimeFormat('en-CA', {
-      hour: '2-digit',
-      minute: '2-digit',
-      hour12: false,
-      timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone
-    }).format(date);
   }
 </script>
 
