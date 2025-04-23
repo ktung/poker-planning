@@ -9,6 +9,7 @@
   import { page } from '$app/state';
   import { pointsValues, tableData } from '$lib/assets/data';
   import Chat from '$lib/components/chat.svelte';
+  import CopiableText from '$lib/components/copiable-text.svelte';
   import UsersStatus from '$lib/components/users-status.svelte';
   import Voters from '$lib/components/voters.svelte';
   import { pushMessage } from '$lib/db/messages';
@@ -192,33 +193,11 @@
       payload: {}
     });
   }
-
-  let copyFeedback = $state(false);
-  async function copyInviteLink() {
-    try {
-      await navigator.clipboard.writeText(`${currentHref}/join`);
-      copyFeedback = true;
-      setTimeout(() => {
-        copyFeedback = false;
-      }, 2000);
-    } catch (err) {
-      logger.error('Failed to copy invite link:', err);
-    }
-  }
 </script>
 
 <section>
   <div>
-    <span>Invite your team to the room: </span><span
-      class="invite-link"
-      class:copied={copyFeedback}
-      onclick={copyInviteLink}
-      role="button"
-      tabindex="0"
-      >{currentHref}/join{#if copyFeedback}
-        <span class="tooltip">Copied!</span>
-      {/if}
-    </span>
+    <span>Invite your team to the room: </span><CopiableText text={`${currentHref}/join`} />
     <button onclick={showVotes}>Show votes</button>
     <button onclick={clearVote}>Clear votes</button>
   </div>
@@ -282,35 +261,6 @@
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
-  }
-
-  .invite-link {
-    position: relative;
-    cursor: pointer;
-  }
-
-  .tooltip {
-    position: absolute;
-    bottom: -30px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #333;
-    color: white;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.875rem;
-    animation: fadeIn 0.2s ease;
-  }
-
-  @keyframes fadeIn {
-    from {
-      opacity: 0;
-      transform: translate(-50%, -10px);
-    }
-    to {
-      opacity: 1;
-      transform: translate(-50%, 0);
-    }
   }
 
   button {
