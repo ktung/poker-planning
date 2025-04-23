@@ -21,9 +21,14 @@
   import { onDestroy, onMount } from 'svelte';
   import type { PageData } from './$types';
 
+  interface VoteModel {
+    complexity: number | null;
+    effort: number | null;
+    uncertainty: number | null;
+  }
+
   const { data }: { data: PageData } = $props();
   const { roomId, slug, sessionId, userId, username } = data;
-
   const currentHref = page.url.href;
 
   let usersStatuses = [
@@ -116,16 +121,16 @@
     }
   });
 
-  let activeCell = $state({
-    complexity: null as number | null,
-    effort: null as number | null,
-    uncertainty: null as number | null
+  let activeCell: VoteModel = $state({
+    complexity: null,
+    effort: null,
+    uncertainty: null
   });
 
-  let selectedPointsValues = $state({
-    complexity: null as number | null,
-    effort: null as number | null,
-    uncertainty: null as number | null
+  let selectedPointsValues: VoteModel = $state({
+    complexity: null,
+    effort: null,
+    uncertainty: null
   });
 
   let mean = $derived.by(() => {
@@ -165,7 +170,7 @@
     }
   }
 
-  let savedVotes = $state([]);
+  let savedVotes: VoteModel[] = $state([]);
   function showVotes() {
     supabase
       .from('votes')
