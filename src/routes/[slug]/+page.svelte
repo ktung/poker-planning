@@ -129,8 +129,6 @@
 
   let mean = $derived.by(() => {
     const nbSelected = Object.values(activeCell).filter((value) => value !== null).length;
-    logger.debug('selectedPointsValues', $state.snapshot(selectedPointsValues));
-    logger.debug('nbSelected', nbSelected);
     const mean =
       ((selectedPointsValues.complexity || 0) + (selectedPointsValues.effort || 0) + (selectedPointsValues.uncertainty || 0)) / nbSelected;
     return round2(mean);
