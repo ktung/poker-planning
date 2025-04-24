@@ -24,6 +24,23 @@ export const load: PageServerLoad = async ({ params }) => {
     throw new Error('Error upserting room');
   }
 
+  const { data: currentVotesData, error: currentVotesQueryError } = await supabase
+    .from('votes')
+    .select('complexity, effort, uncertainty, users ( username )')
+    .eq('room_id', room.id);
+  if (currentVotesQueryError) {
+    logger.error('Error selecting current votes', currentVotesQueryError);
+    throw new Error('Error selecting current votes');
+  }
+  const currentVotes = currentVotesData.map((vote) => {
+    return {
+      complexity: vote.complexity,
+      effort: vote.effort,
+      uncertainty: vote.uncertainty,
+      username: vote.users.username
+    };
+  });
+
   const votesChannel = supabase
     .channel(slug)
     .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
@@ -56,6 +73,7 @@ export const load: PageServerLoad = async ({ params }) => {
 
   return {
     slug: room.name,
-    roomId: room.id
+    roomId: room.id,
+    currentVotes: currentVotes
   };
 };

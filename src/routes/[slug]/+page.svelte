@@ -22,13 +22,8 @@
   import type { PageData } from './$types';
 
   const { data }: { data: PageData } = $props();
-  const { roomId, slug, userId, username } = data;
+  const { roomId, slug, userId, username, currentVotes } = data;
   const currentHref = page.url.href;
-
-  let usersStatuses = [
-    { username: 'ptung', complexity: '✅', effort: '🤔', uncertainty: '✅' },
-    { username: 'ptung', complexity: '✅', effort: '🤔', uncertainty: '✅' }
-  ];
 
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
@@ -205,7 +200,7 @@
 
   <div class="infos">
     <Chat {roomId} {slug} {userId} />
-    <UsersStatus {usersStatuses} />
+    <UsersStatus usersStatuses={currentVotes} />
     <div class="stats">
       Mean {mean}
       Point over mean {pointValueOverMean}

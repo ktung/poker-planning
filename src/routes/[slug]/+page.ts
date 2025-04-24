@@ -23,6 +23,7 @@ export const load: PageLoad = async ({ data }) => {
     slug: slug,
     roomId: roomId,
     userId: currentUser.id,
-    username: currentUser.username
+    username: currentUser.username,
+    currentVotes: data.currentVotes
   };
 };
