@@ -40,3 +40,4 @@
   - https://commitizen-tools.github.io/commitizen/
 - add https://logflare.app/
 - Use chat to notify when user changes votes if show votes enabled
+- Use boundary https://svelte.dev/docs/svelte/svelte-boundary

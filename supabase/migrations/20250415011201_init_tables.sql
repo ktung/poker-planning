@@ -7,7 +7,6 @@ create table rooms (
 
 create table users (
   id uuid not null default uuid_generate_v4() primary key,
-  session_id uuid not null,
   room_id uuid not null references rooms(id) on delete cascade,
   username text not null,
   created_at timestamptz not null default now()

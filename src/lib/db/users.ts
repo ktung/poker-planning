@@ -1,11 +1,10 @@
 import { supabase } from '$lib/supabaseClient';
 
-export const upsertUser = (sessionId: string, roomId: string, username: string) => {
+export const upsertUser = (roomId: string, username: string) => {
   return supabase
     .from('users')
     .upsert(
       {
-        session_id: sessionId,
         room_id: roomId,
         username: username
       },

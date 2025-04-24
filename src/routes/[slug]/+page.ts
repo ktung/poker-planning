@@ -3,13 +3,11 @@ import { getUsername } from '$lib/store/username';
 import { logger } from '$lib/util/logger';
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = async ({ data, parent }) => {
-  const parentData = await parent();
-  const { sessionId } = parentData;
+export const load: PageLoad = async ({ data }) => {
   const slug = data.slug;
   const roomId = data.roomId;
 
-  const { data: currentUser, error } = await upsertUser(sessionId, roomId, getUsername());
+  const { data: currentUser, error } = await upsertUser(roomId, getUsername());
   if (error || !currentUser) {
     logger.error('Error upserting users', error);
     throw new Error('Error upserting users');

@@ -28,7 +28,7 @@
   }
 
   const { data }: { data: PageData } = $props();
-  const { roomId, slug, sessionId, userId, username } = data;
+  const { roomId, slug, userId, username } = data;
   const currentHref = page.url.href;
 
   let usersStatuses = [
@@ -82,7 +82,7 @@
         }
 
         const userStatus = {
-          userId: sessionId,
+          userId: userId,
           online_at: new Date().toISOString()
         };
         const presenceTrackStatus = await channelPresence.track(userStatus);
@@ -113,7 +113,7 @@
 
     const { error } = await supabase.from('users').delete().match({
       room_id: roomId,
-      session_id: sessionId
+      id: userId
     });
 
     if (error) {
@@ -164,7 +164,7 @@
       }
     }
 
-    const { error } = await upsertVote(sessionId, roomId, type, selectedPointsValues[type]);
+    const { error } = await upsertVote(userId, roomId, type, selectedPointsValues[type]);
     if (error) {
       logger.error('Error upserting vote', error);
     }

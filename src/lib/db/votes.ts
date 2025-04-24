@@ -1,14 +1,9 @@
 import { supabase } from '$lib/supabaseClient';
 
-export const upsertVote = async (sessionId: string, roomId: string, type: VoteType, value: number | null) => {
-  const { data: userId } = await supabase.from('users').select('id').eq('session_id', sessionId).single();
-  if (!userId || !userId.id) {
-    throw new Error('User not found with session_id ' + sessionId);
-  }
-
+export const upsertVote = async (userId: string, roomId: string, type: VoteType, value: number | null) => {
   const data = {
     room_id: roomId,
-    user_id: userId.id
+    user_id: userId
   };
   data[type] = value;
   return supabase
