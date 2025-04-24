@@ -21,12 +21,6 @@
   import { onDestroy, onMount } from 'svelte';
   import type { PageData } from './$types';
 
-  interface VoteModel {
-    complexity: number | null;
-    effort: number | null;
-    uncertainty: number | null;
-  }
-
   const { data }: { data: PageData } = $props();
   const { roomId, slug, userId, username } = data;
   const currentHref = page.url.href;
@@ -170,26 +164,30 @@
     }
   }
 
-  let savedVotes: VoteModel[] = $state([]);
-  function showVotes() {
-    supabase
-      .from('votes')
-      .select('complexity, effort, uncertainty, users (username)')
-      .eq('room_id', roomId)
-      .then(({ data, error }) => {
-        if (error) {
-          logger.error('Error fetching votes:', error);
-        } else {
-          logger.debug('Votes:', data);
-          savedVotes = data;
+  let savedVotes: UservoteModel[] = $state([]);
+  async function showVotes() {
+    const { data, error } = await supabase.from('votes').select('complexity, effort, uncertainty, users (username)').eq('room_id', roomId);
 
-          activeCell = {
-            complexity: null,
-            effort: null,
-            uncertainty: null
-          };
-        }
+    if (error) {
+      logger.error('Error fetching votes:', error);
+      throw error;
+    }
+
+    data.forEach((vote) => {
+      const { complexity, effort, uncertainty, users } = vote;
+      savedVotes.push({
+        complexity,
+        effort,
+        uncertainty,
+        username: users.username
       });
+    });
+
+    activeCell = {
+      complexity: null,
+      effort: null,
+      uncertainty: null
+    };
   }
   function clearVote() {
     supabase.channel(slug).send({

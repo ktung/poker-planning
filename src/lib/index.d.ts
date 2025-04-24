@@ -7,3 +7,13 @@ declare interface Vote {
 }
 
 declare type VoteType = 'complexity' | 'effort' | 'uncertainty';
+
+interface VoteModel {
+  complexity: number | null;
+  effort: number | null;
+  uncertainty: number | null;
+}
+
+interface UservoteModel extends VoteModel {
+  username: string;
+}

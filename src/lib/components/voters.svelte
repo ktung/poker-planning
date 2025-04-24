@@ -1,9 +1,9 @@
 <script lang="ts">
-  const { votes, selectedType, selectedValue } = $props();
+  const { votes, selectedType, selectedValue }: { votes: UservoteModel[]; selectedType: VoteType; selectedValue: number } = $props();
 
   const usernames = $derived.by(() => {
     const selectedVotes = votes.filter((vote) => vote[selectedType] === selectedValue);
-    return selectedVotes.map((vote) => vote.users.username);
+    return selectedVotes.map((vote) => vote.username);
   });
 </script>
 
