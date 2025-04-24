@@ -1,5 +1,43 @@
 <script lang="ts">
-  let { usersStatuses } = $props();
+  import { REALTIME_LISTEN_TYPES, REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from '@supabase/supabase-js';
+  import { supabase } from '$lib/supabaseClient';
+  import { logger } from '$lib/util/logger';
+  import { onMount } from 'svelte';
+
+  let { usersStatuses, roomId }: { usersStatuses: UservoteModel[]; roomId: string } = $props();
+  let statuses = $state(usersStatuses);
+
+  onMount(() => {
+    const votesChannel = supabase
+      .channel(`votes:${roomId}`)
+      .on(
+        REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+        { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, schema: 'public', table: 'votes' },
+        async () => {
+          const { data: currentVotesData, error: currentVotesQueryError } = await supabase
+            .from('votes')
+            .select('complexity, effort, uncertainty, users ( username )')
+            .eq('room_id', roomId);
+          if (currentVotesQueryError) {
+            logger.error('Error selecting current votes', currentVotesQueryError);
+            throw new Error('Error selecting current votes');
+          }
+          statuses = currentVotesData.map((vote) => {
+            return {
+              complexity: vote.complexity,
+              effort: vote.effort,
+              uncertainty: vote.uncertainty,
+              username: vote.users.username
+            };
+          });
+        }
+      )
+      .subscribe();
+
+    return () => {
+      votesChannel.unsubscribe();
+    };
+  });
 </script>
 
 <div>
@@ -13,7 +51,7 @@
       </tr>
     </thead>
     <tbody>
-      {#each usersStatuses as user, i (i)}
+      {#each statuses as user, i (i)}
         <tr>
           <td>{user.username}</td>
           <td>{user.complexity}</td>

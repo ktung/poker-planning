@@ -200,7 +200,7 @@
 
   <div class="infos">
     <Chat {roomId} {slug} {userId} />
-    <UsersStatus usersStatuses={currentVotes} />
+    <UsersStatus usersStatuses={currentVotes} {roomId} />
     <div class="stats">
       Mean {mean}
       Point over mean {pointValueOverMean}
