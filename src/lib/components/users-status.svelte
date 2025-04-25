@@ -1,5 +1,6 @@
 <script lang="ts">
   import { REALTIME_LISTEN_TYPES, REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from '@supabase/supabase-js';
+  import { fetchVotesAndUsersByRoomId } from '$lib/db/votes';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
   import { onMount } from 'svelte';
@@ -14,10 +15,7 @@
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, schema: 'public', table: 'votes' },
         async () => {
-          const { data: currentVotesData, error: currentVotesQueryError } = await supabase
-            .from('votes')
-            .select('complexity, effort, uncertainty, users ( username )')
-            .eq('room_id', roomId);
+          const { data: currentVotesData, error: currentVotesQueryError } = await fetchVotesAndUsersByRoomId(roomId);
           if (currentVotesQueryError) {
             logger.error('Error selecting current votes', currentVotesQueryError);
             throw new Error('Error selecting current votes');

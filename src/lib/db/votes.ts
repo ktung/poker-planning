@@ -8,6 +8,10 @@ interface Vote {
   uncertainty?: number | null;
 }
 
+export const fetchVotesAndUsersByRoomId = (roomId: string) => {
+  return supabase.from('votes').select('complexity, effort, uncertainty, users ( username )').eq('room_id', roomId);
+};
+
 export const upsertVote = async (userId: string, roomId: string, type: VoteType, value: number | null) => {
   const data: Vote = {
     room_id: roomId,
@@ -20,4 +24,15 @@ export const upsertVote = async (userId: string, roomId: string, type: VoteType,
       onConflict: 'room_id, user_id'
     })
     .select();
+};
+
+export const deleteVotesByUserIdAndRoomId = (userId: string, roomId: string) => {
+  return supabase.from('users').delete().match({
+    room_id: roomId,
+    id: userId
+  });
+};
+
+export const deleteVotesByRoomId = (roomId: string) => {
+  return supabase.from('votes').delete().eq('room_id', roomId);
 };

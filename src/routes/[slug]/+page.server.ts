@@ -1,4 +1,6 @@
 import { REALTIME_LISTEN_TYPES, REALTIME_PRESENCE_LISTEN_EVENTS } from '@supabase/supabase-js';
+import { deleteRoomByName, upsertRoom } from '$lib/db/rooms';
+import { deleteVotesByRoomId, fetchVotesAndUsersByRoomId } from '$lib/db/votes';
 import { supabase } from '$lib/supabaseClient.js';
 import { logger } from '$lib/util/logger';
 import type { PageServerLoad } from './$types';
@@ -6,28 +8,13 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ params }) => {
   const slug = params.slug;
 
-  const { data: room, error } = await supabase
-    .from('rooms')
-    .upsert(
-      {
-        name: slug,
-        updated_at: new Date().toISOString()
-      },
-      {
-        onConflict: 'name'
-      }
-    )
-    .select()
-    .single();
+  const { data: room, error } = await upsertRoom(slug);
   if (error || !room) {
     logger.error('Error upserting room', error);
     throw new Error('Error upserting room');
   }
 
-  const { data: currentVotesData, error: currentVotesQueryError } = await supabase
-    .from('votes')
-    .select('complexity, effort, uncertainty, users ( username )')
-    .eq('room_id', room.id);
+  const { data: currentVotesData, error: currentVotesQueryError } = await fetchVotesAndUsersByRoomId(room.id);
   if (currentVotesQueryError) {
     logger.error('Error selecting current votes', currentVotesQueryError);
     throw new Error('Error selecting current votes');
@@ -44,17 +31,13 @@ export const load: PageServerLoad = async ({ params }) => {
   const votesChannel = supabase
     .channel(slug)
     .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
-      supabase
-        .from('votes')
-        .delete()
-        .eq('room_id', room.id)
-        .then(({ error }) => {
-          if (error) {
-            logger.error('Error deleting vote:', error);
-          } else {
-            logger.debug(`Vote deleted successfully on room ${slug}`);
-          }
-        });
+      deleteVotesByRoomId(room.id).then(({ error }) => {
+        if (error) {
+          logger.error('Error deleting vote:', error);
+        } else {
+          logger.debug(`Vote deleted successfully on room ${slug}`);
+        }
+      });
     })
     .subscribe();
 
@@ -63,7 +46,7 @@ export const load: PageServerLoad = async ({ params }) => {
     .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.LEAVE }, async () => {
       const state = await presenceChannel.presenceState();
       if (Object.keys(state).length === 0) {
-        supabase.from('rooms').delete().eq('name', slug).then();
+        deleteRoomByName(slug).then();
         votesChannel.unsubscribe();
         presenceChannel.unsubscribe();
       }

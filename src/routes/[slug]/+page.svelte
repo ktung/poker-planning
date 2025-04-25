@@ -13,7 +13,7 @@
   import UsersStatus from '$lib/components/users-status.svelte';
   import Voters from '$lib/components/voters.svelte';
   import { pushMessage } from '$lib/db/messages';
-  import { upsertVote } from '$lib/db/votes';
+  import { deleteVotesByUserIdAndRoomId, fetchVotesAndUsersByRoomId, upsertVote } from '$lib/db/votes';
   import { m } from '$lib/paraglide/messages';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
@@ -100,10 +100,7 @@
   onDestroy(async () => {
     pushMessage(roomId, userId, `${username} left the room`).then();
 
-    const { error } = await supabase.from('users').delete().match({
-      room_id: roomId,
-      id: userId
-    });
+    const { error } = await deleteVotesByUserIdAndRoomId(userId, roomId);
 
     if (error) {
       logger.error('Error deleting user:', error);
@@ -159,7 +156,7 @@
 
   let savedVotes: UservoteModel[] = $state([]);
   async function showVotes() {
-    const { data, error } = await supabase.from('votes').select('complexity, effort, uncertainty, users (username)').eq('room_id', roomId);
+    const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
 
     if (error) {
       logger.error('Error fetching votes:', error);
