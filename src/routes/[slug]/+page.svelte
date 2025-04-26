@@ -43,17 +43,6 @@
       }
     });
 
-    const userStatusChannel = supabase
-      .channel(`users_status:${slug}`)
-      .on(
-        REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
-        { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, schema: 'public', table: 'users' },
-        (payload) => {
-          logger.debug('user status', payload);
-        }
-      )
-      .subscribe();
-
     channelPresence
       .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
         const state = channelPresence.presenceState();
@@ -94,13 +83,11 @@
       roomChannel.unsubscribe();
       channelPresence.untrack();
       channelPresence.unsubscribe();
-      userStatusChannel.unsubscribe();
     };
   });
 
   onDestroy(async () => {
     pushMessage(roomId, userId, `${username} left the room`).then();
-
     const { error } = await deleteVotesByUserIdAndRoomId(userId, roomId);
 
     if (error) {
