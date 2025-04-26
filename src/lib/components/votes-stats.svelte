@@ -3,17 +3,21 @@
 
   let { pointsValues, myVotes, teamVotes }: { pointsValues: number[]; myVotes: VoteModel; teamVotes: VoteModel[] } = $props();
 
-  let mean = $derived.by(() => {
+  let mean: number | null = $derived.by(() => {
     const nbSelected = Object.values(myVotes).filter((vote) => vote !== null && vote !== undefined).length;
     const mean = ((myVotes.complexity || 0) + (myVotes.effort || 0) + (myVotes.uncertainty || 0)) / nbSelected;
     return round2(mean);
   });
 
-  let pointValueOverMean = $derived.by(() => {
+  let pointValueOverMean: number | null = $derived.by(() => {
+    if (mean === null || mean === undefined || isNaN(mean)) {
+      return null;
+    }
+
     return pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
   });
 
-  let teamMean = $derived.by(() => {
+  let teamMean: number | null = $derived.by(() => {
     const teamVotesValues = Object.values(teamVotes).filter((vote) => vote !== null && vote !== undefined);
     const nbTeamVotes = teamVotesValues.length;
     const mean =
@@ -22,17 +26,25 @@
     return round2(mean);
   });
 
-  let pointValueOverTeamMean = $derived.by(() => {
+  let pointValueOverTeamMean: number | null = $derived.by(() => {
+    if (teamMean === null || teamMean === undefined || isNaN(teamMean)) {
+      return null;
+    }
+
     return pointsValues.find((value) => value >= teamMean) ?? pointsValues[pointsValues.length - 1];
   });
 </script>
 
 <div class="stats">
   <ul>
-    <li>Mean {mean}</li>
-    <li>Point over mean {pointValueOverMean}</li>
-    <li>Team mean {teamMean}</li>
-    <li>Team point over mean {pointValueOverTeamMean}</li>
+    {#if mean !== null && pointValueOverMean !== null}
+      <li>Mean {mean}</li>
+      <li>Point over mean {pointValueOverMean}</li>
+    {/if}
+    {#if teamMean !== null && pointValueOverTeamMean !== null}
+      <li>Team mean {teamMean}</li>
+      <li>Team point over mean {pointValueOverTeamMean}</li>
+    {/if}
   </ul>
 </div>
 
