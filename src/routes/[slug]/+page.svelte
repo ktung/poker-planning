@@ -12,12 +12,12 @@
   import CopiableText from '$lib/components/copiable-text.svelte';
   import UsersStatus from '$lib/components/users-status.svelte';
   import Voters from '$lib/components/voters.svelte';
+  import VotesStats from '$lib/components/votes-stats.svelte';
   import { pushMessage } from '$lib/db/messages';
   import { deleteVotesByUserIdAndRoomId, fetchVotesAndUsersByRoomId, upsertVote } from '$lib/db/votes';
   import { m } from '$lib/paraglide/messages';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
-  import { round2 } from '$lib/util/math';
   import { onDestroy, onMount } from 'svelte';
   import type { PageData } from './$types';
 
@@ -119,17 +119,6 @@
     uncertainty: null
   });
 
-  let mean = $derived.by(() => {
-    const nbSelected = Object.values(activeCell).filter((value) => value !== null).length;
-    const mean =
-      ((selectedPointsValues.complexity || 0) + (selectedPointsValues.effort || 0) + (selectedPointsValues.uncertainty || 0)) / nbSelected;
-    return round2(mean);
-  });
-
-  let pointValueOverMean = $derived.by(() => {
-    return pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
-  });
-
   async function handleClick(event: MouseEvent, type: VoteType, index: number) {
     if (activeCell[type] === index) {
       activeCell[type] = null;
@@ -198,10 +187,7 @@
   <div class="infos">
     <Chat {roomId} {slug} {userId} />
     <UsersStatus usersStatuses={currentVotes} {roomId} />
-    <div class="stats">
-      Mean {mean}
-      Point over mean {pointValueOverMean}
-    </div>
+    <VotesStats {pointsValues} myVotes={selectedPointsValues} teamVotes={savedVotes} />
   </div>
 
   <table>
@@ -240,14 +226,6 @@
     display: flex;
     justify-content: space-around;
     margin-bottom: 2rem;
-  }
-
-  .stats {
-    margin: 1rem 0;
-    background: white;
-    box-shadow: 0 2px 4px var(--shadow);
-    border-radius: 8px;
-    padding: 1rem;
   }
 
   section {
