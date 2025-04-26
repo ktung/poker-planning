@@ -24,6 +24,7 @@
   const { data }: { data: PageData } = $props();
   const { roomId, slug, userId, username, currentVotes } = data;
   const currentHref = page.url.href;
+  let voteShown = $state(false);
 
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
@@ -146,11 +147,11 @@
   let savedVotes: UservoteModel[] = $state([]);
   async function showVotes() {
     const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
-
     if (error) {
       logger.error('Error fetching votes:', error);
       throw error;
     }
+    voteShown = true;
 
     data.forEach((vote) => {
       const { complexity, effort, uncertainty, users } = vote;
@@ -168,20 +169,29 @@
       uncertainty: null
     };
   }
+
   function clearVote() {
-    supabase.channel(slug).send({
-      type: 'broadcast',
-      event: 'clearVotes',
-      payload: {}
-    });
+    supabase
+      .channel(slug)
+      .send({
+        type: 'broadcast',
+        event: 'clearVotes',
+        payload: {}
+      })
+      .then(() => {
+        voteShown = false;
+      });
   }
 </script>
 
 <section>
   <div>
     <span>Invite your team to the room: </span><CopiableText text={`${currentHref}/join`} />
-    <button onclick={showVotes}>Show votes</button>
-    <button onclick={clearVote}>Clear votes</button>
+    {#if voteShown}
+      <button onclick={clearVote}>Clear votes</button>
+    {:else}
+      <button onclick={showVotes}>Show votes</button>
+    {/if}
   </div>
 
   <div class="infos">
