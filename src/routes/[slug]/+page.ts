@@ -1,3 +1,4 @@
+import { pushMessage } from '$lib/db/messages';
 import { selectUsers, upsertUser } from '$lib/db/users';
 import { getUsername } from '$lib/store/username';
 import { logger } from '$lib/util/logger';
@@ -12,6 +13,7 @@ export const load: PageLoad = async ({ data }) => {
     logger.error('Error upserting users', error);
     throw new Error('Error upserting users');
   }
+  pushMessage(roomId, currentUser.id, `${getUsername()} joined the room`).then();
 
   const { error: errorSelect } = await selectUsers(roomId);
   if (errorSelect) {

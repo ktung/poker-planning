@@ -1,9 +1,10 @@
 <script lang="ts">
   import {
     REALTIME_LISTEN_TYPES,
-    REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
     REALTIME_PRESENCE_LISTEN_EVENTS,
-    REALTIME_SUBSCRIBE_STATES
+    REALTIME_SUBSCRIBE_STATES,
+    type RealtimeChannelSendResponse,
+    type RealtimePresenceState
   } from '@supabase/supabase-js';
   import { goto } from '$app/navigation';
   import { page } from '$app/state';
@@ -13,16 +14,15 @@
   import UsersStatus from '$lib/components/users-status.svelte';
   import Voters from '$lib/components/voters.svelte';
   import VotesStats from '$lib/components/votes-stats.svelte';
-  import { pushMessage } from '$lib/db/messages';
-  import { deleteVotesByUserIdAndRoomId, fetchVotesAndUsersByRoomId, upsertVote } from '$lib/db/votes';
+  import { fetchVotesAndUsersByRoomId, upsertVote } from '$lib/db/votes';
   import { m } from '$lib/paraglide/messages';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
-  import { onDestroy, onMount } from 'svelte';
+  import { onMount } from 'svelte';
   import type { PageData } from './$types';
 
   const { data }: { data: PageData } = $props();
-  const { roomId, slug, userId, username, currentVotes } = data;
+  const { roomId, slug, userId, currentVotes } = data;
   const currentHref = page.url.href;
   let voteShown = $state(false);
 
@@ -45,14 +45,19 @@
 
     channelPresence
       .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
-        const state = channelPresence.presenceState();
-        logger.debug('sync', state);
-      })
-      .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.JOIN }, ({ key, newPresences }) => {
-        logger.debug('join', key, newPresences);
-      })
-      .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.LEAVE }, ({ key, leftPresences }) => {
-        logger.debug('leave', key, leftPresences);
+        const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
+        const users = state[slug];
+
+        if (users && users.length !== 0 && users[0].userId === userId) {
+          fetch(`/api/rooms/sync`, {
+            method: 'POST',
+            body: JSON.stringify({
+              roomId: roomId,
+              userId: userId,
+              users: users
+            })
+          });
+        }
       })
       .subscribe(async (status) => {
         if (status !== REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
@@ -60,13 +65,14 @@
           return;
         }
 
-        const userStatus = {
+        const userStatus: UserTrackModel = {
           userId: userId,
-          online_at: new Date().toISOString()
+          onlineAt: new Date().toISOString()
         };
-        const presenceTrackStatus = await channelPresence.track(userStatus);
-        logger.debug('presence status', presenceTrackStatus);
-        pushMessage(roomId, userId, `${username} joined the room`).then();
+        const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
+        if (presenceTrackStatus !== 'ok') {
+          goto(`${currentHref}/join`);
+        }
       });
 
     roomChannel
@@ -84,15 +90,6 @@
       channelPresence.untrack();
       channelPresence.unsubscribe();
     };
-  });
-
-  onDestroy(async () => {
-    pushMessage(roomId, userId, `${username} left the room`).then();
-    const { error } = await deleteVotesByUserIdAndRoomId(userId, roomId);
-
-    if (error) {
-      logger.error('Error deleting user:', error);
-    }
   });
 
   let activeCell: VoteModel = $state({

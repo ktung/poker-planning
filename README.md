@@ -18,6 +18,10 @@ pnpx @inlang/cli lint --project project.inlang
 pnpx @inlang/cli machine translate --project project.inlang
 ```
 
+## Limitations
+
+Because I'm cheap, I don't want to run a server
+
 ## Inspired by
 
 - https://github.com/rangzen/poker-sliders

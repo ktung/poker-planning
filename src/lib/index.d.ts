@@ -17,3 +17,8 @@ interface VoteModel {
 interface UservoteModel extends VoteModel {
   username: string;
 }
+
+interface UserTrackModel {
+  userId: string;
+  onlineAt: string;
+}

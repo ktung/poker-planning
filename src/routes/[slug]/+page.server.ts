@@ -1,5 +1,5 @@
-import { REALTIME_LISTEN_TYPES, REALTIME_PRESENCE_LISTEN_EVENTS } from '@supabase/supabase-js';
-import { deleteRoomByName, upsertRoom } from '$lib/db/rooms';
+import { REALTIME_LISTEN_TYPES } from '@supabase/supabase-js';
+import { upsertRoom } from '$lib/db/rooms';
 import { deleteVotesByRoomId, fetchVotesAndUsersByRoomId } from '$lib/db/votes';
 import { supabase } from '$lib/supabaseClient.js';
 import { logger } from '$lib/util/logger';
@@ -28,7 +28,7 @@ export const load: PageServerLoad = async ({ params }) => {
     };
   });
 
-  const votesChannel = supabase
+  supabase
     .channel(slug)
     .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
       deleteVotesByRoomId(room.id).then(({ error }) => {
@@ -38,19 +38,6 @@ export const load: PageServerLoad = async ({ params }) => {
           logger.debug(`Vote deleted successfully on room ${slug}`);
         }
       });
-    })
-    .subscribe();
-
-  const presenceChannel = supabase
-    .channel(`presence:${slug}`)
-    .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.LEAVE }, async () => {
-      const state = await presenceChannel.presenceState();
-      if (Object.keys(state).length === 0) {
-        deleteRoomByName(slug).then();
-        votesChannel.unsubscribe();
-        presenceChannel.unsubscribe();
-      }
-      logger.debug('presence state', state);
     })
     .subscribe();
 
