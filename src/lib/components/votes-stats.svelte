@@ -10,7 +10,7 @@
   });
 
   let pointValueOverMean: number | null = $derived.by(() => {
-    if (mean === null || mean === undefined || isNaN(mean)) {
+    if (isNaN(mean)) {
       return null;
     }
 
@@ -27,7 +27,7 @@
   });
 
   let pointValueOverTeamMean: number | null = $derived.by(() => {
-    if (teamMean === null || teamMean === undefined || isNaN(teamMean)) {
+    if (isNaN(teamMean)) {
       return null;
     }
 
