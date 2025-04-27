@@ -15,7 +15,7 @@
   import UsersStatus from '$lib/components/users-status.svelte';
   import Voters from '$lib/components/voters.svelte';
   import VotesStats from '$lib/components/votes-stats.svelte';
-  import { fetchVotesAndUsersByRoomId, upsertVote } from '$lib/db/votes';
+  import { fetchVotesAndUsersByRoomId, resetVotesByRoomId, upsertVote } from '$lib/db/votes';
   import { m } from '$lib/paraglide/messages';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
@@ -79,11 +79,42 @@
 
     roomChannel
       .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
+        voteShown = false;
+        selectedPointsValues = {
+          complexity: null,
+          effort: null,
+          uncertainty: null
+        };
+        savedVotes = [];
         activeCell = {
           complexity: null,
           effort: null,
           uncertainty: null
         };
+      })
+      .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'showVotes' }, async () => {
+        voteShown = true;
+        activeCell = {
+          complexity: null,
+          effort: null,
+          uncertainty: null
+        };
+
+        const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
+        if (error) {
+          logger.error('Error fetching votes:', error);
+          throw error;
+        }
+
+        data.forEach((vote) => {
+          const { complexity, effort, uncertainty, users } = vote;
+          savedVotes.push({
+            complexity,
+            effort,
+            uncertainty,
+            username: users.username
+          });
+        });
       })
       .subscribe();
 
@@ -138,31 +169,30 @@
         event: 'showVotes',
         payload: {}
       })
-      .then(() => {
+      .then(async () => {
         voteShown = true;
+        activeCell = {
+          complexity: null,
+          effort: null,
+          uncertainty: null
+        };
+
+        const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
+        if (error) {
+          logger.error('Error fetching votes:', error);
+          throw error;
+        }
+
+        data.forEach((vote) => {
+          const { complexity, effort, uncertainty, users } = vote;
+          savedVotes.push({
+            complexity,
+            effort,
+            uncertainty,
+            username: users.username
+          });
+        });
       });
-
-    const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
-    if (error) {
-      logger.error('Error fetching votes:', error);
-      throw error;
-    }
-
-    data.forEach((vote) => {
-      const { complexity, effort, uncertainty, users } = vote;
-      savedVotes.push({
-        complexity,
-        effort,
-        uncertainty,
-        username: users.username
-      });
-    });
-
-    activeCell = {
-      complexity: null,
-      effort: null,
-      uncertainty: null
-    };
   }
 
   function clearVote() {
@@ -172,7 +202,8 @@
         event: 'clearVotes',
         payload: {}
       })
-      .then(() => {
+      .then(async () => {
+        await resetVotesByRoomId(roomId);
         voteShown = false;
         selectedPointsValues = {
           complexity: null,
@@ -180,6 +211,11 @@
           uncertainty: null
         };
         savedVotes = [];
+        activeCell = {
+          complexity: null,
+          effort: null,
+          uncertainty: null
+        };
       });
   }
 </script>

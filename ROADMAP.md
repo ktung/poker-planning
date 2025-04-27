@@ -28,12 +28,11 @@
 
 # Backlog
 
-- Show only "show" or "clear" votes button
+- fix username mandatory (use https://svelte.dev/docs/kit/form-actions)
+  - Add a button to insert random names on home and join page
+  - Generate random if null ?
+- Refresh on voting session page should reconnect ?
 - Use chat to notify when user changes votes if show votes enabled
-- fix presence
-  - https://supabase.com/docs/guides/realtime/presence?queryGroups=language&language=js
-  - https://github.com/supabase/realtime/blob/main/demo/pages/%5B...slug%5D.tsx
-- Fix username mandatory
 - Voting session page
   - Add a "?" besides column title to show a "pro tips"
     - Compare with others tickets/sessions
@@ -47,7 +46,6 @@
   - Auto start
   - Stop on show votes
   - Reset on clear votes
-- Add a button to insert random names on home and join page
 - Show nerd stats
   - min value per category
   - max value per category
@@ -60,3 +58,4 @@
   - https://commitizen-tools.github.io/commitizen/
 - add https://logflare.app/
 - Use boundary https://svelte.dev/docs/svelte/svelte-boundary
+- Use server-only modules https://svelte.dev/docs/kit/server-only-modules
