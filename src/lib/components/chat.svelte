@@ -38,7 +38,7 @@
           .channel(`messages:${slug}`)
           .on(
             REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
-            { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT, schema: 'public', table: 'messages' },
+            { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT, schema: 'public', table: 'messages', filter: `room_id=eq.${roomId}` },
             (payload) => {
               if (messages.some((msg) => msg.id === payload.new.id)) {
                 return;
