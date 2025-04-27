@@ -1,7 +1,7 @@
 import { supabase } from '$lib/supabaseClient';
 
 export const getMessages = (roomId: string) => {
-  return supabase.from('messages').select('message, created_at').eq('room_id', roomId);
+  return supabase.from('messages').select('id, message, created_at').eq('room_id', roomId);
 };
 
 export const pushMessage = (roomId: string, userId: string, message: string) => {

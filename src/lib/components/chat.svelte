@@ -11,8 +11,9 @@
     userId: string;
   }
   interface Message {
+    id: string;
     message: string;
-    created_at: Date;
+    createdAt: Date;
   }
 
   const { roomId, slug, userId }: Props = $props();
@@ -21,30 +22,37 @@
   let chatChannel: RealtimeChannel;
 
   onMount(() => {
-    chatChannel = supabase
-      .channel(`messages:${slug}`)
-      .on(
-        REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
-        { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT, schema: 'public', table: 'messages' },
-        (payload) => {
+    getMessages(roomId)
+      .then(({ data: messagesDb }) => {
+        messagesDb?.forEach((msg) => {
           messages.push({
-            message: payload.new.message,
-            created_at: new Date(payload.new.created_at)
+            id: msg.id,
+            message: msg.message,
+            createdAt: new Date(msg.created_at)
           });
-          setTimeout(scrollToBottom, 0);
-        }
-      )
-      .subscribe();
-
-    (async () => {
-      const { data: fetchmessages } = await getMessages(roomId);
-      fetchmessages?.forEach((message) => {
-        messages.push({
-          message: message.message,
-          created_at: new Date(message.created_at)
         });
+        setTimeout(scrollToBottom, 0);
+      })
+      .then(() => {
+        chatChannel = supabase
+          .channel(`messages:${slug}`)
+          .on(
+            REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+            { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT, schema: 'public', table: 'messages' },
+            (payload) => {
+              if (messages.some((msg) => msg.id === payload.new.id)) {
+                return;
+              }
+              messages.push({
+                id: payload.new.id,
+                message: payload.new.message,
+                createdAt: new Date(payload.new.created_at)
+              });
+              setTimeout(scrollToBottom, 0);
+            }
+          )
+          .subscribe();
       });
-    })();
 
     return () => {
       chatChannel.unsubscribe();
@@ -57,6 +65,7 @@
       messageInput = '';
     }
   };
+
   let messagesContainer: HTMLDivElement;
   function scrollToBottom() {
     if (messagesContainer) {
@@ -67,7 +76,7 @@
 
 <div class="chat-container">
   <div class="messages" bind:this={messagesContainer}>
-    {#each messages as message, index (index)}
+    {#each messages as message (message.id)}
       <div class="message">{message.message} - {formatTime(message.created_at)}</div>
     {/each}
   </div>
