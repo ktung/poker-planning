@@ -1,6 +1,6 @@
 import { REALTIME_LISTEN_TYPES } from '@supabase/supabase-js';
 import { upsertRoom } from '$lib/db/rooms';
-import { deleteVotesByRoomId } from '$lib/db/votes';
+import { resetVotesByRoomId } from '$lib/db/votes';
 import { supabase } from '$lib/supabaseClient.js';
 import { logger } from '$lib/util/logger';
 import type { PageServerLoad } from './$types';
@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ params }) => {
   supabase
     .channel(slug)
     .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
-      deleteVotesByRoomId(room.id).then(({ error }) => {
+      resetVotesByRoomId(room.id).then(({ error }) => {
         if (error) {
           logger.error('Error deleting vote:', error);
         } else {

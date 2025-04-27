@@ -3,6 +3,7 @@
     REALTIME_LISTEN_TYPES,
     REALTIME_PRESENCE_LISTEN_EVENTS,
     REALTIME_SUBSCRIBE_STATES,
+    RealtimeChannel,
     type RealtimeChannelSendResponse,
     type RealtimePresenceState
   } from '@supabase/supabase-js';
@@ -25,6 +26,7 @@
   const { roomId, slug, userId, currentVotes } = data;
   const currentHref = page.url.href;
   let voteShown = $state(false);
+  let roomChannel: RealtimeChannel;
 
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
@@ -34,7 +36,7 @@
       window.sessionStorage.setItem('roomId', slug);
     }
 
-    const roomChannel = supabase.channel(slug);
+    roomChannel = supabase.channel(slug);
     const channelPresence = supabase.channel(`presence:${slug}`, {
       config: {
         presence: {
@@ -130,12 +132,21 @@
 
   let savedVotes: UservoteModel[] = $state([]);
   async function showVotes() {
+    roomChannel
+      .send({
+        type: 'broadcast',
+        event: 'showVotes',
+        payload: {}
+      })
+      .then(() => {
+        voteShown = true;
+      });
+
     const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
     if (error) {
       logger.error('Error fetching votes:', error);
       throw error;
     }
-    voteShown = true;
 
     data.forEach((vote) => {
       const { complexity, effort, uncertainty, users } = vote;
@@ -155,8 +166,7 @@
   }
 
   function clearVote() {
-    supabase
-      .channel(slug)
+    roomChannel
       .send({
         type: 'broadcast',
         event: 'clearVotes',
@@ -164,6 +174,12 @@
       })
       .then(() => {
         voteShown = false;
+        selectedPointsValues = {
+          complexity: null,
+          effort: null,
+          uncertainty: null
+        };
+        savedVotes = [];
       });
   }
 </script>

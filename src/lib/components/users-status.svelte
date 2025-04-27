@@ -36,6 +36,14 @@
       votesChannel.unsubscribe();
     };
   });
+
+  function displayVote(value: number | null) {
+    if (value === null || isNaN(value)) {
+      return '🤔';
+    }
+
+    return '✅';
+  }
 </script>
 
 <div>
@@ -52,9 +60,9 @@
       {#each statuses as user, i (i)}
         <tr>
           <td>{user.username}</td>
-          <td>{user.complexity}</td>
-          <td>{user.effort}</td>
-          <td>{user.uncertainty}</td>
+          <td>{displayVote(user.complexity)}</td>
+          <td>{displayVote(user.effort)}</td>
+          <td>{displayVote(user.uncertainty)}</td>
         </tr>
       {/each}
     </tbody>

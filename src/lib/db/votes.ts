@@ -26,6 +26,6 @@ export const upsertVote = async (userId: string, roomId: string, type: VoteType,
     .select();
 };
 
-export const deleteVotesByRoomId = (roomId: string) => {
-  return supabase.from('votes').delete().eq('room_id', roomId);
+export const resetVotesByRoomId = (roomId: string) => {
+  return supabase.from('votes').update({ complexity: null, effort: null, uncertainty: null }).eq('room_id', roomId);
 };
