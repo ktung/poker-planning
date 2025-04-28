@@ -141,17 +141,15 @@
     if (activeCell[type] === index) {
       activeCell[type] = null;
       selectedPointsValues[type] = null;
-      return;
     } else {
       activeCell[type] = index;
-    }
-
-    const target = event.target as HTMLTableCellElement;
-    const row = target.parentElement;
-    if (row) {
-      const pointValue = row.children[0].textContent;
-      if (pointValue) {
-        selectedPointsValues[type] = parseFloat(pointValue);
+      const target = event.target as HTMLTableCellElement;
+      const row = target.parentElement;
+      if (row) {
+        const pointValue = row.children[0].textContent;
+        if (pointValue) {
+          selectedPointsValues[type] = parseFloat(pointValue);
+        }
       }
     }
 
