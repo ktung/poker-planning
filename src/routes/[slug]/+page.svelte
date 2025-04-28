@@ -168,7 +168,7 @@
         event: 'showVotes',
         payload: {}
       })
-      .then(() => pushMessage(roomId, userId, `${username} showed the votes`))
+      .then(() => pushMessage(roomId, userId, `${username} ${m.showVotesMessage()}`))
       .then(async () => {
         voteShown = true;
         activeCell = {
@@ -202,7 +202,7 @@
         event: 'clearVotes',
         payload: {}
       })
-      .then(() => pushMessage(roomId, userId, `${username} cleared the votes`))
+      .then(() => pushMessage(roomId, userId, `${username} ${m.clearVotesMessage()}`))
       .then(async () => {
         await resetVotesByRoomId(roomId);
         voteShown = false;
@@ -223,11 +223,11 @@
 
 <section>
   <div>
-    <span>Invite your team to the room: </span><CopiableText text={`${currentHref}/join`} />
+    <span>{m.inviteLink()} </span><CopiableText text={`${currentHref}/join`} />
     {#if voteShown}
-      <button onclick={clearVote}>Clear votes</button>
+      <button onclick={clearVote}>{m.clearVotes()}</button>
     {:else}
-      <button onclick={showVotes}>Show votes</button>
+      <button onclick={showVotes}>{m.showVotes()}</button>
     {/if}
   </div>
 

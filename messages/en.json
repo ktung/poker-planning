@@ -47,5 +47,13 @@
   },
   "createRoom": "Create a new room",
   "joinRoom": "Join the {roomId} room",
-  "username": "Username"
+  "username": "Username",
+  "chat_placeholder": "Message...",
+  "yourValuePoint": "Your value",
+  "teamRecommendedValue": "Team recommended value",
+  "showVotesMessage": "showed the votes",
+  "clearVotesMessage": "cleared the votes",
+  "clearVotes": "Clear votes",
+  "showVotes": "Show votes",
+  "inviteLink": "Invite your team to the room:"
 }

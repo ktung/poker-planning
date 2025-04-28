@@ -2,6 +2,7 @@
   import { goto } from '$app/navigation';
   import { m } from '$lib/paraglide/messages';
   import { onMount } from 'svelte';
+  import type { Snapshot } from './$types.js';
 
   const { data } = $props();
   const { slug } = data;
@@ -28,7 +29,7 @@
 <div>
   <h1>{m.hello_world({ name: username })}</h1>
   <label for="username">{m.username()}</label>
-  <input id="username" type="text" placeholder="Username" bind:value={username} />
+  <input id="username" type="text" placeholder={m.username()} bind:value={username} />
   <button onclick={joinRoom}>{m.joinRoom({ roomId })}</button>
 </div>
 

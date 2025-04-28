@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { m } from '$lib/paraglide/messages';
   import { round2 } from '$lib/util/math';
 
   let { pointsValues, myVotes, teamVotes }: { pointsValues: number[]; myVotes: VoteModel; teamVotes: VoteModel[] } = $props();
@@ -38,12 +39,10 @@
 <div class="stats">
   <ul>
     {#if mean !== null && pointValueOverMean !== null}
-      <li>Mean {mean}</li>
-      <li>Point over mean {pointValueOverMean}</li>
+      <li>{m.yourValuePoint()} <span title="Mean {mean}">{pointValueOverMean}</span></li>
     {/if}
     {#if teamMean !== null && pointValueOverTeamMean !== null}
-      <li>Team mean {teamMean}</li>
-      <li>Team point over mean {pointValueOverTeamMean}</li>
+      <li>{m.teamRecommendedValue()} <span title="Mean {teamMean}">{pointValueOverTeamMean}</span></li>
     {/if}
   </ul>
 </div>

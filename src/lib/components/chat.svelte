@@ -1,6 +1,7 @@
 <script lang="ts">
   import { REALTIME_LISTEN_TYPES, REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, type RealtimeChannel } from '@supabase/supabase-js';
   import { getMessages, pushMessage } from '$lib/db/messages';
+  import { m } from '$lib/paraglide/messages';
   import { supabase } from '$lib/supabaseClient';
   import { formatTime } from '$lib/util/date';
   import { onMount } from 'svelte';
@@ -82,7 +83,7 @@
   </div>
 
   <div class="input-container">
-    <input class="message-input" type="text" placeholder="Message..." bind:value={messageInput} onkeydown={handleKeyDown} />
+    <input class="message-input" type="text" placeholder={m.chat_placeholder()} bind:value={messageInput} onkeydown={handleKeyDown} />
   </div>
 </div>
 

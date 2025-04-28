@@ -1,6 +1,7 @@
 <script lang="ts">
   import { REALTIME_LISTEN_TYPES, REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from '@supabase/supabase-js';
   import { fetchVotesAndUsersByRoomId } from '$lib/db/votes';
+  import { m } from '$lib/paraglide/messages';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
   import { onMount } from 'svelte';
@@ -50,10 +51,10 @@
   <table>
     <thead>
       <tr>
-        <th>Username</th>
-        <th>Complexity</th>
-        <th>Effort</th>
-        <th>Uncertainty</th>
+        <th>{m.username()}</th>
+        <th>{m.complexity()}</th>
+        <th>{m.effort()}</th>
+        <th>{m.uncertainty()}</th>
       </tr>
     </thead>
     <tbody>
