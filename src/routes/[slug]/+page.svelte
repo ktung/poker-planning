@@ -15,6 +15,7 @@
   import UsersStatus from '$lib/components/users-status.svelte';
   import Voters from '$lib/components/voters.svelte';
   import VotesStats from '$lib/components/votes-stats.svelte';
+  import { pushMessage } from '$lib/db/messages';
   import { fetchVotesAndUsersByRoomId, resetVotesByRoomId, upsertVote } from '$lib/db/votes';
   import { m } from '$lib/paraglide/messages';
   import { supabase } from '$lib/supabaseClient';
@@ -23,7 +24,7 @@
   import type { PageData } from './$types';
 
   const { data }: { data: PageData } = $props();
-  const { roomId, slug, userId, currentVotes } = data;
+  const { roomId, slug, userId, currentVotes, username } = data;
   const currentHref = page.url.href;
   let voteShown = $state(false);
   let roomChannel: RealtimeChannel;
@@ -167,6 +168,7 @@
         event: 'showVotes',
         payload: {}
       })
+      .then(() => pushMessage(roomId, userId, `${username} showed the votes`))
       .then(async () => {
         voteShown = true;
         activeCell = {
@@ -200,6 +202,7 @@
         event: 'clearVotes',
         payload: {}
       })
+      .then(() => pushMessage(roomId, userId, `${username} cleared the votes`))
       .then(async () => {
         await resetVotesByRoomId(roomId);
         voteShown = false;
