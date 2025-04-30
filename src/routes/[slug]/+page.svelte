@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
     REALTIME_LISTEN_TYPES,
+    REALTIME_POSTGRES_CHANGES_LISTEN_EVENT,
     REALTIME_PRESENCE_LISTEN_EVENTS,
     REALTIME_SUBSCRIBE_STATES,
     RealtimeChannel,
@@ -28,6 +29,7 @@
   const currentHref = page.url.href;
   let voteShown = $state(false);
   let roomChannel: RealtimeChannel;
+  let voteChannel: RealtimeChannel;
 
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
@@ -161,6 +163,46 @@
   }
 
   let savedVotes: UservoteModel[] = $state([]);
+
+  $effect(() => {
+    if (!voteShown && !!voteChannel) {
+      voteChannel.unsubscribe();
+    }
+
+    if (voteShown) {
+      voteChannel = supabase
+        .channel(`votes:${slug}`)
+        .on(
+          REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+          { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
+          async () => {
+            activeCell = {
+              complexity: null,
+              effort: null,
+              uncertainty: null
+            };
+            const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
+            if (error) {
+              logger.error('Error fetching votes:', error);
+              throw error;
+            }
+
+            savedVotes = [];
+            data.forEach((vote) => {
+              const { complexity, effort, uncertainty, users } = vote;
+              savedVotes.push({
+                complexity,
+                effort,
+                uncertainty,
+                username: users.username
+              });
+            });
+          }
+        )
+        .subscribe();
+    }
+  });
+
   async function showVotes() {
     roomChannel
       .send({
@@ -183,6 +225,7 @@
           throw error;
         }
 
+        savedVotes = [];
         data.forEach((vote) => {
           const { complexity, effort, uncertainty, users } = vote;
           savedVotes.push({
