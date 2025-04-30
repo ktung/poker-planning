@@ -45,8 +45,6 @@
 - Improve chat UI : add username on message
 - Improve UI : copy to clipboard (italic, icon)
 - Push messages "Team recommanded value : X"
-- Change value after show votes
-  - should update team stats
 - Add a timer
   - Auto start
   - Stop on show votes
