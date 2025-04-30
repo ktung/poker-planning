@@ -49,10 +49,16 @@
 
 <style>
   .stats {
+    width: 20%;
     margin: 1rem 0;
     background: white;
-    box-shadow: 0 2px 4px var(--shadow);
-    border-radius: 8px;
-    padding: 1rem;
+    box-shadow: var(--shadow-100);
+    border-radius: var(--radius-small);
+  }
+
+  @media (max-width: 480px) {
+    .stats {
+      width: 100%;
+    }
   }
 </style>

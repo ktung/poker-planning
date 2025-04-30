@@ -17,7 +17,7 @@
 </svelte:head>
 
 <header>
-  <a href="/">Poker Planning</a>
+  <a href="/"><img src="/favicon.png" alt="Poker Planning Logo" width="30" height="30" />Poker Planning</a>
   <a href="/about">{m.about()}</a>
   <LanguageSelector />
 </header>
@@ -47,10 +47,13 @@
     display: flex;
     align-items: center;
     gap: 2rem;
-    box-shadow: 0 1px 2px var(--shadow);
+    box-shadow: var(--shadow-100);
   }
 
   header a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
     color: #333;
     text-decoration: none;
     font-weight: 500;

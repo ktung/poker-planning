@@ -221,6 +221,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>{m.votingSession()} {slug} | Poker Planning</title>
+</svelte:head>
+
 <section>
   <div>
     <span>{m.inviteLink()} </span><CopiableText text={`${currentHref}/join`} />
@@ -269,12 +273,6 @@
 </section>
 
 <style>
-  .infos {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 2rem;
-  }
-
   section {
     max-width: 1200px;
     margin: 0 auto;
@@ -286,7 +284,7 @@
     background-color: var(--primary-color);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-small);
     font-size: 1rem;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -301,13 +299,19 @@
     transform: translateY(0);
   }
 
+  .infos {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+  }
+
   table {
     width: 100%;
     margin: 20px auto;
     border-collapse: collapse;
     background-color: white;
-    box-shadow: 0 1px 3px var(--shadow-dark);
-    border-radius: 8px;
+    box-shadow: var(--shadow-100);
+    border-radius: var(--radius-small);
     overflow: hidden;
   }
 

@@ -26,6 +26,10 @@
   }
 </script>
 
+<svelte:head>
+  <title>{m.joiningSession()} {slug} | Poker Planning</title>
+</svelte:head>
+
 <div>
   <h1>{m.hello_world({ name: username })}</h1>
   <label for="username">{m.username()}</label>
@@ -39,8 +43,8 @@
     margin: 2rem auto;
     padding: 2rem;
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px var(--shadow);
+    border-radius: var(--radius-small);
+    box-shadow: var(--shadow-100);
     text-align: center;
   }
 
@@ -56,7 +60,7 @@
     padding: 0.8rem;
     margin: 1rem 0;
     border: 2px solid #eaeaea;
-    border-radius: 6px;
+    border-radius: var(--radius-small);
     font-size: 1rem;
     transition: border-color 0.3s ease;
   }
@@ -72,7 +76,7 @@
     background-color: var(--primary-color);
     color: white;
     border: none;
-    border-radius: 6px;
+    border-radius: var(--radius-small);
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;

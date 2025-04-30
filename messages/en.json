@@ -55,5 +55,7 @@
   "clearVotesMessage": "cleared the votes",
   "clearVotes": "Clear votes",
   "showVotes": "Show votes",
-  "inviteLink": "Invite your team to the room:"
+  "inviteLink": "Invite your team to the room:",
+  "votingSession": "Voting session",
+  "joiningSession": "Joining session"
 }

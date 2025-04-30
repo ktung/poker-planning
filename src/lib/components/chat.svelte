@@ -78,7 +78,7 @@
 <div class="chat-container">
   <div class="messages" bind:this={messagesContainer}>
     {#each messages as message (message.id)}
-      <div class="message">{message.message} - {formatTime(message.created_at)}</div>
+      <div class="message">{message.message} - {formatTime(message.createdAt)}</div>
     {/each}
   </div>
 
@@ -90,9 +90,8 @@
 <style>
   .chat-container {
     background: white;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px var(--shadow);
-    max-width: 400px;
+    border-radius: var(--radius-small);
+    box-shadow: var(--shadow-100);
     margin: 1rem 0;
   }
 
@@ -108,8 +107,8 @@
   .message {
     background: #f0f2f5;
     padding: 0.5rem 1rem;
-    border-radius: 1rem;
-    max-width: 80%;
+    border-radius: var(--radius-medium);
+    width: fit-content;
     word-break: break-word;
     line-height: 1.4;
   }
@@ -124,7 +123,7 @@
     width: 100%;
     padding: 0.8rem;
     border: 2px solid #eaeaea;
-    border-radius: 20px;
+    border-radius: var(--radius-medium);
     font-size: 0.9rem;
     transition: border-color 0.2s ease;
   }
@@ -137,7 +136,6 @@
   @media (max-width: 480px) {
     .chat-container {
       margin: 0.5rem 0;
-      max-width: 100%;
     }
 
     .messages {

@@ -1,7 +1,12 @@
 :root {
-  --primary-color: #007bff;
-  --primary-color-active: #0056b3;
-  --primary-color-focus: #007bff;
-  --shadow: rgba(0, 0, 0, 0.1);
-  --shadow-dark: rgba(0, 0, 0, 0.1);
+  --color-brand: #00874e;
+  --color-brand-active: #00874e;
+  --shadow-100: 0 2px 4px #0000007a;
+
+  --primary-color: var(--color-brand);
+  --primary-color-active: var(--color-brand-active);
+  --primary-color-focus: var(--color-brand-active);
+
+  --radius-small: 8px;
+  --radius-medium: 16px;
 }

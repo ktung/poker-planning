@@ -33,7 +33,7 @@
     background: #333;
     color: white;
     padding: 4px 8px;
-    border-radius: 4px;
+    border-radius: var(--radius-small);
     font-size: 0.875rem;
     animation: fadeIn 0.2s ease;
   }

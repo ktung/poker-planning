@@ -76,8 +76,8 @@
     margin: 20px auto;
     border-collapse: collapse;
     background-color: white;
-    box-shadow: 0 1px 3px var(--shadow-dark);
-    border-radius: 8px;
+    box-shadow: var(--shadow-100);
+    border-radius: var(--radius-small);
     overflow: hidden;
   }
 
