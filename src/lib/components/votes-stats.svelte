@@ -5,7 +5,7 @@
   let { pointsValues, myVotes, teamVotes }: { pointsValues: number[]; myVotes: VoteModel; teamVotes: UservoteModel[] } = $props();
 
   let mean: number | null = $derived.by(() => {
-    const nbSelected = Object.values(myVotes).filter((voteValue: number | null) => voteValue !== null && voteValue !== undefined).length;
+    const nbSelected = Object.values(myVotes).filter((voteValue: number | null) => voteValue !== null && !isNaN(voteValue)).length;
     const mean = ((myVotes.complexity || 0) + (myVotes.effort || 0) + (myVotes.uncertainty || 0)) / nbSelected;
     return round2(mean);
   });
@@ -25,7 +25,7 @@
           .filter(([key]) => key !== 'username')
           .map(([, value]) => value);
       })
-      .filter((vote: number | null) => vote !== null && vote !== undefined).length;
+      .filter((vote: number | null) => vote !== null && !isNaN(vote)).length;
     const mean =
       teamVotes.reduce((acc, vote) => acc + (vote.complexity || 0) + (vote.effort || 0) + (vote.uncertainty || 0), 0) / nbTeamVotes;
     return round2(mean);
