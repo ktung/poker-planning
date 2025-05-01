@@ -6,6 +6,7 @@
   --primary-color: var(--color-brand);
   --primary-color-active: var(--color-brand-active);
   --primary-color-focus: var(--color-brand-active);
+  --secondary-color-active: #2f2f2f;
 
   --radius-small: 8px;
   --radius-medium: 16px;

@@ -23,6 +23,7 @@
   import { logger } from '$lib/util/logger';
   import { onMount } from 'svelte';
   import type { PageData } from './$types';
+  import { CircleX, CircleHelp } from 'lucide-svelte';
 
   const { data }: { data: PageData } = $props();
   const { roomId, slug, userId, currentVotes, username } = data;
@@ -262,6 +263,27 @@
         };
       });
   }
+
+  type ProtipsType = keyof typeof m;
+  const protipsTexts = {
+    complexity: Object.keys(m)
+      .filter((key) => key.startsWith('protips.complexity'))
+      .map((key) => <ProtipsType>key),
+    effort: Object.keys(m)
+      .filter((key) => key.startsWith('protips.effort'))
+      .map((key) => <ProtipsType>key),
+    uncertainty: Object.keys(m)
+      .filter((key) => key.startsWith('protips.uncertainty'))
+      .map((key) => <ProtipsType>key)
+  };
+  let protipsToggles: ProtipsToggleModel = $state({
+    complexity: false,
+    effort: false,
+    uncertainty: false
+  });
+  function toggleProtips(event: MouseEvent, type: VoteType) {
+    protipsToggles[type] = !protipsToggles[type];
+  }
 </script>
 
 <svelte:head>
@@ -284,13 +306,49 @@
     <VotesStats {pointsValues} myVotes={selectedPointsValues} teamVotes={savedVotes} />
   </div>
 
+  <section class="protips">
+    {#if protipsToggles.complexity}
+      <div>
+        <h3>{m.complexity()}</h3>
+        <span onclick={(ev) => toggleProtips(ev, 'complexity')}><CircleX /></span>
+        <ul>
+          {#each protipsTexts.complexity as key (key)}
+            <li>{m[key]()}</li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
+    {#if protipsToggles.effort}
+      <div>
+        <h3>{m.effort()}</h3>
+        <span onclick={(ev) => toggleProtips(ev, 'effort')}><Circle /></span>
+        <ul>
+          {#each protipsTexts.effort as key (key)}
+            <li>{m[key]()}</li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
+    {#if protipsToggles.uncertainty}
+      <div>
+        <h3>{m.uncertainty()}</h3>
+        <span onclick={(ev) => toggleProtips(ev, 'uncertainty')}><Circle /></span>
+        <ul>
+          {#each protipsTexts.uncertainty as key (key)}
+            <li>{m[key]()}</li>
+          {/each}
+        </ul>
+      </div>
+    {/if}
+  </section>
+
   <table>
     <thead>
       <tr>
         <th>{m.points()}</th>
-        <th>{m.complexity()}</th>
-        <th>{m.effort()}</th>
-        <th>{m.uncertainty()}</th>
+        <th>{m.complexity()}<span onclick={(ev) => toggleProtips(ev, 'complexity')}><CircleHelp /></span></th>
+        <th>{m.effort()}<span onclick={(ev) => toggleProtips(ev, 'effort')}><CircleHelp /></span></th>
+        <th>{m.uncertainty()}<span onclick={(ev) => toggleProtips(ev, 'uncertainty')}><CircleHelp /></span></th>
       </tr>
     </thead>
     <tbody>
@@ -316,12 +374,6 @@
 </section>
 
 <style>
-  section {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 2rem;
-  }
-
   button {
     padding: 0.8rem 1.5rem;
     background-color: var(--primary-color);
@@ -348,6 +400,29 @@
     margin-bottom: 2rem;
   }
 
+  .protips {
+    h3 {
+      color: var(--primary-color);
+      display: inline;
+    }
+
+    span {
+      cursor: pointer;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    span:hover {
+      color: var(--primary-color-active);
+    }
+
+    div {
+      background: white;
+      border-radius: var(--radius-small);
+      box-shadow: var(--shadow-100);
+      padding: 1rem;
+    }
+  }
+
   table {
     width: 100%;
     margin: 20px auto;
@@ -363,6 +438,15 @@
     padding: 12px 15px;
     text-align: center;
     border-bottom: 1px solid #ddd;
+
+    span {
+      cursor: pointer;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    span:hover {
+      color: var(--secondary-color-active);
+    }
   }
 
   tr:nth-child(even) {

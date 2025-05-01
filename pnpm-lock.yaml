@@ -20,6 +20,9 @@ importers:
       '@vercel/speed-insights':
         specifier: ^1.2.0
         version: 1.2.0(@sveltejs/kit@2.20.7(@sveltejs/vite-plugin-svelte@5.0.3(svelte@5.28.2)(vite@6.3.3(@types/node@22.15.2)))(svelte@5.28.2)(vite@6.3.3(@types/node@22.15.2)))(svelte@5.28.2)
+      lucide-svelte:
+        specifier: ^0.503.0
+        version: 0.503.0(svelte@5.28.2)
     devDependencies:
       '@eslint/compat':
         specifier: ^1.2.8
@@ -1348,6 +1351,11 @@ packages:
 
   lru-cache@10.4.3:
     resolution: {integrity: sha512-JNAzZcXrCt42VGLuYz0zfAzDfAvJWW6AfYlDBQyDV5DClI2m5sAmK+OIO7s59XfsRsWHp02jAJrRadPRGTt6SQ==}
+
+  lucide-svelte@0.503.0:
+    resolution: {integrity: sha512-oT1idMbgJKCCLWI4U7bdUYUZqxS78fiTGJuKGZ5u0NJNyuiUErDu3G7sXkYpfDwwspeid7gZSjrlJbTINEfErw==}
+    peerDependencies:
+      svelte: ^3 || ^4 || ^5.0.0-next.42
 
   magic-string@0.30.17:
     resolution: {integrity: sha512-sNPKHvyjVf7gyjwS4xGTaW/mCnF8wnjtifKBEhxfZ7E/S8tQ0rssrwGNn6q8JH/ohItJfSQp9mBtQYuTlH5QnA==}
@@ -2967,6 +2975,10 @@ snapshots:
   lodash.merge@4.6.2: {}
 
   lru-cache@10.4.3: {}
+
+  lucide-svelte@0.503.0(svelte@5.28.2):
+    dependencies:
+      svelte: 5.28.2
 
   magic-string@0.30.17:
     dependencies:

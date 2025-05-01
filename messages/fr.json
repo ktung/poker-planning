@@ -57,5 +57,16 @@
   "showVotes": "Afficher les votes",
   "inviteLink": "Invitez votre équipe dans la salle :",
   "votingSession": "Salle de votes",
-  "joiningSession": "Rejoindre la salle"
+  "joiningSession": "Rejoindre la salle",
+  "protips": {
+    "complexity0": "Comparer le pointage avec d'autres tâches similaires",
+    "complexity1": "Est-ce qu'on a déjà fait ce type de travaux ?",
+    "complexity2": "Est-ce parallélisable en plusieurs personnes ?",
+    "effort0": "Est-ce que le scope est clair ?",
+    "effort1": "Estimation du démarrage jusqu'à env dév ? env qa ? env prod ?",
+    "effort2": "Est-ce qu'il y a des dépendances bloquantes ?",
+    "uncertainty0": "Est-ce que les inconnus sont identifiés ?",
+    "uncertainty1": "Est-ce que les inconnus peuvent se débloquer rapidement ? avec une documentation, un contact ?",
+    "uncertainty2": "Est-ce que les documentations/spécifications sont présentes et claires ?"
+  }
 }

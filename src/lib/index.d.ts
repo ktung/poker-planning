@@ -22,3 +22,9 @@ interface UserTrackModel {
   userId: string;
   onlineAt: string;
 }
+
+interface ProtipsToggleModel {
+  complexity: boolean;
+  effort: boolean;
+  uncertainty: boolean;
+}
