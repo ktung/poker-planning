@@ -57,5 +57,16 @@
   "showVotes": "Show votes",
   "inviteLink": "Invite your team to the room:",
   "votingSession": "Voting session",
-  "joiningSession": "Joining session"
+  "joiningSession": "Joining session",
+  "protips": {
+    "complexity0": "Compare with similar tasks",
+    "complexity1": "Have we done this type of work before ?",
+    "complexity2": "Can it be done with multiple people ?",
+    "effort0": "Is the scope clear ?",
+    "effort1": "Estimation is from start to env dev ? env qa ? env prod ?",
+    "effort2": "Are there any blocking dependencies ?",
+    "uncertainty0": "Are the unknowns identified ?",
+    "uncertainty1": "Can the unknowns be solved quickly ? Do we have a documentation ? A contact to help us ?",
+    "uncertainty2": "Are the documentation/specifications present and clear?"
+  }
 }

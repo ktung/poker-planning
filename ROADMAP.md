@@ -1,6 +1,8 @@
 # 1.1.0
+
 - Change value after show votes
   - should update team stats
+- Add a "?" besides column title to show a "pro tips"
 
 # 1.0.0
 
@@ -37,12 +39,6 @@
   - Generate random if null ?
 - Refresh on voting session page should reconnect ?
 - Use chat to notify when user changes votes if show votes enabled
-- Voting session page
-  - Add a "?" besides column title to show a "pro tips"
-    - Compare with others tickets/sessions
-    - Ask and write questions to clarify things
-    - Be clear of the scope (from start to QA validation, from start to prod)
-    - Identify contacts/documentation
 - Add a how to use section in about page
   - Click on table
   - Discuss to reach consensus
