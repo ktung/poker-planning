@@ -321,7 +321,7 @@
     {#if protipsToggles.effort}
       <div>
         <h3>{m.effort()}</h3>
-        <span onclick={(ev) => toggleProtips(ev, 'effort')}><Circle /></span>
+        <span onclick={(ev) => toggleProtips(ev, 'effort')}><CircleX /></span>
         <ul>
           {#each protipsTexts.effort as key (key)}
             <li>{m[key]()}</li>
@@ -332,7 +332,7 @@
     {#if protipsToggles.uncertainty}
       <div>
         <h3>{m.uncertainty()}</h3>
-        <span onclick={(ev) => toggleProtips(ev, 'uncertainty')}><Circle /></span>
+        <span onclick={(ev) => toggleProtips(ev, 'uncertainty')}><CircleX /></span>
         <ul>
           {#each protipsTexts.uncertainty as key (key)}
             <li>{m[key]()}</li>
