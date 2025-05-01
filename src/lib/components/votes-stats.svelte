@@ -2,10 +2,10 @@
   import { m } from '$lib/paraglide/messages';
   import { round2 } from '$lib/util/math';
 
-  let { pointsValues, myVotes, teamVotes }: { pointsValues: number[]; myVotes: VoteModel; teamVotes: VoteModel[] } = $props();
+  let { pointsValues, myVotes, teamVotes }: { pointsValues: number[]; myVotes: VoteModel; teamVotes: UservoteModel[] } = $props();
 
   let mean: number | null = $derived.by(() => {
-    const nbSelected = Object.values(myVotes).filter((vote) => vote !== null && vote !== undefined).length;
+    const nbSelected = Object.values(myVotes).filter((voteValue: number | null) => voteValue !== null && voteValue !== undefined).length;
     const mean = ((myVotes.complexity || 0) + (myVotes.effort || 0) + (myVotes.uncertainty || 0)) / nbSelected;
     return round2(mean);
   });
@@ -19,11 +19,15 @@
   });
 
   let teamMean: number | null = $derived.by(() => {
-    const teamVotesValues = Object.values(teamVotes).filter((vote) => vote !== null && vote !== undefined);
-    const nbTeamVotes = teamVotesValues.length;
+    const nbTeamVotes = teamVotes
+      .flatMap((vote) => {
+        return Object.entries(vote)
+          .filter(([key]) => key !== 'username')
+          .map(([, value]) => value);
+      })
+      .filter((vote: number | null) => vote !== null && vote !== undefined).length;
     const mean =
-      teamVotesValues.reduce((acc, vote) => acc + (vote.complexity || 0) + (vote.effort || 0) + (vote.uncertainty || 0), 0) /
-      (nbTeamVotes * 3);
+      teamVotes.reduce((acc, vote) => acc + (vote.complexity || 0) + (vote.effort || 0) + (vote.uncertainty || 0), 0) / nbTeamVotes;
     return round2(mean);
   });
 
