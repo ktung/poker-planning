@@ -3,6 +3,7 @@
 - Change value after show votes
   - should update team stats
 - Add a "?" besides column title to show a "pro tips"
+- Add some guards to prevent access to the room directly
 
 # 1.0.0
 
@@ -37,7 +38,7 @@
 - fix username mandatory (use https://svelte.dev/docs/kit/form-actions)
   - Add a button to insert random names on home and join page
   - Generate random if null ?
-- Refresh on voting session page should reconnect ?
+- Password protected rooms
 - Use chat to notify when user changes votes if show votes enabled
 - Add a how to use section in about page
   - Click on table
@@ -53,7 +54,7 @@
   - min value per category
   - max value per category
   - mean value per category
-- Password protected rooms
+- chose another preset on create room (use another scale/color)
 - use ReadableStream / EventSource
 - conventional commit again
   - https://dev.to/ghacosta/definitive-guide-for-commitizen-commitlint-husky-3of9

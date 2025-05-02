@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
   import { m } from '$lib/paraglide/messages';
-  import { nanoid } from 'nanoid';
+  import { generateRoomId } from '$lib/util/room';
   import { onMount } from 'svelte';
   import type { Snapshot } from './$types';
 
@@ -16,7 +16,7 @@
   };
 
   function redirectRandomRoom() {
-    const randomRoomId = nanoid();
+    const randomRoomId = generateRoomId();
     window.localStorage.setItem('username', username);
     goto(`/${randomRoomId}`);
   }

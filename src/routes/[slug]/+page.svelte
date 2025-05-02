@@ -24,6 +24,7 @@
   import { onMount } from 'svelte';
   import type { PageData } from './$types';
   import { CircleX, CircleHelp } from 'lucide-svelte';
+  import { getJoinUrl } from '$lib/util/routes';
 
   const { data }: { data: PageData } = $props();
   const { roomId, slug, userId, currentVotes, username } = data;
@@ -35,7 +36,7 @@
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
     if (!!sessionRoomId && sessionRoomId === slug) {
-      goto(`${currentHref}/join`);
+      goto(`${getJoinUrl(currentHref)}`);
     } else {
       window.sessionStorage.setItem('roomId', slug);
     }
@@ -77,7 +78,7 @@
         };
         const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
         if (presenceTrackStatus !== 'ok') {
-          goto(`${currentHref}/join`);
+          goto(`${getJoinUrl(currentHref)}`);
         }
       });
 
