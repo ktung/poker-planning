@@ -38,11 +38,7 @@
 - fix username mandatory (use https://svelte.dev/docs/kit/form-actions)
   - Add a button to insert random names on home and join page
   - Generate random if null ?
-- Password protected rooms
 - Use chat to notify when user changes votes if show votes enabled
-- Add a how to use section in about page
-  - Click on table
-  - Discuss to reach consensus
 - Improve chat UI : add username on message
 - Improve UI : copy to clipboard (italic, icon)
 - Push messages "Team recommanded value : X"
@@ -54,7 +50,15 @@
   - min value per category
   - max value per category
   - mean value per category
+- Use server-only modules https://svelte.dev/docs/kit/server-only-modules
+  - Use RLS with db policy
+    - https://supabase.com/docs/guides/api/api-keys
+    - https://supabase.com/docs/guides/database/postgres/row-level-security
 - chose another preset on create room (use another scale/color)
+- Password protected rooms
+- Add a how to use section in about page
+  - Click on table
+  - Discuss to reach consensus
 - use ReadableStream / EventSource
 - conventional commit again
   - https://dev.to/ghacosta/definitive-guide-for-commitizen-commitlint-husky-3of9
@@ -62,7 +66,3 @@
   - https://commitizen-tools.github.io/commitizen/
 - add https://logflare.app/
 - Use boundary https://svelte.dev/docs/svelte/svelte-boundary
-- Use server-only modules https://svelte.dev/docs/kit/server-only-modules
-  - Use RLS with db policy
-    - https://supabase.com/docs/guides/api/api-keys
-    - https://supabase.com/docs/guides/database/postgres/row-level-security
