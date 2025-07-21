@@ -8,3 +8,4 @@ bun.lockb
 .vscode/extensions.json
 
 messages/*.json
+src/routes/\[slug\]/+page.svelte
