@@ -111,6 +111,7 @@
           throw error;
         }
 
+        savedVotes = [];
         data.forEach((vote) => {
           const { complexity, effort, uncertainty, users } = vote;
           savedVotes.push({
@@ -294,11 +295,8 @@
 <section>
   <div>
     <span>{m.inviteLink()} </span><CopiableText text={`${currentHref}/join`} />
-    {#if voteShown}
-      <button onclick={clearVote}>{m.clearVotes()}</button>
-    {:else}
-      <button onclick={showVotes}>{m.showVotes()}</button>
-    {/if}
+    <button onclick={clearVote}>{m.clearVotes()}</button>
+    <button onclick={showVotes}>{m.showVotes()}</button>
   </div>
 
   <div class="infos">
