@@ -111,6 +111,7 @@
           throw error;
         }
 
+        savedVotes = [];
         data.forEach((vote) => {
           const { complexity, effort, uncertainty, users } = vote;
           savedVotes.push({
