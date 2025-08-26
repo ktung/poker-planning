@@ -30,7 +30,7 @@
     "@sveltejs/adapter-vercel": "^5.7.0",
     "@sveltejs/kit": "^2.20.7",
     "@sveltejs/vite-plugin-svelte": "^6.1.0",
-    "eslint": "^9.25.1",
+    "eslint": "^9.34.0",
     "eslint-config-prettier": "^10.1.2",
     "eslint-plugin-svelte": "^3.5.1",
     "globals": "^16.0.0",
