@@ -23,7 +23,7 @@
   import { logger } from '$lib/util/logger';
   import { onMount } from 'svelte';
   import type { PageData } from './$types';
-  import { CircleX, CircleHelp } from 'lucide-svelte';
+  import { CircleX, CircleQuestionMark } from 'lucide-svelte';
   import { getJoinUrl } from '$lib/util/routes';
 
   const { data }: { data: PageData } = $props();
@@ -69,6 +69,7 @@
       .subscribe(async (status) => {
         if (status !== REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
           logger.error(`Error subscribing to presence channel: ${status}`);
+          goto(getJoinUrl(currentHref))
           return;
         }
 
@@ -78,7 +79,7 @@
         };
         const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
         if (presenceTrackStatus !== 'ok') {
-          goto(`${getJoinUrl(currentHref)}`);
+          goto(getJoinUrl(currentHref));
         }
       });
 
@@ -294,7 +295,7 @@
 
 <section>
   <div>
-    <span>{m.inviteLink()} </span><CopiableText text={`${currentHref}/join`} />
+    <span>{m.inviteLink()} </span><CopiableText text={getJoinUrl(currentHref)} />
     <button onclick={clearVote}>{m.clearVotes()}</button>
     <button onclick={showVotes}>{m.showVotes()}</button>
   </div>
@@ -345,9 +346,9 @@
     <thead>
       <tr>
         <th>{m.points()}</th>
-        <th>{m.complexity()}<span onclick={(ev) => toggleProtips(ev, 'complexity')}><CircleHelp /></span></th>
-        <th>{m.effort()}<span onclick={(ev) => toggleProtips(ev, 'effort')}><CircleHelp /></span></th>
-        <th>{m.uncertainty()}<span onclick={(ev) => toggleProtips(ev, 'uncertainty')}><CircleHelp /></span></th>
+        <th>{m.complexity()}<span onclick={(ev) => toggleProtips(ev, 'complexity')}><CircleQuestionMark /></span></th>
+        <th>{m.effort()}<span onclick={(ev) => toggleProtips(ev, 'effort')}><CircleQuestionMark /></span></th>
+        <th>{m.uncertainty()}<span onclick={(ev) => toggleProtips(ev, 'uncertainty')}><CircleQuestionMark /></span></th>
       </tr>
     </thead>
     <tbody>
