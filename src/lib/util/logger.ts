@@ -1,13 +1,25 @@
-import { dev } from '$app/environment';
+import { browser, dev } from "$app/environment";
 
 export const logger = {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  debug: (message: string, ...args: any[]) => {
-    if (dev) {
-      console.log(message, ...args);
+  debug: (message?: unknown, ...optionalParams: unknown[]) => {
+    if (browser && !dev) {
+      return;
     }
+
+    console.debug(message, optionalParams);
   },
-  error: (message: string, error?: Error | null) => {
-    console.error(message, error);
+  info: (message?: unknown, ...optionalParams: unknown[]) => {
+    if (browser && !dev) {
+      return;
+    }
+
+    console.log(message, optionalParams);
+  },
+  error: (message?: unknown, ...optionalParams: unknown[]) => {
+    if (browser && !dev) {
+      return;
+    }
+
+    console.error(message, optionalParams);
   }
 };
