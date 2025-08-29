@@ -1,4 +1,4 @@
-import { upsertRoom } from '$lib/db/rooms';
+import { upsertRoom } from '$lib/server/db/rooms';
 import { logger } from '$lib/util/logger';
 import type { PageServerLoad } from './$types';
 
