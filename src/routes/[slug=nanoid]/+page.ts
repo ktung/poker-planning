@@ -8,6 +8,7 @@ import type { PageLoad } from './$types';
 export const load: PageLoad = async ({ data }) => {
   const slug = data.slug;
   const roomId = data.roomId;
+  const protipsTexts = data.protipsTexts;
 
   const { data: currentUser, error } = await upsertUser(roomId, getUsername());
   if (error || !currentUser) {
@@ -36,6 +37,7 @@ export const load: PageLoad = async ({ data }) => {
     roomId: roomId,
     userId: currentUser.id,
     username: currentUser.username,
-    currentVotes: currentVotes
+    currentVotes: currentVotes,
+    protipsTexts: protipsTexts
   };
 };

@@ -21,13 +21,13 @@
   import { m } from '$lib/paraglide/messages';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
+  import { getJoinUrl } from '$lib/util/routes';
+  import { CircleQuestionMark, CircleX } from 'lucide-svelte';
   import { onMount } from 'svelte';
   import type { PageData } from './$types';
-  import { CircleX, CircleQuestionMark } from 'lucide-svelte';
-  import { getJoinUrl } from '$lib/util/routes';
 
   const { data }: { data: PageData } = $props();
-  const { roomId, slug, userId, currentVotes, username } = data;
+  const { roomId, slug, userId, currentVotes, username, protipsTexts } = data;
   const currentHref = page.url.href;
   let voteShown = $state(false);
   let roomChannel: RealtimeChannel;
@@ -69,7 +69,7 @@
       .subscribe(async (status) => {
         if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
           logger.error(`Error subscribing to presence channel: ${status}`);
-          goto(getJoinUrl(currentHref))
+          goto(getJoinUrl(currentHref));
           return;
         }
 
@@ -79,7 +79,7 @@
         };
         const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
         if (presenceTrackStatus !== 'ok') {
-          logger.debug("track presence", presenceTrackStatus)
+          logger.debug('track presence', presenceTrackStatus);
           goto(getJoinUrl(currentHref));
         }
       });
@@ -268,18 +268,6 @@
       });
   }
 
-  type ProtipsType = keyof typeof m;
-  const protipsTexts = {
-    complexity: Object.keys(m)
-      .filter((key) => key.startsWith('protips.complexity'))
-      .map((key) => <ProtipsType>key),
-    effort: Object.keys(m)
-      .filter((key) => key.startsWith('protips.effort'))
-      .map((key) => <ProtipsType>key),
-    uncertainty: Object.keys(m)
-      .filter((key) => key.startsWith('protips.uncertainty'))
-      .map((key) => <ProtipsType>key)
-  };
   let protipsToggles: ProtipsToggleModel = $state({
     complexity: false,
     effort: false,
