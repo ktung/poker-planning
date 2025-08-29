@@ -1,5 +1,5 @@
-import { upsertRoom } from '$lib/db/rooms';
 import { m } from '$lib/paraglide/messages';
+import { upsertRoom } from '$lib/server/db/rooms';
 import { logger } from '$lib/util/logger';
 import type { PageServerLoad } from './$types';
 

@@ -1,7 +1,7 @@
 import { redirect, type Handle } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
-import { fetchRoom } from '$lib/db/rooms';
 import { paraglideMiddleware } from '$lib/paraglide/server';
+import { fetchRoom } from '$lib/server/db/rooms';
 import { logger } from '$lib/util/logger';
 import { ROOM_ID_ALPHABET, ROOM_ID_LENGTH } from '$lib/util/room';
 import { getJoinUrl } from '$lib/util/routes';
@@ -26,6 +26,7 @@ const handleRoom: Handle = async ({ event, resolve }) => {
       if (roomSlug) {
         const { error } = await fetchRoom(roomSlug);
         if (!error) {
+          logger.error('Redirecting to join URL', error);
           throw redirect(303, getJoinUrl(`${event.url.origin}/${roomSlug}`));
         }
       }
