@@ -5,7 +5,7 @@
 ```sh
 pnpm supabase start
 # fill .env.local
-npm run dev
+pnpm run dev
 ```
 
 - Localhost URL : http://localhost:5173

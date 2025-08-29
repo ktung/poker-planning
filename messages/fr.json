@@ -7,37 +7,26 @@
   "uncertainty": "Incertitude",
   "easy": "Facile",
   "dcom": {
-    "complexity0": "Aucune idée",
     "effort0": "Aucune idée",
     "uncertainty0": "Aucune idée",
-    "complexity05": "Une seule tâche simple",
     "effort05": "Moins d'une demi-journée",
     "uncertainty05": "Exigences et solution claires",
-    "complexity1": "Tâche simple avec solution connue",
     "effort1": "Une demi-journée",
     "uncertainty1": "Des éclaircissements mineurs sont nécessaires",
-    "complexity2": "Plusieurs tâches simples",
     "effort2": "1 jour max",
     "uncertainty2": "Certaines inconnues existent",
-    "complexity3": "Plusieurs tâches interconnectées",
     "effort3": "1 à 2 jours",
     "uncertainty3": "Plusieurs inconnues",
-    "complexity5": "Problème complexe, approche claire",
     "effort5": "2 à 3 jours",
     "uncertainty5": "Inconnues importantes",
-    "complexity8": "Problème complexe, approches multiples",
     "effort8": "3 à 5 jours",
     "uncertainty8": "De nombreuses dépendances",
-    "complexity13": "Des changements à l’échelle du système sont nécessaires",
     "effort13": "1 à 2 semaines",
     "uncertainty13": "La faisabilité technique n'est pas claire",
-    "complexity20": "Interactions multiples du système",
     "effort20": "2 à 3 semaines",
     "uncertainty20": "Zones à haut risque identifiées",
-    "complexity40": "Modifications architecturales nécessaires",
     "effort40": "3 à 4 semaines",
     "uncertainty40": "Principales dépendances inconnues",
-    "complexity100": "Trop complexe à estimer",
     "effort100": "> 1 mois",
     "uncertainty100": "Je ne peux pas estimer avec certitude"
   },
@@ -68,5 +57,149 @@
     "uncertainty0": "Est-ce que les inconnus sont identifiés ?",
     "uncertainty1": "Est-ce que les inconnus peuvent se débloquer rapidement ? avec une documentation, un contact ?",
     "uncertainty2": "Est-ce que les documentations/spécifications sont présentes et claires ?"
-  }
+  },
+  "complexity0": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=dcom": "Aucune idée",
+        "context=*": "Aucune idée"
+      }
+    }
+  ],
+  "complexity05": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Une seule tâche simple"
+      }
+    }
+  ],
+  "complexity1": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Tâche simple avec solution connue"
+      }
+    }
+  ],
+  "complexity2": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Plusieurs tâches simples"
+      }
+    }
+  ],
+  "complexity3": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Plusieurs tâches interconnectées"
+      }
+    }
+  ],
+  "complexity5": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Problème complexe, approche claire"
+      }
+    }
+  ],
+  "complexity8": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Problème complexe, approches multiples"
+      }
+    }
+  ],
+  "complexity13": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Des changements à l’échelle du système sont nécessaires"
+      }
+    }
+  ],
+  "complexity20": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Interactions multiples du système"
+      }
+    }
+  ],
+  "complexity40": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Modifications architecturales nécessaires"
+      }
+    }
+  ],
+  "complexity100": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Trop complexe à estimer"
+      }
+    }
+  ]
 }

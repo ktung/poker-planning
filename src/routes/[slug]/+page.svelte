@@ -67,7 +67,7 @@
         }
       })
       .subscribe(async (status) => {
-        if (status !== REALTIME_SUBSCRIBE_STATES.SUBSCRIBED) {
+        if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
           logger.error(`Error subscribing to presence channel: ${status}`);
           goto(getJoinUrl(currentHref))
           return;
@@ -79,6 +79,7 @@
         };
         const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
         if (presenceTrackStatus !== 'ok') {
+          logger.debug("track presence", presenceTrackStatus)
           goto(getJoinUrl(currentHref));
         }
       });

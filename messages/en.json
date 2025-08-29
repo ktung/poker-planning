@@ -7,37 +7,26 @@
   "uncertainty": "Uncertainty",
   "easy": "Easy",
   "dcom": {
-    "complexity0": "No idea",
     "effort0": "No idea",
     "uncertainty0": "No idea",
-    "complexity05": "Single straightforward task",
     "effort05": "Less than half-day",
     "uncertainty05": "Clear requirements & solution",
-    "complexity1": "Simple task with known solution",
     "effort1": "Half-day",
     "uncertainty1": "Minor clarifications needed",
-    "complexity2": "Multiple simple tasks",
     "effort2": "One day max",
     "uncertainty2": "Some unknowns exist",
-    "complexity3": "Multiple interconnected tasks",
     "effort3": "1-2 days",
     "uncertainty3": "Several unknowns",
-    "complexity5": "Complex problem, clear approach",
     "effort5": "2-3 days",
     "uncertainty5": "Significant unknowns",
-    "complexity8": "Complex problem, multiple approaches",
     "effort8": "3-5 days",
     "uncertainty8": "Many dependencies",
-    "complexity13": "System-wide changes needed",
     "effort13": "1-2 weeks",
     "uncertainty13": "Technical feasibility unclear",
-    "complexity20": "Multiple system interactions",
     "effort20": "2-3 weeks",
     "uncertainty20": "High risk areas identified",
-    "complexity40": "Architectural changes required",
     "effort40": "3-4 weeks",
     "uncertainty40": "Major unknown dependencies",
-    "complexity100": "Too complex to estimate",
     "effort100": "> 1 month",
     "uncertainty100": "Cannot estimate confidently"
   },
@@ -68,5 +57,148 @@
     "uncertainty0": "Are the unknowns identified ?",
     "uncertainty1": "Can the unknowns be solved quickly ? Do we have a documentation ? A contact to help us ?",
     "uncertainty2": "Are the documentation/specifications present and clear?"
-  }
+  },
+  "complexity0": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "No idea"
+      }
+    }
+  ],
+  "complexity05": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Single straightforward task"
+      }
+    }
+  ],
+  "complexity1": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Simple task with known solution"
+      }
+    }
+  ],
+  "complexity2": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Multiple simple tasks"
+      }
+    }
+  ],
+  "complexity3": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Multiple interconnected tasks"
+      }
+    }
+  ],
+  "complexity5": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Complex problem, clear approach"
+      }
+    }
+  ],
+  "complexity8": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Complex problem, multiple approaches"
+      }
+    }
+  ],
+  "complexity13": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "System-wide changes needed"
+      }
+    }
+  ],
+  "complexity20": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Multiple system interactions"
+      }
+    }
+  ],
+  "complexity40": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Architectural changes required"
+      }
+    }
+  ],
+  "complexity100": [
+    {
+      "declarations": [
+        "input context"
+      ],
+      "selectors": [
+        "context"
+      ],
+      "match": {
+        "context=*": "Too complex to estimate"
+      }
+    }
+  ]
 }
