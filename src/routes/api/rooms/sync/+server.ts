@@ -1,8 +1,8 @@
 import { json } from '@sveltejs/kit';
 import { pushMessage } from '$lib/db/messages';
-import { deleteUserByUserIdAndRoomId, selectUsers } from '$lib/db/users';
 import { logger } from '$lib/util/logger';
 import type { RequestHandler } from './$types';
+import { deleteUserByUserIdAndRoomId, selectUsers } from '$lib/server/db/users';
 
 interface RequestBody {
   roomId: string;
