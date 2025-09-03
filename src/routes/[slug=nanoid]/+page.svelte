@@ -21,13 +21,13 @@
   import { m } from '$lib/paraglide/messages';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
+  import { getJoinUrl } from '$lib/util/routes';
+  import { CircleQuestionMark, CircleX } from 'lucide-svelte';
   import { onMount } from 'svelte';
   import type { PageData } from './$types';
-  import { CircleX, CircleQuestionMark } from 'lucide-svelte';
-  import { getJoinUrl } from '$lib/util/routes';
 
   const { data }: { data: PageData } = $props();
-  const { roomId, slug, userId, currentVotes, username } = data;
+  const { roomId, slug, userId, currentVotes, username, protipsTexts } = data;
   const currentHref = page.url.href;
   let voteShown = $state(false);
   let roomChannel: RealtimeChannel;
@@ -69,7 +69,7 @@
       .subscribe(async (status) => {
         if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
           logger.error(`Error subscribing to presence channel: ${status}`);
-          goto(getJoinUrl(currentHref))
+          goto(getJoinUrl(currentHref));
           return;
         }
 
@@ -79,7 +79,7 @@
         };
         const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
         if (presenceTrackStatus !== 'ok') {
-          logger.debug("track presence", presenceTrackStatus)
+          logger.debug('track presence', presenceTrackStatus);
           goto(getJoinUrl(currentHref));
         }
       });
@@ -87,25 +87,13 @@
     roomChannel
       .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
         voteShown = false;
-        selectedPointsValues = {
-          complexity: null,
-          effort: null,
-          uncertainty: null
-        };
         savedVotes = [];
-        activeCell = {
-          complexity: null,
-          effort: null,
-          uncertainty: null
-        };
+        resetSelectedPointsValues();
+        resetActiveCell();
       })
       .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'showVotes' }, async () => {
         voteShown = true;
-        activeCell = {
-          complexity: null,
-          effort: null,
-          uncertainty: null
-        };
+        resetActiveCell();
 
         const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
         if (error) {
@@ -181,11 +169,7 @@
           REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
           { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
           async () => {
-            activeCell = {
-              complexity: null,
-              effort: null,
-              uncertainty: null
-            };
+            resetActiveCell();
             const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
             if (error) {
               logger.error('Error fetching votes:', error);
@@ -218,11 +202,7 @@
       .then(() => pushMessage(roomId, userId, `${username} ${m.showVotesMessage()}`))
       .then(async () => {
         voteShown = true;
-        activeCell = {
-          complexity: null,
-          effort: null,
-          uncertainty: null
-        };
+        resetActiveCell();
 
         const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
         if (error) {
@@ -254,39 +234,36 @@
       .then(async () => {
         await resetVotesByRoomId(roomId);
         voteShown = false;
-        selectedPointsValues = {
-          complexity: null,
-          effort: null,
-          uncertainty: null
-        };
         savedVotes = [];
-        activeCell = {
-          complexity: null,
-          effort: null,
-          uncertainty: null
-        };
+        resetSelectedPointsValues();
+        resetActiveCell();
       });
   }
 
-  type ProtipsType = keyof typeof m;
-  const protipsTexts = {
-    complexity: Object.keys(m)
-      .filter((key) => key.startsWith('protips.complexity'))
-      .map((key) => <ProtipsType>key),
-    effort: Object.keys(m)
-      .filter((key) => key.startsWith('protips.effort'))
-      .map((key) => <ProtipsType>key),
-    uncertainty: Object.keys(m)
-      .filter((key) => key.startsWith('protips.uncertainty'))
-      .map((key) => <ProtipsType>key)
-  };
   let protipsToggles: ProtipsToggleModel = $state({
     complexity: false,
     effort: false,
     uncertainty: false
   });
+
   function toggleProtips(event: MouseEvent, type: VoteType) {
     protipsToggles[type] = !protipsToggles[type];
+  }
+
+  function resetActiveCell() {
+    activeCell = {
+      complexity: null,
+      effort: null,
+      uncertainty: null
+    };
+  }
+
+  function resetSelectedPointsValues() {
+    selectedPointsValues = {
+      complexity: null,
+      effort: null,
+      uncertainty: null
+    };
   }
 </script>
 

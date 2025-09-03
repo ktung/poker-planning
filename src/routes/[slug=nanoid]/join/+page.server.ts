@@ -1,10 +1,11 @@
 import { redirect } from '@sveltejs/kit';
-import { fetchRoom } from '$lib/db/rooms';
+import { fetchRoom } from '$lib/server/db/rooms';
 import { logger } from '$lib/util/logger';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
   const slug = params.slug;
+  logger.info(slug);
 
   const { error } = await fetchRoom(slug);
 

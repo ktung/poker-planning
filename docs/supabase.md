@@ -6,9 +6,9 @@ https://supabase.com/docs/guides/local-development?queryGroups=package-manager&p
 
 ```sh
 pnpm add supabase --save-dev
-pnpm supabase init
-pnpm supabase start
-pnpm supabase stop
+pnpx supabase init
+pnpx supabase start
+pnpx supabase stop
 ```
 
 Setup `.env.local` with `PUBLIC_SUPABASE_URL` and `PUBLIC_SUPABASE_ANON_KEY` (from command menu)
@@ -31,7 +31,7 @@ pnpm supabase migration up --local
 
 pnpm supabase db reset --local
 
-pnpm supabase gen types typescript --local > src/lib/db/database.types.ts
+pnpm supabase gen types typescript --local > src/lib/server/db/database.types.ts
 LINKED_PROJECT_ID=$(pnpm supabase projects list -o json | jq -r '.[] | select(.linked==true) | .id')
 pnpm supabase gen types typescript --project-id $LINKED_PROJECT_ID > src/lib/db/database.types.ts
 ```
