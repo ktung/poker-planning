@@ -273,7 +273,7 @@
 
 <section>
   <div>
-    <span>{m.inviteLink()} </span><CopiableText text={getJoinUrl(currentHref)} />
+    <span>{m.inviteLink()}</span><CopiableText text={getJoinUrl(currentHref)} />
     <button onclick={clearVote}>{m.clearVotes()}</button>
     <button onclick={showVotes}>{m.showVotes()}</button>
   </div>
