@@ -16,9 +16,9 @@
   import UsersStatus from '$lib/components/users-status.svelte';
   import Voters from '$lib/components/voters.svelte';
   import VotesStats from '$lib/components/votes-stats.svelte';
-  import { pushMessage } from '$lib/db/messages';
-  import { fetchVotesAndUsersByRoomId, resetVotesByRoomId, upsertVote } from '$lib/db/votes';
   import { m } from '$lib/paraglide/messages';
+  import { pushMessage } from '$lib/remote/messages.remote';
+  import { fetchVotesAndUsersByRoomId, resetVotesByRoomId, upsertVote } from '$lib/remote/votes.remote';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
   import { getJoinUrl } from '$lib/util/routes';
@@ -149,7 +149,7 @@
       }
     }
 
-    const { error } = await upsertVote(userId, roomId, type, selectedPointsValues[type]);
+    const { error } = await upsertVote({ userId, roomId, type, value: selectedPointsValues[type] });
     if (error) {
       logger.error('Error upserting vote', error);
     }
@@ -199,7 +199,7 @@
         event: 'showVotes',
         payload: {}
       })
-      .then(() => pushMessage(roomId, userId, `${username} ${m.showVotesMessage()}`))
+      .then(() => pushMessage({ roomId, userId, message: `${username} ${m.showVotesMessage()}` }))
       .then(async () => {
         voteShown = true;
         resetActiveCell();
@@ -230,7 +230,7 @@
         event: 'clearVotes',
         payload: {}
       })
-      .then(() => pushMessage(roomId, userId, `${username} ${m.clearVotesMessage()}`))
+      .then(() => pushMessage({ roomId, userId, message: `${username} ${m.clearVotesMessage()}` }))
       .then(async () => {
         await resetVotesByRoomId(roomId);
         voteShown = false;

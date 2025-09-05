@@ -1,12 +1,12 @@
 create table rooms (
-  id uuid not null default uuid_generate_v4() primary key,
+  id uuid not null default gen_random_uuid() primary key,
   name text not null unique CHECK (length(name) <= 22),
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
 
 create table users (
-  id uuid not null default uuid_generate_v4() primary key,
+  id uuid not null default gen_random_uuid() primary key,
   room_id uuid not null references rooms(id) on delete cascade,
   username text not null,
   created_at timestamptz not null default now()
@@ -22,7 +22,7 @@ create table votes (
 );
 
 create table messages (
-  id uuid not null default uuid_generate_v4() primary key,
+  id uuid not null default gen_random_uuid() primary key,
   room_id uuid not null references rooms(id) on delete cascade,
   user_id uuid references users(id) on delete set null,
   created_at timestamptz not null default now(),

@@ -42,6 +42,7 @@
 - Improve chat UI : add username on message
 - Improve UI : copy to clipboard (italic, icon)
 - Push messages "Team recommanded value : X"
+- Have state voteShown in db : join room already shown
 - Add a timer
   - Auto start
   - Stop on show votes
@@ -50,10 +51,6 @@
   - min value per category
   - max value per category
   - mean value per category
-- Use server-only modules https://svelte.dev/docs/kit/server-only-modules
-  - Use RLS with db policy
-    - https://supabase.com/docs/guides/api/api-keys
-    - https://supabase.com/docs/guides/database/postgres/row-level-security
 - chose another preset on create room (use another scale/color)
 - Password protected rooms
 - Add a how to use section in about page

@@ -1,5 +1,5 @@
 import { json } from '@sveltejs/kit';
-import { pushMessage } from '$lib/db/messages';
+import { insertMessage } from '$lib/server/db/messages';
 import { deleteUserByUserIdAndRoomId, selectUsers } from '$lib/server/db/users';
 import { logger } from '$lib/util/logger';
 import type { RequestHandler } from './$types';
@@ -31,7 +31,7 @@ export const POST: RequestHandler = async ({ request }) => {
   const usersToDelete = usersDbIds.filter((userId) => !usersIds.includes(userId));
   logger.debug('usersToDelete', usersToDelete);
   for (const userId of usersToDelete) {
-    await pushMessage(data.roomId, userId, `${usersDb.find((user) => user.id === userId)?.username} left the room`);
+    await insertMessage(data.roomId, userId, `${usersDb.find((user) => user.id === userId)?.username} left the room`);
     const { error } = await deleteUserByUserIdAndRoomId(userId, data.roomId);
     if (error) {
       logger.error('Error deleting user:', error);

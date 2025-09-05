@@ -1,6 +1,6 @@
-import { pushMessage } from '$lib/db/messages';
-import { fetchVotesAndUsersByRoomId, upsertVote } from '$lib/db/votes';
+import { pushMessage } from '$lib/remote/messages.remote';
 import { upsertUser } from '$lib/remote/users.remote';
+import { fetchVotesAndUsersByRoomId, upsertVote } from '$lib/remote/votes.remote';
 import { getUsername } from '$lib/store/username';
 import { logger } from '$lib/util/logger';
 import type { PageLoad } from './$types';
@@ -15,8 +15,8 @@ export const load: PageLoad = async ({ data }) => {
     logger.error('Error upserting users', error);
     throw new Error('Error upserting users');
   }
-  await upsertVote(currentUser.id, roomId, 'complexity', null);
-  pushMessage(roomId, currentUser.id, `${getUsername()} joined the room`).then();
+  await upsertVote({ userId: currentUser.id, roomId, type: 'complexity', value: null });
+  pushMessage({ roomId, userId: currentUser.id, message: `${getUsername()} joined the room` }).then();
 
   const { data: currentVotesData, error: currentVotesQueryError } = await fetchVotesAndUsersByRoomId(roomId);
   if (currentVotesQueryError) {

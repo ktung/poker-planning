@@ -6,7 +6,7 @@ const upsertUserSchema = v.object({
   roomId: v.string(),
   username: v.string()
 });
-export const upsertUser = command(upsertUserSchema, async ({ roomId, username }) => {
+export const upsertUser = command(upsertUserSchema, ({ roomId, username }) => {
   return supabase
     .from('users')
     .upsert(
