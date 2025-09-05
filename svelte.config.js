@@ -11,7 +11,12 @@ if (process.env.ADAPTER === 'vercel') {
 
 const config = {
   preprocess: vitePreprocess(),
-  kit: { adapter: customAdapter }
+  kit: {
+    adapter: customAdapter,
+    experimental: {
+      remoteFunctions: true
+    }
+  }
 };
 
 export default config;
