@@ -44,6 +44,7 @@
     color: #333;
     margin-bottom: 1.5rem;
     font-size: 1.8rem;
+    word-break: break-all;
   }
 
   input {

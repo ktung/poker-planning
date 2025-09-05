@@ -1,6 +1,6 @@
 import { pushMessage } from '$lib/db/messages';
-import { upsertUser } from '$lib/db/users';
 import { fetchVotesAndUsersByRoomId, upsertVote } from '$lib/db/votes';
+import { upsertUser } from '$lib/remote/users.remote';
 import { getUsername } from '$lib/store/username';
 import { logger } from '$lib/util/logger';
 import type { PageLoad } from './$types';
@@ -10,7 +10,7 @@ export const load: PageLoad = async ({ data }) => {
   const roomId = data.roomId;
   const protipsTexts = data.protipsTexts;
 
-  const { data: currentUser, error } = await upsertUser(roomId, getUsername());
+  const { data: currentUser, error } = await upsertUser({ roomId: roomId, username: getUsername() });
   if (error || !currentUser) {
     logger.error('Error upserting users', error);
     throw new Error('Error upserting users');

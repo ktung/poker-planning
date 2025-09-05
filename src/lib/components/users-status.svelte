@@ -86,6 +86,7 @@
     padding: 12px 15px;
     text-align: center;
     border-bottom: 1px solid #ddd;
+    word-break: break-all;
   }
 
   tr:nth-child(even) {
