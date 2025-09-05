@@ -42,6 +42,11 @@ pnpm supabase migration list --linked
 pnpm supabase migration up --linked
 ```
 
+### RLS
+
+https://supabase.com/docs/guides/database/postgres/row-level-security
+https://supabase.com/docs/guides/api/api-keys
+
 ### pg_cron
 
 https://supabase.com/docs/guides/cron
