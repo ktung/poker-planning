@@ -1,7 +1,7 @@
 <script lang="ts">
   import { REALTIME_LISTEN_TYPES, REALTIME_POSTGRES_CHANGES_LISTEN_EVENT } from '@supabase/supabase-js';
-  import { fetchVotesAndUsersByRoomId } from '$lib/db/votes';
   import { m } from '$lib/paraglide/messages';
+  import { fetchVotesAndUsersByRoomId } from '$lib/remote/votes.remote';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
   import { onMount } from 'svelte';

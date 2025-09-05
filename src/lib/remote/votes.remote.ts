@@ -1,4 +1,6 @@
-import { supabase } from '$lib/supabaseClient';
+import { command, query } from '$app/server';
+import { supabase } from '$lib/server/supabaseClient';
+import * as v from 'valibot';
 
 interface Vote {
   room_id: string;
@@ -8,11 +10,17 @@ interface Vote {
   uncertainty?: number | null;
 }
 
-export const fetchVotesAndUsersByRoomId = (roomId: string) => {
+export const fetchVotesAndUsersByRoomId = query(v.string(), (roomId) => {
   return supabase.from('votes').select('complexity, effort, uncertainty, users ( username )').eq('room_id', roomId);
-};
+});
 
-export const upsertVote = async (userId: string, roomId: string, type: VoteType, value: number | null) => {
+const upsertVoteSchema = v.object({
+  userId: v.string(),
+  roomId: v.string(),
+  type: v.union([v.literal('complexity'), v.literal('effort'), v.literal('uncertainty')]),
+  value: v.nullable(v.number())
+});
+export const upsertVote = command(upsertVoteSchema, ({ userId, roomId, type, value }) => {
   const data: Vote = {
     room_id: roomId,
     user_id: userId
@@ -24,8 +32,8 @@ export const upsertVote = async (userId: string, roomId: string, type: VoteType,
       onConflict: 'room_id, user_id'
     })
     .select();
-};
+});
 
-export const resetVotesByRoomId = (roomId: string) => {
+export const resetVotesByRoomId = command(v.string(), (roomId) => {
   return supabase.from('votes').update({ complexity: null, effort: null, uncertainty: null }).eq('room_id', roomId);
-};
+});
