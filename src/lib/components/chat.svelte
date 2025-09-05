@@ -1,7 +1,7 @@
 <script lang="ts">
   import { REALTIME_LISTEN_TYPES, REALTIME_POSTGRES_CHANGES_LISTEN_EVENT, type RealtimeChannel } from '@supabase/supabase-js';
-  import { getMessages, pushMessage } from '$lib/db/messages';
   import { m } from '$lib/paraglide/messages';
+  import { getMessages, pushMessage } from '$lib/remote/messages.remote';
   import { supabase } from '$lib/supabaseClient';
   import { formatTime } from '$lib/util/date';
   import { onMount } from 'svelte';
@@ -62,7 +62,7 @@
 
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === 'Enter' && messageInput.trim() !== '') {
-      pushMessage(roomId, userId, messageInput).then();
+      pushMessage({ roomId, userId, message: messageInput }).then();
       messageInput = '';
     }
   };
