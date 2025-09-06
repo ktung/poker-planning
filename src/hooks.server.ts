@@ -14,23 +14,21 @@ const handleParaglide: Handle = ({ event, resolve }) =>
       transformPageChunk: ({ html }) => html.replace('%paraglide.lang%', locale)
     });
   });
-
 const handleRoom: Handle = async ({ event, resolve }) => {
   const roomPathRegex = new RegExp(`^/[${ROOM_ID_ALPHABET}]{${ROOM_ID_LENGTH}}$`);
   if (roomPathRegex.test(event.url.pathname)) {
     const referer = event.request.headers.get('referer');
     if (!referer || (referer !== `${event.url.origin}/` && referer !== `${getJoinUrl(event.url.href)}`)) {
-      logger.error('referer', referer);
-
       const roomSlug = event.params.slug;
       if (roomSlug) {
         const { error } = await fetchRoom(roomSlug);
-        if (!error) {
+        if (error) {
           logger.error('Redirecting to join URL', error);
           throw redirect(303, getJoinUrl(`${event.url.origin}/${roomSlug}`));
         }
       }
 
+      logger.error('Redirecting to /');
       throw redirect(303, '/');
     }
   }
