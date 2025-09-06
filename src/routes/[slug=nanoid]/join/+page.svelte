@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
   import { m } from '$lib/paraglide/messages';
   import { onMount } from 'svelte';
   import type { Snapshot } from './$types.js';
@@ -22,7 +23,7 @@
 
   function joinRoom() {
     window.localStorage.setItem('username', username);
-    goto(`/${roomId}`);
+    goto(resolve('/[slug=nanoid]', { slug: roomId }));
   }
 </script>
 

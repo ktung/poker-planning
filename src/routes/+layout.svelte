@@ -1,4 +1,5 @@
 <script>
+  import { resolve } from '$app/paths';
   import Footer from '$lib/components/footer.svelte';
   import LanguageSelector from '$lib/components/language-selector.svelte';
   import { m } from '$lib/paraglide/messages';
@@ -17,8 +18,8 @@
 </svelte:head>
 
 <header>
-  <a href="/"><img src="/favicon.png" alt="Poker Planning Logo" width="30" height="30" />Poker Planning</a>
-  <a href="/about">{m.about()}</a>
+  <a href={resolve('/')}><img src="/favicon.png" alt="Poker Planning Logo" width="30" height="30" />Poker Planning</a>
+  <a href={resolve('/about')}>{m.about()}</a>
   <LanguageSelector />
 </header>
 <main>

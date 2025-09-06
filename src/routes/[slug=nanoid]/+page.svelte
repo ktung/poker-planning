@@ -36,6 +36,7 @@
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
     if (!!sessionRoomId && sessionRoomId === slug) {
+      // eslint-disable-next-line svelte/no-navigation-without-resolve -- so tired
       goto(`${getJoinUrl(currentHref)}`);
     } else {
       window.sessionStorage.setItem('roomId', slug);
@@ -69,6 +70,7 @@
       .subscribe(async (status) => {
         if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
           logger.error(`Error subscribing to presence channel: ${status}`);
+          // eslint-disable-next-line svelte/no-navigation-without-resolve -- so tired
           goto(getJoinUrl(currentHref));
           return;
         }
@@ -80,6 +82,7 @@
         const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
         if (presenceTrackStatus !== 'ok') {
           logger.debug('track presence', presenceTrackStatus);
+          // eslint-disable-next-line svelte/no-navigation-without-resolve -- so tired
           goto(getJoinUrl(currentHref));
         }
       });
