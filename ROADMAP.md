@@ -40,7 +40,6 @@
   - Generate random if null ?
 - Use chat to notify when user changes votes if show votes enabled
 - Improve chat UI : add username on message
-- Improve UI : copy to clipboard (italic, icon)
 - Push messages "Team recommanded value : X"
 - Have state voteShown in db : join room already shown
 - Add a timer
