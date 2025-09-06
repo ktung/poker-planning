@@ -24,12 +24,10 @@ export const POST: RequestHandler = async ({ request }) => {
     // return json({ error: 'Error fetching users' }, { status: 500 });
     return json({});
   }
-  logger.debug('usersDb', usersDb);
 
   const usersDbIds = usersDb.map((user) => user.id);
   const usersIds = data.users.map((user) => user.userId);
   const usersToDelete = usersDbIds.filter((userId) => !usersIds.includes(userId));
-  logger.debug('usersToDelete', usersToDelete);
   for (const userId of usersToDelete) {
     await insertMessage(data.roomId, userId, `${usersDb.find((user) => user.id === userId)?.username} left the room`);
     const { error } = await deleteUserByUserIdAndRoomId(userId, data.roomId);
