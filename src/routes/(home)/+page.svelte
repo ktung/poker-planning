@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
   import { m } from '$lib/paraglide/messages';
-  import { generateRoomId } from '$lib/util/room';
+  import { createRoom } from '$lib/remote/rooms.remote';
+  import { logger } from '$lib/util/logger';
   import { onMount } from 'svelte';
   import type { Snapshot } from './$types';
 
@@ -14,19 +14,25 @@
     capture: () => username,
     restore: (value) => (username = value)
   };
-
-  function redirectRandomRoom() {
-    const randomRoomId = generateRoomId();
-    window.localStorage.setItem('username', username);
-    goto(`/${randomRoomId}`);
-  }
 </script>
 
 <div>
   <h1>{m.hello_world({ name: username })}</h1>
-  <label for="username">{m.username()}</label>
-  <input id="username" type="text" placeholder="Username" bind:value={username} />
-  <button onclick={redirectRandomRoom}>{m.createRoom()}</button>
+  <form
+    {...createRoom.enhance(async ({ form, submit }) => {
+      try {
+        await submit();
+        form.reset();
+        window.localStorage.setItem('username', username);
+      } catch (error) {
+        logger.error('Error creating room', error);
+      }
+    })}
+  >
+    <label for="username">{m.username()}</label>
+    <input id="username" type="text" placeholder="Username" bind:value={username} />
+    <button>{m.createRoom()}</button>
+  </form>
 </div>
 
 <style>

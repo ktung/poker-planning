@@ -1,15 +1,15 @@
 import { m } from '$lib/paraglide/messages';
-import { upsertRoom } from '$lib/server/db/rooms';
+import { fetchRoom } from '$lib/server/db/rooms';
 import { logger } from '$lib/util/logger';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
   const slug = params.slug;
 
-  const { data: room, error } = await upsertRoom(slug);
+  const { data: room, error } = await fetchRoom(slug);
   if (error || !room) {
-    logger.error('Error upserting room', error);
-    throw new Error('Error upserting room');
+    logger.error('Error fetching room', error);
+    throw new Error('Error fetching room');
   }
 
   return {

@@ -5,7 +5,6 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
   const slug = params.slug;
-  logger.info(slug);
 
   const { error } = await fetchRoom(slug);
 
