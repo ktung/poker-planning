@@ -25,6 +25,7 @@
 <style>
   .invite-link {
     cursor: pointer;
+    font-style: italic;
   }
 
   .tooltip {
