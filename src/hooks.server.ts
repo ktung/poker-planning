@@ -22,7 +22,8 @@ const handleRoom: Handle = async ({ event, resolve }) => {
       const roomSlug = event.params.slug;
       if (roomSlug) {
         const { error } = await fetchRoom(roomSlug);
-        if (error) {
+        // room exists, redirect to join page
+        if (!error) {
           logger.error('Redirecting to join URL', error);
           throw redirect(303, getJoinUrl(`${event.url.origin}/${roomSlug}`));
         }
