@@ -6,14 +6,15 @@ import type { PageServerLoad } from './$types';
 export const load: PageServerLoad = async ({ params }) => {
   const slug = params.slug;
 
-  const { error } = await fetchRoom(slug);
+  const { data, error } = await fetchRoom(slug);
 
-  if (error) {
+  if (!data || error) {
     logger.error(`Error joining room`, error);
     redirect(302, '/');
   }
 
   return {
+    roomId: data.id,
     slug: slug
   };
 };

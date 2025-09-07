@@ -30,7 +30,7 @@
     })}
   >
     <label for="username">{m.username()}</label>
-    <input id="username" type="text" placeholder="Username" bind:value={username} />
+    <input id="username" type="text" name="username" placeholder="Username" bind:value={username} />
     <button>{m.createRoom()}</button>
   </form>
 </div>

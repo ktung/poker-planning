@@ -35,7 +35,7 @@
     "text": "Vos données ne sont pas collectées et chaque session de vote est supprimée tous les jours."
   },
   "createRoom": "Créer une nouvelle salle",
-  "joinRoom": "Rejoignez la salle {roomId}",
+  "joinRoom": "Rejoignez la salle {roomName}",
   "username": "Nom d'utilisateur",
   "chat_placeholder": "Message...",
   "yourValuePoint": "Votre valeur",

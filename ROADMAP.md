@@ -35,9 +35,6 @@
 
 # Backlog
 
-- fix username mandatory (use https://svelte.dev/docs/kit/form-actions)
-  - Add a button to insert random names on home and join page
-  - Generate random if null ?
 - Use chat to notify when user changes votes if show votes enabled
 - Improve chat UI : add username on message
 - Push messages "Team recommanded value : X"

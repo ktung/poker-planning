@@ -35,7 +35,7 @@
     "text": "I don't care about your data, every voting session is deleted everyday."
   },
   "createRoom": "Create a new room",
-  "joinRoom": "Join the {roomId} room",
+  "joinRoom": "Join the {roomName} room",
   "username": "Username",
   "chat_placeholder": "Message...",
   "yourValuePoint": "Your value",
