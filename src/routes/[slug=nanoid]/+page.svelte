@@ -89,31 +89,10 @@
 
     roomChannel
       .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
-        voteShown = false;
-        savedVotes = [];
-        resetSelectedPointsValues();
-        resetActiveCell();
+        clearVotes();
       })
       .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'showVotes' }, async () => {
-        voteShown = true;
-        resetActiveCell();
-
-        const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
-        if (error) {
-          logger.error('Error fetching votes:', error);
-          throw error;
-        }
-
-        savedVotes = [];
-        data.forEach((vote) => {
-          const { complexity, effort, uncertainty, users } = vote;
-          savedVotes.push({
-            complexity,
-            effort,
-            uncertainty,
-            username: users.username
-          });
-        });
+        handleShowVotes();
       })
       .subscribe();
 
@@ -173,29 +152,14 @@
           { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
           async () => {
             resetActiveCell();
-            const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
-            if (error) {
-              logger.error('Error fetching votes:', error);
-              throw error;
-            }
-
-            savedVotes = [];
-            data.forEach((vote) => {
-              const { complexity, effort, uncertainty, users } = vote;
-              savedVotes.push({
-                complexity,
-                effort,
-                uncertainty,
-                username: users.username
-              });
-            });
+            savedVotes = await fetchVotesAndUsersByRoomId(roomId);
           }
         )
         .subscribe();
     }
   });
 
-  async function showVotes() {
+  async function sendShowVotes() {
     roomChannel
       .send({
         type: 'broadcast',
@@ -204,29 +168,11 @@
       })
       .then(() => pushMessage({ roomId, userId, message: `${username} ${m.showVotesMessage()}` }))
       .then(async () => {
-        voteShown = true;
-        resetActiveCell();
-
-        const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
-        if (error) {
-          logger.error('Error fetching votes:', error);
-          throw error;
-        }
-
-        savedVotes = [];
-        data.forEach((vote) => {
-          const { complexity, effort, uncertainty, users } = vote;
-          savedVotes.push({
-            complexity,
-            effort,
-            uncertainty,
-            username: users.username
-          });
-        });
+        handleShowVotes();
       });
   }
 
-  function clearVote() {
+  function sendClearVotes() {
     roomChannel
       .send({
         type: 'broadcast',
@@ -236,10 +182,7 @@
       .then(() => pushMessage({ roomId, userId, message: `${username} ${m.clearVotesMessage()}` }))
       .then(async () => {
         await resetVotesByRoomId(roomId);
-        voteShown = false;
-        savedVotes = [];
-        resetSelectedPointsValues();
-        resetActiveCell();
+        clearVotes();
       });
   }
 
@@ -261,12 +204,21 @@
     };
   }
 
-  function resetSelectedPointsValues() {
+  function clearVotes() {
+    voteShown = false;
+    savedVotes = [];
     selectedPointsValues = {
       complexity: null,
       effort: null,
       uncertainty: null
     };
+    resetActiveCell();
+  }
+
+  async function handleShowVotes() {
+    savedVotes = await fetchVotesAndUsersByRoomId(roomId);
+    voteShown = true;
+    resetActiveCell();
   }
 </script>
 
@@ -277,8 +229,8 @@
 <section>
   <div>
     <span>{m.inviteLink()}</span><CopiableText text={getJoinUrl(currentHref)} />
-    <button onclick={clearVote}>{m.clearVotes()}</button>
-    <button onclick={showVotes}>{m.showVotes()}</button>
+    <button onclick={sendClearVotes}>{m.clearVotes()}</button>
+    <button onclick={sendShowVotes}>{m.showVotes()}</button>
   </div>
 
   <div class="infos">
@@ -378,7 +330,6 @@
   .infos {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 2rem;
   }
 
   .protips {

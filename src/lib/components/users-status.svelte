@@ -3,7 +3,6 @@
   import { m } from '$lib/paraglide/messages';
   import { fetchVotesAndUsersByRoomId } from '$lib/remote/votes.remote';
   import { supabase } from '$lib/supabaseClient';
-  import { logger } from '$lib/util/logger';
   import { onMount } from 'svelte';
 
   let { usersStatuses, roomId }: { usersStatuses: UservoteModel[]; roomId: string } = $props();
@@ -16,19 +15,7 @@
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, schema: 'public', table: 'votes' },
         async () => {
-          const { data: currentVotesData, error: currentVotesQueryError } = await fetchVotesAndUsersByRoomId(roomId);
-          if (currentVotesQueryError) {
-            logger.error('Error selecting current votes', currentVotesQueryError);
-            throw new Error('Error selecting current votes');
-          }
-          statuses = currentVotesData.map((vote) => {
-            return {
-              complexity: vote.complexity,
-              effort: vote.effort,
-              uncertainty: vote.uncertainty,
-              username: vote.users.username
-            };
-          });
+          statuses = await fetchVotesAndUsersByRoomId(roomId);
         }
       )
       .subscribe();
