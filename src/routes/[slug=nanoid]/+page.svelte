@@ -18,7 +18,6 @@
   import VotesStats from '$lib/components/votes-stats.svelte';
   import { m } from '$lib/paraglide/messages';
   import { pushMessage } from '$lib/remote/messages.remote';
-  import { syncPresence } from '$lib/remote/users.remote';
   import { fetchVotesAndUsersByRoomId, resetVotesByRoomId, upsertVote } from '$lib/remote/votes.remote';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
@@ -53,14 +52,18 @@
     });
 
     channelPresence
-      .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, async () => {
+      .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
         const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
         const users = state[slug];
 
         if (users && users.length !== 0 && users[0].userId === userId) {
-          await syncPresence({
-            roomId: roomId,
-            users: users
+          fetch(`/api/rooms/sync`, {
+            method: 'POST',
+            body: JSON.stringify({
+              roomId: roomId,
+              userId: userId,
+              users: users
+            })
           });
         }
       })
