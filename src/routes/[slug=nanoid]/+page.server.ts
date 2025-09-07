@@ -1,10 +1,18 @@
 import { m } from '$lib/paraglide/messages';
+import { fetchVotesAndUsersByRoomId } from '$lib/remote/votes.remote';
 import { fetchRoom } from '$lib/server/db/rooms';
+import { supabase } from '$lib/server/supabaseClient';
 import { logger } from '$lib/util/logger';
 import type { PageServerLoad } from './$types';
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, cookies }) => {
   const slug = params.slug;
+  const userId = cookies.get('userId');
+
+  if (!slug || !userId) {
+    logger.error('Missing slug or userId');
+    throw new Error('Missing slug or userId');
+  }
 
   const { data: room, error } = await fetchRoom(slug);
   if (error || !room) {
@@ -12,10 +20,33 @@ export const load: PageServerLoad = async ({ params }) => {
     throw new Error('Error fetching room');
   }
 
+  const { data: currentUser, error: userError } = await supabase.from('users').select().eq('id', userId).single();
+  if (userError || !currentUser) {
+    logger.error('Error fetching user', userError);
+    throw new Error('Error fetching user');
+  }
+
+  const { data: currentVotesData, error: currentVotesQueryError } = await fetchVotesAndUsersByRoomId(room.id);
+  if (currentVotesQueryError) {
+    logger.error('Error selecting current votes', currentVotesQueryError);
+    throw new Error('Error selecting current votes');
+  }
+  const currentVotes = currentVotesData.map((vote) => {
+    return {
+      complexity: vote.complexity,
+      effort: vote.effort,
+      uncertainty: vote.uncertainty,
+      username: vote.users.username
+    };
+  });
+
   return {
     slug: room.name,
     roomId: room.id,
-    protipsTexts: protipsTexts
+    userId: currentUser.id,
+    username: currentUser.username,
+    protipsTexts: protipsTexts,
+    currentVotes: currentVotes
   };
 };
 

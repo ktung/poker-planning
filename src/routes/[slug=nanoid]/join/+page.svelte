@@ -1,14 +1,14 @@
 <script lang="ts">
-  import { goto } from '$app/navigation';
-  import { resolve } from '$app/paths';
   import { m } from '$lib/paraglide/messages';
+  import { joinRoom } from '$lib/remote/rooms.remote.js';
+  import { logger } from '$lib/util/logger.js';
   import { onMount } from 'svelte';
   import type { Snapshot } from './$types.js';
 
   const { data } = $props();
-  const { slug } = data;
+  const { roomId, slug } = data;
 
-  let roomId: string = $state(slug);
+  let roomName: string = $state(slug);
   let username = $state('');
 
   onMount(() => {
@@ -20,11 +20,6 @@
     capture: () => username,
     restore: (value) => (username = value)
   };
-
-  function joinRoom() {
-    window.localStorage.setItem('username', username);
-    goto(resolve('/[slug=nanoid]', { slug: roomId }));
-  }
 </script>
 
 <svelte:head>
@@ -33,9 +28,22 @@
 
 <div>
   <h1>{m.hello_world({ name: username })}</h1>
-  <label for="username">{m.username()}</label>
-  <input id="username" type="text" placeholder={m.username()} bind:value={username} />
-  <button onclick={joinRoom}>{m.joinRoom({ roomId })}</button>
+  <form
+    {...joinRoom.enhance(async ({ form, submit }) => {
+      try {
+        await submit();
+        form.reset();
+        window.localStorage.setItem('username', username);
+      } catch (error) {
+        logger.error('Error joining room', error);
+      }
+    })}
+  >
+    <label for="username">{m.username()}</label>
+    <input id="username" type="text" name="username" placeholder={m.username()} bind:value={username} />
+    <input type="hidden" name="roomId" value={roomId} />
+    <button>{m.joinRoom({ roomName })}</button>
+  </form>
 </div>
 
 <style>
