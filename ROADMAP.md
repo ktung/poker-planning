@@ -1,3 +1,8 @@
+# 1.1.1
+
+- Fix username mandatory (insert user on create/join)
+- Improve UI : copy to clipboard (italic)
+
 # 1.1.0
 
 - Change value after show votes
