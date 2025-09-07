@@ -2,15 +2,15 @@
   import { m } from '$lib/paraglide/messages';
   import { round2 } from '$lib/util/math';
 
-  let { pointsValues, myVotes, teamVotes }: { pointsValues: number[]; myVotes: VoteModel; teamVotes: UservoteModel[] } = $props();
+  const { pointsValues, myVotes, teamVotes }: { pointsValues: number[]; myVotes: VoteModel; teamVotes: UservoteModel[] } = $props();
 
-  let mean: number | null = $derived.by(() => {
+  const mean: number | null = $derived.by(() => {
     const nbSelected = Object.values(myVotes).filter((voteValue: number | null) => voteValue !== null && !isNaN(voteValue)).length;
     const mean = ((myVotes.complexity || 0) + (myVotes.effort || 0) + (myVotes.uncertainty || 0)) / nbSelected;
     return round2(mean);
   });
 
-  let pointValueOverMean: number | null = $derived.by(() => {
+  const pointValueOverMean: number | null = $derived.by(() => {
     if (isNaN(mean)) {
       return null;
     }
@@ -18,7 +18,7 @@
     return pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
   });
 
-  let teamMean: number | null = $derived.by(() => {
+  const teamMean: number | null = $derived.by(() => {
     const nbTeamVotes = teamVotes
       .flatMap((vote) => {
         return Object.entries(vote)
@@ -31,7 +31,7 @@
     return round2(mean);
   });
 
-  let pointValueOverTeamMean: number | null = $derived.by(() => {
+  const pointValueOverTeamMean: number | null = $derived.by(() => {
     if (isNaN(teamMean)) {
       return null;
     }
@@ -43,10 +43,10 @@
 <div class="stats">
   <ul>
     {#if mean !== null && pointValueOverMean !== null}
-      <li>{m.yourValuePoint()} <span title="Mean {mean}">{pointValueOverMean}</span></li>
+      <li title="Mean {mean}">{m.yourValuePoint()} {pointValueOverMean}</li>
     {/if}
     {#if teamMean !== null && pointValueOverTeamMean !== null}
-      <li>{m.teamRecommendedValue()} <span title="Mean {teamMean}">{pointValueOverTeamMean}</span></li>
+      <li title="Mean {teamMean}" class="mean">{m.teamRecommendedValue()} {pointValueOverTeamMean}</li>
     {/if}
   </ul>
 </div>
