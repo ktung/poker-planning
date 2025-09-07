@@ -49,10 +49,6 @@ export const syncPresence = command(syncPresenceSchema, async ({ roomId, users }
 
   logger.debug('Users to delete:', usersToDelete);
   usersToDelete?.forEach(async (user) => {
-    await insertMessage(roomId, user.id, `${user.username} left the room`);
-    const { error } = await deleteUserByUserIdAndRoomId(user.id, roomId);
-    if (error) {
-      logger.error('Error deleting user:', error);
-    }
+    Promise.all([deleteUserByUserIdAndRoomId(user.id, roomId), insertMessage(roomId, user.id, `${user.username} left the room`)]);
   });
 });
