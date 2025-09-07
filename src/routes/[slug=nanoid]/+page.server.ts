@@ -26,19 +26,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     throw new Error('Error fetching user');
   }
 
-  const { data: currentVotesData, error: currentVotesQueryError } = await fetchVotesAndUsersByRoomId(room.id);
-  if (currentVotesQueryError) {
-    logger.error('Error selecting current votes', currentVotesQueryError);
-    throw new Error('Error selecting current votes');
-  }
-  const currentVotes = currentVotesData.map((vote) => {
-    return {
-      complexity: vote.complexity,
-      effort: vote.effort,
-      uncertainty: vote.uncertainty,
-      username: vote.users.username
-    };
-  });
+  const currentVotes = await fetchVotesAndUsersByRoomId(room.id);
 
   return {
     slug: room.name,

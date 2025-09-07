@@ -152,22 +152,7 @@
           { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
           async () => {
             resetActiveCell();
-            const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
-            if (error) {
-              logger.error('Error fetching votes:', error);
-              throw error;
-            }
-
-            savedVotes = [];
-            data.forEach((vote) => {
-              const { complexity, effort, uncertainty, users } = vote;
-              savedVotes.push({
-                complexity,
-                effort,
-                uncertainty,
-                username: users.username
-              });
-            });
+            savedVotes = await fetchVotesAndUsersByRoomId(roomId);
           }
         )
         .subscribe();
@@ -231,25 +216,9 @@
   }
 
   async function handleShowVotes() {
-    const { data, error } = await fetchVotesAndUsersByRoomId(roomId);
-    if (error) {
-      logger.error('Error fetching votes:', error);
-      throw error;
-    }
-
+    savedVotes = await fetchVotesAndUsersByRoomId(roomId);
     voteShown = true;
     resetActiveCell();
-
-    savedVotes = [];
-    data.forEach((vote) => {
-      const { complexity, effort, uncertainty, users } = vote;
-      savedVotes.push({
-        complexity,
-        effort,
-        uncertainty,
-        username: users.username
-      });
-    });
   }
 </script>
 
