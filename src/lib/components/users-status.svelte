@@ -15,7 +15,7 @@
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, schema: 'public', table: 'votes' },
         async () => {
-          statuses = await fetchVotesAndUsersByRoomId(roomId);
+          statuses = (await fetchVotesAndUsersByRoomId(roomId)).votes;
         }
       )
       .subscribe();
