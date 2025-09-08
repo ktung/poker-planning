@@ -26,7 +26,7 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     throw new Error('Error fetching user');
   }
 
-  const currentVotes = await fetchVotesAndUsersByRoomId(room.id);
+  const currentVotes = (await fetchVotesAndUsersByRoomId(room.id)).votes;
 
   return {
     slug: room.name,

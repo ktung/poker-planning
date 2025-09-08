@@ -32,6 +32,7 @@
   let voteShown = $state(false);
   let roomChannel: RealtimeChannel;
   let voteChannel: RealtimeChannel;
+  let stats = $state();
 
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
@@ -152,7 +153,9 @@
           { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
           async () => {
             resetActiveCell();
-            savedVotes = await fetchVotesAndUsersByRoomId(roomId);
+            const data = await fetchVotesAndUsersByRoomId(roomId);
+            savedVotes = data.votes;
+            stats = data.stats;
           }
         )
         .subscribe();
@@ -207,6 +210,7 @@
   function clearVotes() {
     voteShown = false;
     savedVotes = [];
+    stats = null;
     selectedPointsValues = {
       complexity: null,
       effort: null,
@@ -216,7 +220,9 @@
   }
 
   async function handleShowVotes() {
-    savedVotes = await fetchVotesAndUsersByRoomId(roomId);
+    const data = await fetchVotesAndUsersByRoomId(roomId);
+    savedVotes = data.votes;
+    stats = data.stats;
     voteShown = true;
     resetActiveCell();
   }
@@ -236,7 +242,7 @@
   <div class="infos">
     <Chat {roomId} {slug} {userId} />
     <UsersStatus usersStatuses={currentVotes} {roomId} />
-    <VotesStats {pointsValues} myVotes={selectedPointsValues} teamVotes={savedVotes} />
+    <VotesStats {pointsValues} myVotes={selectedPointsValues} {stats} teamVotes={savedVotes} />
   </div>
 
   <section class="protips">

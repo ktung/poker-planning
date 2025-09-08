@@ -1,8 +1,9 @@
 <script lang="ts">
   import { m } from '$lib/paraglide/messages';
+  import type { VoteStats } from '$lib/remote/votes.schemas';
   import { round2 } from '$lib/util/math';
 
-  const { pointsValues, myVotes, teamVotes }: { pointsValues: number[]; myVotes: VoteModel; teamVotes: UservoteModel[] } = $props();
+  const { pointsValues, myVotes, stats }: { pointsValues: number[]; myVotes: VoteModel; stats: VoteStats } = $props();
 
   const mean: number | null = $derived.by(() => {
     const nbSelected = Object.values(myVotes).filter((voteValue: number | null) => voteValue !== null && !isNaN(voteValue)).length;
@@ -17,27 +18,6 @@
 
     return pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
   });
-
-  const teamMean: number | null = $derived.by(() => {
-    const nbTeamVotes = teamVotes
-      .flatMap((vote) => {
-        return Object.entries(vote)
-          .filter(([key]) => key !== 'username')
-          .map(([, value]) => value);
-      })
-      .filter((vote: number | null) => vote !== null && !isNaN(vote)).length;
-    const mean =
-      teamVotes.reduce((acc, vote) => acc + (vote.complexity || 0) + (vote.effort || 0) + (vote.uncertainty || 0), 0) / nbTeamVotes;
-    return round2(mean);
-  });
-
-  const pointValueOverTeamMean: number | null = $derived.by(() => {
-    if (isNaN(teamMean)) {
-      return null;
-    }
-
-    return pointsValues.find((value) => value >= teamMean) ?? pointsValues[pointsValues.length - 1];
-  });
 </script>
 
 <div class="stats">
@@ -45,8 +25,18 @@
     {#if mean !== null && pointValueOverMean !== null}
       <li title="Mean {mean}">{m.yourValuePoint()} {pointValueOverMean}</li>
     {/if}
-    {#if teamMean !== null && pointValueOverTeamMean !== null}
-      <li title="Mean {teamMean}" class="mean">{m.teamRecommendedValue()} {pointValueOverTeamMean}</li>
+    {#if stats}
+      {#if stats.teamMean !== null && stats.teamRecommendedValue !== null}
+        <li
+          title="Mean {stats.teamMean}"
+          class:consensus={stats.teamRecommendedValue === stats.teamMin.value && stats.teamMin.value === stats.teamMax.value}
+        >
+          {m.teamRecommendedValue()}
+          {stats.teamRecommendedValue}
+        </li>
+      {/if}
+      <li>Min {stats.teamMin.value} ({stats.teamMin.usernames})</li>
+      <li>Max {stats.teamMax.value} ({stats.teamMax.usernames})</li>
     {/if}
   </ul>
 </div>
@@ -64,5 +54,10 @@
     .stats {
       width: 100%;
     }
+  }
+
+  .consensus {
+    font-weight: bold;
+    color: var(--primary-color);
   }
 </style>

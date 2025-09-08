@@ -1,7 +1,10 @@
 import { command, query } from '$app/server';
+import { pointsValues } from '$lib/assets/data';
 import { supabase } from '$lib/server/supabaseClient';
 import { logger } from '$lib/util/logger';
+import { round2 } from '$lib/util/math';
 import * as v from 'valibot';
+import type { VoteStats } from './votes.schemas';
 
 interface Vote {
   room_id: string;
@@ -12,18 +15,100 @@ interface Vote {
 }
 
 export const fetchVotesAndUsersByRoomId = query(v.string(), async (roomId) => {
-  const { data, error } = await supabase.from('votes').select('complexity, effort, uncertainty, users ( username )').eq('room_id', roomId);
+  const { data, error } = await supabase
+    .from('votes')
+    .select('complexity, effort, uncertainty, users ( id, username )')
+    .eq('room_id', roomId);
   if (!data || error) {
     logger.error('Error fetching votes:', error);
     throw error;
   }
-  return data.map((vote) => ({
+  const votes = data.map((vote) => ({
     complexity: vote.complexity,
     effort: vote.effort,
     uncertainty: vote.uncertainty,
+    userid: vote.users.id,
     username: vote.users.username
   }));
+
+  const mean: number = computeMean(votes);
+  const pointValueOverMean: number | null = computePointOverMean(mean);
+
+  const votesByUser = Object.groupBy(votes, (vote) => vote.userid);
+  const recommendedValueByUser = Object.fromEntries(
+    Object.entries(votesByUser).map(([userId, userVotes]) => {
+      if (!userVotes || userVotes.length === 0) {
+        return [userId, null];
+      }
+
+      const userMean = computeMean(userVotes);
+      const userRecommendedValue = computePointOverMean(userMean);
+      return [userId, userRecommendedValue];
+    })
+  );
+
+  return {
+    votes: votes.map((vote) => ({
+      complexity: vote.complexity,
+      effort: vote.effort,
+      uncertainty: vote.uncertainty,
+      username: vote.username
+    })),
+    mean,
+    pointValueOverMean,
+    stats: {
+      teamMean: mean,
+      teamRecommendedValue: pointValueOverMean,
+      teamMin: {
+        value: recommendedValueByUser
+          ? Math.min(...Object.values(recommendedValueByUser).filter((v): v is number => v !== null && !isNaN(v)))
+          : null,
+        usernames: votes
+          .filter(
+            (vote) =>
+              recommendedValueByUser[vote.userid] ===
+              (recommendedValueByUser
+                ? Math.min(...Object.values(recommendedValueByUser).filter((v): v is number => v !== null && !isNaN(v)))
+                : null)
+          )
+          .map((vote) => vote.username)
+      },
+      teamMax: {
+        value: recommendedValueByUser
+          ? Math.max(...Object.values(recommendedValueByUser).filter((v): v is number => v !== null && !isNaN(v)))
+          : null,
+        usernames: votes
+          .filter(
+            (vote) =>
+              recommendedValueByUser[vote.userid] ===
+              (recommendedValueByUser
+                ? Math.max(...Object.values(recommendedValueByUser).filter((v): v is number => v !== null && !isNaN(v)))
+                : null)
+          )
+          .map((vote) => vote.username)
+      }
+    } satisfies VoteStats
+  };
 });
+
+const computeMean = (votes: VoteModel[]): number => {
+  const nbVotes = votes
+    .flatMap((vote) => {
+      return Object.entries(vote)
+        .filter(([key]) => key !== 'username')
+        .map(([, value]) => (typeof value === 'number' ? value : null));
+    })
+    .filter((vote: number | null) => vote !== null && !isNaN(vote)).length;
+  return round2(votes.reduce((acc, vote) => acc + (vote.complexity || 0) + (vote.effort || 0) + (vote.uncertainty || 0), 0) / nbVotes);
+};
+
+const computePointOverMean = (mean: number): number | null => {
+  if (isNaN(mean)) {
+    return null;
+  }
+  const pointValueOverMean = pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
+  return pointValueOverMean;
+};
 
 const upsertVoteSchema = v.object({
   userId: v.string(),
