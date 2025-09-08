@@ -1,7 +1,9 @@
-# 1.1.1
+# 1.2.0
 
 - Fix username mandatory (insert user on create/join)
 - Improve UI : copy to clipboard (italic)
+- Show min/max
+- Highlight out of mean users
 
 # 1.1.0
 
@@ -48,10 +50,6 @@
   - Auto start
   - Stop on show votes
   - Reset on clear votes
-- Show nerd stats
-  - min value per category
-  - max value per category
-  - mean value per category
 - chose another preset on create room (use another scale/color)
 - Password protected rooms
 - Add a how to use section in about page

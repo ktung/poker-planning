@@ -18,6 +18,16 @@
 
     return pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
   });
+
+  const isConsensus = $derived.by(() => {
+    return (
+      stats.teamRecommendedValue !== null &&
+      stats.teamMin !== null &&
+      stats.teamMax !== null &&
+      stats.teamMin.value === stats.teamMax.value &&
+      stats.teamMin.value === stats.teamRecommendedValue
+    );
+  });
 </script>
 
 <div class="stats">
@@ -27,10 +37,7 @@
     {/if}
     {#if stats}
       {#if stats.teamMean !== null && stats.teamRecommendedValue !== null}
-        <li
-          title="Mean {stats.teamMean}"
-          class:consensus={stats.teamRecommendedValue === stats.teamMin.value && stats.teamMin.value === stats.teamMax.value}
-        >
+        <li title="Mean {stats.teamMean}" class:consensus={isConsensus}>
           {m.teamRecommendedValue()}
           {stats.teamRecommendedValue}
         </li>
