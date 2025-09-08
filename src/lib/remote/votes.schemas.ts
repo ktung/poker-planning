@@ -9,4 +9,7 @@ export interface VoteStats {
     value: number | null;
     usernames: string[];
   };
+  complexityRecommandation: number | null;
+  effortRecommandation: number | null;
+  uncertaintyRecommandation: number | null;
 }

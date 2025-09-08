@@ -19,6 +19,7 @@
   import { m } from '$lib/paraglide/messages';
   import { pushMessage } from '$lib/remote/messages.remote';
   import { fetchVotesAndUsersByRoomId, resetVotesByRoomId, upsertVote } from '$lib/remote/votes.remote';
+  import type { VoteStats } from '$lib/remote/votes.schemas';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
   import { getJoinUrl } from '$lib/util/routes';
@@ -32,7 +33,7 @@
   let voteShown = $state(false);
   let roomChannel: RealtimeChannel;
   let voteChannel: RealtimeChannel;
-  let stats = $state();
+  let stats: VoteStats | undefined = $state();
 
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
@@ -296,15 +297,25 @@
           <td>{row.pointValue}</td>
           <td class:active={activeCell.complexity === index} onclick={(ev) => handleClick(ev, 'complexity', index)}>
             {row.complexity}
-            <Voters votes={savedVotes} selectedType="complexity" selectedValue={row.pointValue} />
+            <Voters
+              votes={savedVotes}
+              selectedType="complexity"
+              selectedValue={row.pointValue}
+              recommandedValue={stats.complexityRecommandation}
+            />
           </td>
           <td class:active={activeCell.effort === index} onclick={(ev) => handleClick(ev, 'effort', index)}
             >{row.effort}
-            <Voters votes={savedVotes} selectedType="effort" selectedValue={row.pointValue} />
+            <Voters votes={savedVotes} selectedType="effort" selectedValue={row.pointValue} recommandedValue={stats.effortRecommandation} />
           </td>
           <td class:active={activeCell.uncertainty === index} onclick={(ev) => handleClick(ev, 'uncertainty', index)}
             >{row.uncertainty}
-            <Voters votes={savedVotes} selectedType="uncertainty" selectedValue={row.pointValue} />
+            <Voters
+              votes={savedVotes}
+              selectedType="uncertainty"
+              selectedValue={row.pointValue}
+              recommandedValue={stats.uncertaintyRecommandation}
+            />
           </td>
         </tr>
       {/each}

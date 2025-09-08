@@ -86,7 +86,10 @@ export const fetchVotesAndUsersByRoomId = query(v.string(), async (roomId) => {
                 : null)
           )
           .map((vote) => vote.username)
-      }
+      },
+      complexityRecommandation: computePointOverMeanByCategory(votes, 'complexity'),
+      effortRecommandation: computePointOverMeanByCategory(votes, 'effort'),
+      uncertaintyRecommandation: computePointOverMeanByCategory(votes, 'uncertainty')
     } satisfies VoteStats
   };
 });
@@ -106,6 +109,16 @@ const computePointOverMean = (mean: number): number | null => {
   if (isNaN(mean)) {
     return null;
   }
+  const pointValueOverMean = pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
+  return pointValueOverMean;
+};
+
+const computePointOverMeanByCategory = (votes: VoteModel[], category: 'complexity' | 'effort' | 'uncertainty'): number | null => {
+  const categoryVotes = votes.map((vote) => vote[category]).filter((value): value is number => value !== null && !isNaN(value));
+  if (categoryVotes.length === 0) {
+    return null;
+  }
+  const mean = round2(categoryVotes.reduce((acc, value) => acc + value, 0) / categoryVotes.length);
   const pointValueOverMean = pointsValues.find((value) => value >= mean) ?? pointsValues[pointsValues.length - 1];
   return pointValueOverMean;
 };
