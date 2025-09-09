@@ -38,6 +38,7 @@
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
     if (!!sessionRoomId && sessionRoomId === slug) {
+      logger.error('Redirecting to join url if its a refresh');
       // eslint-disable-next-line svelte/no-navigation-without-resolve -- so tired
       goto(`${getJoinUrl(currentHref)}`);
     } else {
@@ -82,8 +83,8 @@
           onlineAt: new Date().toISOString()
         };
         const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
-        if (presenceTrackStatus !== 'ok') {
-          logger.debug('track presence', presenceTrackStatus);
+        if (presenceTrackStatus === 'error') {
+          logger.info('track presence', presenceTrackStatus);
           // eslint-disable-next-line svelte/no-navigation-without-resolve -- so tired
           goto(getJoinUrl(currentHref));
         }
@@ -124,7 +125,7 @@
     } else {
       activeCell[type] = index;
       const target = event.target as HTMLTableCellElement;
-      const row = target.parentElement;
+      const row = target.closest('tr');
       if (row) {
         const pointValue = row.children[0].textContent;
         if (pointValue) {
@@ -301,12 +302,17 @@
               votes={savedVotes}
               selectedType="complexity"
               selectedValue={row.pointValue}
-              recommandedValue={stats.complexityRecommandation}
+              recommandedValue={stats?.complexityRecommandation}
             />
           </td>
           <td class:active={activeCell.effort === index} onclick={(ev) => handleClick(ev, 'effort', index)}
             >{row.effort}
-            <Voters votes={savedVotes} selectedType="effort" selectedValue={row.pointValue} recommandedValue={stats.effortRecommandation} />
+            <Voters
+              votes={savedVotes}
+              selectedType="effort"
+              selectedValue={row.pointValue}
+              recommandedValue={stats?.effortRecommandation}
+            />
           </td>
           <td class:active={activeCell.uncertainty === index} onclick={(ev) => handleClick(ev, 'uncertainty', index)}
             >{row.uncertainty}
@@ -314,7 +320,7 @@
               votes={savedVotes}
               selectedType="uncertainty"
               selectedValue={row.pointValue}
-              recommandedValue={stats.uncertaintyRecommandation}
+              recommandedValue={stats?.uncertaintyRecommandation}
             />
           </td>
         </tr>

@@ -1,13 +1,6 @@
 import { browser, dev } from '$app/environment';
 
 export const logger = {
-  debug: (message?: unknown, ...optionalParams: unknown[]) => {
-    if (browser && !dev) {
-      return;
-    }
-
-    console.debug(message, optionalParams);
-  },
   info: (message?: unknown, ...optionalParams: unknown[]) => {
     if (browser && !dev) {
       return;

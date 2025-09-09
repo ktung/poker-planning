@@ -12,7 +12,7 @@ interface RequestBody {
 
 export const POST: RequestHandler = async ({ request }) => {
   const data: RequestBody = await request.json();
-  logger.debug('POST /api/rooms/sync', data);
+  logger.info('POST /api/rooms/sync', data);
 
   if (!data.roomId || !data.userId || !data.users) {
     logger.error('Invalid request body', data);
