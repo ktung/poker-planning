@@ -55,10 +55,12 @@
 <style>
   .stats {
     width: 20%;
+    min-width: 250px;
     margin: 1rem 0;
     background: white;
     box-shadow: var(--shadow-100);
     border-radius: var(--radius-small);
+    word-break: break-all;
   }
 
   @media (max-width: 480px) {
