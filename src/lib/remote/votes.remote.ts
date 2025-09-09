@@ -113,7 +113,7 @@ const computePointOverMean = (mean: number): number | null => {
   return pointValueOverMean;
 };
 
-const computePointOverMeanByCategory = (votes: VoteModel[], category: 'complexity' | 'effort' | 'uncertainty'): number | null => {
+const computePointOverMeanByCategory = (votes: VoteModel[], category: VoteType): number | null => {
   const categoryVotes = votes.map((vote) => vote[category]).filter((value): value is number => value !== null && !isNaN(value));
   if (categoryVotes.length === 0) {
     return null;

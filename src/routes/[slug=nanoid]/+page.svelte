@@ -9,6 +9,7 @@
     type RealtimePresenceState
   } from '@supabase/supabase-js';
   import { goto } from '$app/navigation';
+  import { resolve } from '$app/paths';
   import { page } from '$app/state';
   import { pointsValues, tableData } from '$lib/assets/data';
   import Chat from '$lib/components/chat.svelte';
@@ -19,7 +20,7 @@
   import { m } from '$lib/paraglide/messages';
   import { pushMessage } from '$lib/remote/messages.remote';
   import { fetchVotesAndUsersByRoomId, resetVotesByRoomId, upsertVote } from '$lib/remote/votes.remote';
-  import type { VoteStats } from '$lib/remote/votes.schemas';
+  import { defaultVoteStats, type VoteStats } from '$lib/remote/votes.schemas';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
   import { getJoinUrl } from '$lib/util/routes';
@@ -29,18 +30,16 @@
 
   const { data }: { data: PageData } = $props();
   const { roomId, slug, userId, currentVotes, username, protipsTexts } = data;
-  const currentHref = page.url.href;
   let voteShown = $state(false);
   let roomChannel: RealtimeChannel;
   let voteChannel: RealtimeChannel;
-  let stats: VoteStats | undefined = $state();
+  let stats: VoteStats = $state(defaultVoteStats);
 
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
     if (!!sessionRoomId && sessionRoomId === slug) {
       logger.error('Redirecting to join url if its a refresh');
-      // eslint-disable-next-line svelte/no-navigation-without-resolve -- so tired
-      goto(`${getJoinUrl(currentHref)}`);
+      goto(resolve('/[slug=nanoid]/join', { slug: slug }));
     } else {
       window.sessionStorage.setItem('roomId', slug);
     }
@@ -73,8 +72,7 @@
       .subscribe(async (status) => {
         if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
           logger.error(`Error subscribing to presence channel: ${status}`);
-          // eslint-disable-next-line svelte/no-navigation-without-resolve -- so tired
-          goto(getJoinUrl(currentHref));
+          goto(resolve('/[slug=nanoid]/join', { slug: slug }));
           return;
         }
 
@@ -85,8 +83,7 @@
         const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
         if (presenceTrackStatus === 'error') {
           logger.info('track presence', presenceTrackStatus);
-          // eslint-disable-next-line svelte/no-navigation-without-resolve -- so tired
-          goto(getJoinUrl(currentHref));
+          goto(resolve('/[slug=nanoid]/join', { slug: slug }));
         }
       });
 
@@ -111,7 +108,6 @@
     effort: null,
     uncertainty: null
   });
-
   let selectedPointsValues: VoteModel = $state({
     complexity: null,
     effort: null,
@@ -154,7 +150,6 @@
           REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
           { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
           async () => {
-            resetActiveCell();
             const data = await fetchVotesAndUsersByRoomId(roomId);
             savedVotes = data.votes;
             stats = data.stats;
@@ -201,7 +196,15 @@
     protipsToggles[type] = !protipsToggles[type];
   }
 
-  function resetActiveCell() {
+  function clearVotes() {
+    voteShown = false;
+    savedVotes = [];
+    stats = defaultVoteStats;
+    selectedPointsValues = {
+      complexity: null,
+      effort: null,
+      uncertainty: null
+    };
     activeCell = {
       complexity: null,
       effort: null,
@@ -209,24 +212,11 @@
     };
   }
 
-  function clearVotes() {
-    voteShown = false;
-    savedVotes = [];
-    stats = null;
-    selectedPointsValues = {
-      complexity: null,
-      effort: null,
-      uncertainty: null
-    };
-    resetActiveCell();
-  }
-
   async function handleShowVotes() {
     const data = await fetchVotesAndUsersByRoomId(roomId);
     savedVotes = data.votes;
     stats = data.stats;
     voteShown = true;
-    resetActiveCell();
   }
 </script>
 
@@ -236,7 +226,7 @@
 
 <section>
   <div>
-    <span>{m.inviteLink()}</span><CopiableText text={getJoinUrl(currentHref)} />
+    <span>{m.inviteLink()}</span><CopiableText text={getJoinUrl(page.url.href)} />
     <button onclick={sendClearVotes}>{m.clearVotes()}</button>
     <button onclick={sendShowVotes}>{m.showVotes()}</button>
   </div>
@@ -296,7 +286,7 @@
       {#each tableData as row, index (row.pointValue)}
         <tr>
           <td>{row.pointValue}</td>
-          <td class:active={activeCell.complexity === index} onclick={(ev) => handleClick(ev, 'complexity', index)}>
+          <td class:active={!voteShown && activeCell.complexity === index} onclick={(ev) => handleClick(ev, 'complexity', index)}>
             {row.complexity}
             <Voters
               votes={savedVotes}
@@ -305,7 +295,7 @@
               recommandedValue={stats?.complexityRecommandation}
             />
           </td>
-          <td class:active={activeCell.effort === index} onclick={(ev) => handleClick(ev, 'effort', index)}
+          <td class:active={!voteShown && activeCell.effort === index} onclick={(ev) => handleClick(ev, 'effort', index)}
             >{row.effort}
             <Voters
               votes={savedVotes}
@@ -314,7 +304,7 @@
               recommandedValue={stats?.effortRecommandation}
             />
           </td>
-          <td class:active={activeCell.uncertainty === index} onclick={(ev) => handleClick(ev, 'uncertainty', index)}
+          <td class:active={!voteShown && activeCell.uncertainty === index} onclick={(ev) => handleClick(ev, 'uncertainty', index)}
             >{row.uncertainty}
             <Voters
               votes={savedVotes}

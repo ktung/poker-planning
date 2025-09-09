@@ -42,8 +42,12 @@
           {stats.teamRecommendedValue}
         </li>
       {/if}
-      <li>Min {stats.teamMin.value} ({stats.teamMin.usernames})</li>
-      <li>Max {stats.teamMax.value} ({stats.teamMax.usernames})</li>
+      {#if stats.teamMin.value !== null}
+        <li>Min {stats.teamMin.value} ({stats.teamMin.usernames})</li>
+      {/if}
+      {#if stats.teamMax.value !== null}
+        <li>Max {stats.teamMax.value} ({stats.teamMax.usernames})</li>
+      {/if}
     {/if}
   </ul>
 </div>
