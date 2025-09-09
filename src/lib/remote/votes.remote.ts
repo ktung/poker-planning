@@ -127,7 +127,7 @@ const upsertVoteSchema = v.object({
   userId: v.string(),
   roomId: v.string(),
   type: v.union([v.literal('complexity'), v.literal('effort'), v.literal('uncertainty')]),
-  value: v.nullable(v.number())
+  value: v.nullish(v.number())
 });
 export const upsertVote = command(upsertVoteSchema, ({ userId, roomId, type, value }) => {
   const data: Vote = {

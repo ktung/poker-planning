@@ -5,7 +5,7 @@
     votes: UservoteModel[];
     selectedType: VoteType;
     selectedValue: number;
-    recommandedValue: number | null;
+    recommandedValue?: number | null;
   }
 
   const { votes, selectedType, selectedValue, recommandedValue }: PropsType = $props();
