@@ -1,5 +1,5 @@
 export interface VoteStats {
-  teamMean: number;
+  teamMean: number | null;
   teamRecommendedValue: number | null;
   teamMin: {
     value: number | null;
@@ -13,3 +13,12 @@ export interface VoteStats {
   effortRecommandation: number | null;
   uncertaintyRecommandation: number | null;
 }
+export const defaultVoteStats: VoteStats = {
+  teamMean: null,
+  teamRecommendedValue: null,
+  teamMin: { value: null, usernames: [] },
+  teamMax: { value: null, usernames: [] },
+  complexityRecommandation: null,
+  effortRecommandation: null,
+  uncertaintyRecommandation: null
+};

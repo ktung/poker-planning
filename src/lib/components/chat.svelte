@@ -93,11 +93,12 @@
     border-radius: var(--radius-small);
     box-shadow: var(--shadow-100);
     margin: 1rem 0;
+    max-height: 500px;
   }
 
   .messages {
-    height: 15vh;
     overflow-y: auto;
+    height: 78%;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -109,7 +110,7 @@
     padding: 0.5rem 1rem;
     border-radius: var(--radius-medium);
     width: fit-content;
-    word-break: break-word;
+    word-break: break-all;
     line-height: 1.4;
   }
 
