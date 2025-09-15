@@ -25,7 +25,7 @@
   import { logger } from '$lib/util/logger';
   import { getJoinUrl } from '$lib/util/routes';
   import { CircleQuestionMark, CircleX } from 'lucide-svelte';
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import type { PageData } from './$types';
 
   const { data }: { data: PageData } = $props();
@@ -97,10 +97,14 @@
       .subscribe();
 
     return () => {
-      roomChannel.unsubscribe();
+      supabase.removeChannel(roomChannel);
       channelPresence.untrack();
-      channelPresence.unsubscribe();
+      supabase.removeChannel(channelPresence);
     };
+  });
+
+  onDestroy(() => {
+    supabase.removeAllChannels();
   });
 
   let activeCell: VoteModel = $state({
