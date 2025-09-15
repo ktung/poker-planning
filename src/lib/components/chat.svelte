@@ -94,11 +94,11 @@
     box-shadow: var(--shadow-100);
     margin: 1rem 0;
     max-height: 500px;
-    width: 320px;
   }
 
   .messages {
     overflow-y: auto;
+    height: 78%;
     padding: 1rem;
     display: flex;
     flex-direction: column;
@@ -137,7 +137,6 @@
   @media (max-width: 480px) {
     .chat-container {
       margin: 0.5rem 0;
-      width: 100%;
     }
 
     .messages {
