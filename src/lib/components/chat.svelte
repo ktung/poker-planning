@@ -4,6 +4,7 @@
   import { getMessages, pushMessage } from '$lib/remote/messages.remote';
   import { supabase } from '$lib/supabaseClient';
   import { formatTime } from '$lib/util/date';
+  import { logger } from '$lib/util/logger';
   import { onMount } from 'svelte';
 
   interface Props {
@@ -56,6 +57,7 @@
       });
 
     return () => {
+      logger.info('Removing chat channel');
       supabase.removeChannel(chatChannel);
     };
   });
@@ -99,10 +101,12 @@
 
   .messages {
     overflow-y: auto;
+    overflow-anchor: auto;
     padding: 1rem;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    max-height: calc(60vh - 55px);
   }
 
   .message {
