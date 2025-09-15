@@ -82,7 +82,7 @@
         };
         const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
         if (presenceTrackStatus === 'error') {
-          logger.info('track presence', presenceTrackStatus);
+          logger.error('track presence', presenceTrackStatus);
           goto(resolve('/[slug=nanoid]/join', { slug: slug }));
         }
       });
