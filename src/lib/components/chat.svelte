@@ -56,7 +56,7 @@
       });
 
     return () => {
-      chatChannel.unsubscribe();
+      supabase.removeChannel(chatChannel);
     };
   });
 

@@ -25,7 +25,7 @@
   import { logger } from '$lib/util/logger';
   import { getJoinUrl } from '$lib/util/routes';
   import { CircleQuestionMark, CircleX } from 'lucide-svelte';
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import type { PageData } from './$types';
 
   const { data }: { data: PageData } = $props();
@@ -72,8 +72,8 @@
       .subscribe(async (status) => {
         if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
           logger.error(`Error subscribing to presence channel: ${status}`);
-          // goto(resolve('/[slug=nanoid]/join', { slug: slug }));
-          // return;
+          goto(resolve('/[slug=nanoid]/join', { slug: slug }));
+          return;
         }
 
         const userStatus: UserTrackModel = {
@@ -83,7 +83,7 @@
         const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
         if (presenceTrackStatus === 'error') {
           logger.error('track presence', presenceTrackStatus);
-          // goto(resolve('/[slug=nanoid]/join', { slug: slug }));
+          goto(resolve('/[slug=nanoid]/join', { slug: slug }));
         }
       });
 
@@ -97,10 +97,14 @@
       .subscribe();
 
     return () => {
-      roomChannel.unsubscribe();
+      supabase.removeChannel(roomChannel);
       channelPresence.untrack();
-      channelPresence.unsubscribe();
+      supabase.removeChannel(channelPresence);
     };
+  });
+
+  onDestroy(() => {
+    supabase.removeAllChannels();
   });
 
   let activeCell: VoteModel = $state({

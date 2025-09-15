@@ -21,7 +21,7 @@
       .subscribe();
 
     return () => {
-      votesChannel.unsubscribe();
+      supabase.removeChannel(votesChannel);
     };
   });
 
