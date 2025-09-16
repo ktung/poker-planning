@@ -3,6 +3,7 @@
   import { m } from '$lib/paraglide/messages';
   import { fetchVotesAndUsersByRoomId } from '$lib/remote/votes.remote';
   import { supabase } from '$lib/supabaseClient';
+  import { logger } from '$lib/util/logger';
   import { onMount } from 'svelte';
 
   let { usersStatuses, roomId }: { usersStatuses: UservoteModel[]; roomId: string } = $props();
@@ -11,6 +12,9 @@
   onMount(() => {
     const votesChannel = supabase
       .channel(`votes:${roomId}`)
+      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, () => {
+        logger.info('Reconnected to votes channel');
+      })
       .on(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, schema: 'public', table: 'votes' },
