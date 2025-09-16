@@ -54,6 +54,22 @@
     });
 
     channelPresence
+      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, () => {
+        logger.info('Reconnected to presence channel');
+        const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
+        const users = state[slug];
+
+        if (users && users.length !== 0 && users[0].userId === userId) {
+          fetch(`/api/rooms/sync`, {
+            method: 'POST',
+            body: JSON.stringify({
+              roomId: roomId,
+              userId: userId,
+              users: users
+            })
+          });
+        }
+      })
       .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
         const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
         const users = state[slug];
