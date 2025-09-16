@@ -12,8 +12,9 @@
   onMount(() => {
     const votesChannel = supabase
       .channel(`votes:${roomId}`)
-      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, () => {
+      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, async () => {
         logger.info('Reconnected to votes channel');
+        statuses = (await fetchVotesAndUsersByRoomId(roomId)).votes;
       })
       .on(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,

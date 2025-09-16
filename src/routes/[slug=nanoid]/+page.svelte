@@ -161,24 +161,37 @@
 
   $effect(() => {
     if (!voteShown && !!voteChannel) {
-      voteChannel.unsubscribe();
+      supabase.removeChannel(voteChannel);
     }
 
     if (voteShown) {
-      voteChannel = supabase
-        .channel(`votes:${slug}`)
-        .on(
-          REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
-          { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
-          async () => {
-            const data = await fetchVotesAndUsersByRoomId(roomId);
-            savedVotes = data.votes;
-            stats = data.stats;
-          }
-        )
-        .subscribe();
+      subscribeVotesChanges();
     }
   });
+
+  function subscribeVotesChanges() {
+    if (voteChannel) {
+      supabase.removeChannel(voteChannel);
+    }
+    voteChannel = supabase
+      .channel(`votes:${slug}`)
+      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, async () => {
+        logger.info('Reconnected to votes channel');
+        const data = await fetchVotesAndUsersByRoomId(roomId);
+        savedVotes = data.votes;
+        stats = data.stats;
+      })
+      .on(
+        REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
+        { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
+        async () => {
+          const data = await fetchVotesAndUsersByRoomId(roomId);
+          savedVotes = data.votes;
+          stats = data.stats;
+        }
+      )
+      .subscribe();
+  }
 
   async function sendShowVotes() {
     roomChannel

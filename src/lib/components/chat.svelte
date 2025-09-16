@@ -109,7 +109,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-height: calc(60vh - 55px);
+    max-height: 300px;
   }
 
   .message {
