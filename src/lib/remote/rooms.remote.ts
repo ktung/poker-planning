@@ -3,16 +3,14 @@ import { form, getRequestEvent } from '$app/server';
 import { supabase } from '$lib/server/supabaseClient';
 import { logger } from '$lib/util/logger';
 import { generateRoomId } from '$lib/util/room';
+import * as v from 'valibot';
 import { pushMessage } from './messages.remote';
 import { upsertVote } from './votes.remote';
 
-export const createRoom = form(async (formData) => {
-  const username = formData.get('username')?.toString().trim();
-  if (!username) {
-    logger.error('Username is required to create a room');
-    throw new Error('Username is required to create a room');
-  }
-
+const formSchema = v.object({
+  username: v.pipe(v.string(), v.trim(), v.nonEmpty())
+});
+export const createRoom = form(formSchema, async ({ username }) => {
   const { data: room, error: roomsError } = await supabase.from('rooms').insert({ name: generateRoomId() }).select().single();
   if (roomsError || !room) {
     logger.error('Error insert room', roomsError);
@@ -40,14 +38,11 @@ export const createRoom = form(async (formData) => {
   redirect(303, `/${room.name}`);
 });
 
-export const joinRoom = form(async (formData) => {
-  const username = formData.get('username')?.toString().trim();
-  const roomId = formData.get('roomId')?.toString().trim();
-  if (!username || !roomId) {
-    logger.error('Username and roomId is required to join a room');
-    throw new Error('Username and roomId is required to join a room');
-  }
-
+const joinRoomSchema = v.object({
+  username: v.pipe(v.string(), v.trim(), v.nonEmpty()),
+  roomId: v.pipe(v.string(), v.trim(), v.nonEmpty())
+});
+export const joinRoom = form(joinRoomSchema, async ({ username, roomId }) => {
   const { data: room, error: roomsError } = await supabase.from('rooms').select().eq('id', roomId).single();
   if (roomsError || !room) {
     logger.error('Error fetching room', roomsError);
