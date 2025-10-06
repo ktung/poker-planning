@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@inlang/paraglide-js':
-        specifier: ~2.3.2
-        version: 2.3.2
+        specifier: ~2.4.0
+        version: 2.4.0
       '@supabase/supabase-js':
         specifier: ~2.58.0
         version: 2.58.0
@@ -370,8 +370,8 @@ packages:
       prettier-plugin-ember-template-tag:
         optional: true
 
-  '@inlang/paraglide-js@2.3.2':
-    resolution: {integrity: sha512-mF7ku1AaXQxa6fnbBczXiEAM7lxhYzaAH7FnDVvAbpzNtgRJESi11KN0bzpCH0YhsKLdimFrQlzjaSVlo9Uh+Q==}
+  '@inlang/paraglide-js@2.4.0':
+    resolution: {integrity: sha512-T/m9uoev574/1JrhCnPcgK1xnAwkVMgaDev4LFthnmID8ubX2xjboSGO3IztwXWwO0aJoT1UJr89JCwjbwgnJQ==}
     hasBin: true
 
   '@inlang/recommend-sherlock@0.2.1':
@@ -875,8 +875,8 @@ packages:
     resolution: {integrity: sha512-yPVavfyCcRhmorC7rWlkHn15b4wDVgVmBA7kV4QVBsF7kv/9TKJAbAXVTxvTnwP8HHKjRCJDClKbciiYS7p0DQ==}
     engines: {node: '>=16'}
 
-  comment-json@4.2.5:
-    resolution: {integrity: sha512-bKw/r35jR3HGt5PEPm1ljsQQGyCrR8sFGNiN5L+ykDHdpO8Smxkrkla9Yi6NkQyUrb8V54PGhfMs6NrIwtxtdw==}
+  comment-json@4.4.1:
+    resolution: {integrity: sha512-r1To31BQD5060QdkC+Iheai7gHwoSZobzunqkf2/kQ6xIAfJyrKNAFUwdKvkK7Qgu7pVTKQEa7ok7Ed3ycAJgg==}
     engines: {node: '>= 6'}
 
   concat-map@0.0.1:
@@ -1132,10 +1132,6 @@ packages:
 
   has-flag@4.0.0:
     resolution: {integrity: sha512-EykJT/Q1KjTWctppgIAgfSO0tKVuZUjhgMr17kqTumMl6Afv3EISleU7qZUzoXDFTAHTDC4NOoG/ZxU3EvlMPQ==}
-    engines: {node: '>=8'}
-
-  has-own-prop@2.0.0:
-    resolution: {integrity: sha512-Pq0h+hvsVm6dDEa8x82GnLSYHOzNDt7f0ddFa3FqcQlgzEiptPqL+XrOJNavjOzSYiYWIrgeVYYgGlLmnxwilQ==}
     engines: {node: '>=8'}
 
   https-proxy-agent@7.0.6:
@@ -1498,10 +1494,6 @@ packages:
   readdirp@4.1.2:
     resolution: {integrity: sha512-GDhwkLfywWL2s6vEjyhri+eXmfH6j1L7JE27WhqLeYzoh/A3DBaYGEj2H/HFZCn/kMfim73FXxEJTw06WtxQwg==}
     engines: {node: '>= 14.18.0'}
-
-  repeat-string@1.6.1:
-    resolution: {integrity: sha512-PV0dzCYDNfRi1jCDbJzpW7jNNDRuCOG/jI5ctQcGKt/clZD+YcPS3yIlWuTJMmESC8aevCFmWJy5wjAFgNqN6w==}
-    engines: {node: '>=0.10'}
 
   resolve-from@4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}
@@ -1989,7 +1981,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@inlang/paraglide-js@2.3.2':
+  '@inlang/paraglide-js@2.4.0':
     dependencies:
       '@inlang/recommend-sherlock': 0.2.1
       '@inlang/sdk': 2.4.9
@@ -2003,7 +1995,7 @@ snapshots:
 
   '@inlang/recommend-sherlock@0.2.1':
     dependencies:
-      comment-json: 4.2.5
+      comment-json: 4.4.1
 
   '@inlang/sdk@2.4.9':
     dependencies:
@@ -2502,13 +2494,11 @@ snapshots:
 
   commander@11.1.0: {}
 
-  comment-json@4.2.5:
+  comment-json@4.4.1:
     dependencies:
       array-timsort: 1.0.3
       core-util-is: 1.0.3
       esprima: 4.0.1
-      has-own-prop: 2.0.0
-      repeat-string: 1.6.1
 
   concat-map@0.0.1: {}
 
@@ -2771,8 +2761,6 @@ snapshots:
   graphemer@1.4.0: {}
 
   has-flag@4.0.0: {}
-
-  has-own-prop@2.0.0: {}
 
   https-proxy-agent@7.0.6:
     dependencies:
@@ -3047,8 +3035,6 @@ snapshots:
   read-cmd-shim@5.0.0: {}
 
   readdirp@4.1.2: {}
-
-  repeat-string@1.6.1: {}
 
   resolve-from@4.0.0: {}
 
