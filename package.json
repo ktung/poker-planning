@@ -59,6 +59,7 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "@vercel/speed-insights",
+      "cypress",
       "esbuild",
       "lefthook",
       "supabase"
