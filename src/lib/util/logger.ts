@@ -2,9 +2,9 @@ import { browser, dev } from '$app/environment';
 
 export const logger = {
   info: (message?: unknown, ...optionalParams: unknown[]) => {
-    // if (browser && !dev) {
-    //   return;
-    // }
+    if (browser && !dev) {
+      return;
+    }
 
     console.log(message, optionalParams);
   },
