@@ -14,43 +14,39 @@ describe('template spec', () => {
 
       cy.get('div.messages').contains('cy-press joined the room');
 
-      cy.get('table.users-status tbody tr td')
+      cy.get('table.users-status tbody tr')
+        .children()
         .should('have.length', 4)
-        .each(($el) => {
-          expect($el).to.have.text('cy-press');
-          expect($el).to.have.text('🤔');
-          expect($el).to.have.text('🤔');
-          expect($el).to.have.text('🤔');
-        });
+        .should('contain', 'cy-press')
+        .should('contain', '🤔')
+        .should('contain', '🤔')
+        .should('contain', '🤔');
       cy.contains('Single straightforward task').click();
-      cy.get('table.users-status tbody tr td')
+      cy.get('table.users-status tbody tr')
+        .children()
         .should('have.length', 4)
-        .each(($el) => {
-          expect($el).to.have.text('cy-press');
-          expect($el).to.have.text('✅');
-          expect($el).to.have.text('🤔');
-          expect($el).to.have.text('🤔');
-        });
+        .should('contain', 'cy-press')
+        .should('contain', '✅')
+        .should('contain', '🤔')
+        .should('contain', '🤔');
 
       cy.contains('1-2 days').click();
-      cy.get('table.users-status tbody tr td')
+      cy.get('table.users-status tbody tr')
+        .children()
         .should('have.length', 4)
-        .each(($el) => {
-          expect($el).to.have.text('cy-press');
-          expect($el).to.have.text('✅');
-          expect($el).to.have.text('✅');
-          expect($el).to.have.text('🤔');
-        });
+        .should('contain', 'cy-press')
+        .should('contain', '✅')
+        .should('contain', '✅')
+        .should('contain', '🤔');
 
       cy.contains('Some unknowns exist').click();
-      cy.get('table.users-status tbody tr td')
+      cy.get('table.users-status tbody tr')
+        .children()
         .should('have.length', 4)
-        .each(($el) => {
-          expect($el).to.have.text('cy-press');
-          expect($el).to.have.text('✅');
-          expect($el).to.have.text('✅');
-          expect($el).to.have.text('✅');
-        });
+        .should('contain', 'cy-press')
+        .should('contain', '✅')
+        .should('contain', '✅')
+        .should('contain', '✅');
 
       cy.get('div.stats ul li')
         .should('have.length', 1)
@@ -59,14 +55,13 @@ describe('template spec', () => {
         });
 
       cy.contains('Single straightforward task').click();
-      cy.get('table.users-status tbody tr td')
+      cy.get('table.users-status tbody tr')
+        .children()
         .should('have.length', 4)
-        .each(($el) => {
-          expect($el).to.have.text('cy-press');
-          expect($el).to.have.text('🤔');
-          expect($el).to.have.text('✅');
-          expect($el).to.have.text('✅');
-        });
+        .should('contain', 'cy-press')
+        .should('contain', '🤔')
+        .should('contain', '✅')
+        .should('contain', '✅');
     });
   });
 });
