@@ -40,7 +40,7 @@
 </script>
 
 <div>
-  <table>
+  <table class="users-status">
     <thead>
       <tr>
         <th>{m.username()}</th>
