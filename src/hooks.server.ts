@@ -19,12 +19,13 @@ const handleRoom: Handle = async ({ event, resolve }) => {
   if (roomPathRegex.test(event.url.pathname)) {
     const referer = event.request.headers.get('referer');
     if (!referer || (referer !== `${event.url.origin}/` && referer !== `${getJoinUrl(event.url.href)}`)) {
+      console.log('referer', referer);
       const roomSlug = event.params.slug;
       if (roomSlug) {
         const { error } = await fetchRoom(roomSlug);
         // room exists, redirect to join page
         if (!error) {
-          logger.error('Redirecting to join URL', error);
+          logger.error('Redirecting to join URL', roomSlug, error);
           throw redirect(303, getJoinUrl(`${event.url.origin}/${roomSlug}`));
         }
       }
