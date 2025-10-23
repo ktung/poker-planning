@@ -3,7 +3,7 @@ name: Cypress tests
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */2 * * THU'
+    - cron: '0 */2 * * MON-FRI'
   push:
     branches:
       - main

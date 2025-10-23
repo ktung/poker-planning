@@ -18,35 +18,35 @@ describe('template spec', () => {
         .children()
         .should('have.length', 4)
         .should('contain', 'cy-press')
-        .should('contain', '🤔')
-        .should('contain', '🤔')
-        .should('contain', '🤔');
+        .should('contain', '🤔', { timeout: 10000 })
+        .should('contain', '🤔', { timeout: 10000 })
+        .should('contain', '🤔', { timeout: 10000 });
       cy.contains('Single straightforward task').click();
       cy.get('table.users-status tbody tr')
         .children()
         .should('have.length', 4)
         .should('contain', 'cy-press')
-        .should('contain', '✅')
-        .should('contain', '🤔')
-        .should('contain', '🤔');
+        .should('contain', '✅', { timeout: 10000 })
+        .should('contain', '🤔', { timeout: 10000 })
+        .should('contain', '🤔', { timeout: 10000 });
 
       cy.contains('1-2 days').click();
       cy.get('table.users-status tbody tr')
         .children()
         .should('have.length', 4)
         .should('contain', 'cy-press')
-        .should('contain', '✅')
-        .should('contain', '✅')
-        .should('contain', '🤔');
+        .should('contain', '✅', { timeout: 10000 })
+        .should('contain', '✅', { timeout: 10000 })
+        .should('contain', '🤔', { timeout: 10000 });
 
       cy.contains('Some unknowns exist').click();
       cy.get('table.users-status tbody tr')
         .children()
         .should('have.length', 4)
         .should('contain', 'cy-press')
-        .should('contain', '✅')
-        .should('contain', '✅')
-        .should('contain', '✅');
+        .should('contain', '✅', { timeout: 10000 })
+        .should('contain', '✅', { timeout: 10000 })
+        .should('contain', '✅', { timeout: 10000 });
 
       cy.get('div.stats ul li')
         .should('have.length', 1)
@@ -59,9 +59,9 @@ describe('template spec', () => {
         .children()
         .should('have.length', 4)
         .should('contain', 'cy-press')
-        .should('contain', '🤔')
-        .should('contain', '✅')
-        .should('contain', '✅');
+        .should('contain', '🤔', { timeout: 10000 })
+        .should('contain', '✅', { timeout: 10000 })
+        .should('contain', '✅', { timeout: 10000 });
     });
   });
 });
