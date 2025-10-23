@@ -33,7 +33,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-svelte": "^3.12.3",
     "globals": "^16.4.0",
-    "lefthook": "^1.13.6",
+    "lefthook": "^2.0.0",
     "prettier": "^3.6.2",
     "prettier-plugin-svelte": "^3.4.0",
     "supabase": "^2.47.2",
