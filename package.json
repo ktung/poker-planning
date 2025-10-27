@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "@inlang/paraglide-js": "~2.4.0",
-    "@supabase/supabase-js": "~2.75.0",
+    "@supabase/supabase-js": "~2.76.1",
     "@sveltejs/adapter-auto": "~6.1.0",
     "@sveltejs/adapter-vercel": "~6.0.0",
     "@sveltejs/kit": "2.42.2",
