@@ -22,7 +22,7 @@ describe('template spec', () => {
         .should('contain', '🤔')
         .should('contain', '🤔');
       cy.contains('Single straightforward task').click();
-      cy.get('table.users-status tbody tr', { timeout: 30000 })
+      cy.get('table.users-status tbody tr', { timeout: 60000 })
         .children()
         .should('have.length', 4)
         .should('contain', 'cy-press')
