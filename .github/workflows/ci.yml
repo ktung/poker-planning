@@ -61,4 +61,4 @@ jobs:
           github-token: '${{ secrets.GITHUB_TOKEN }}'
       - run: |
           gh pr review --approve "$PR_URL"
-          gh pr merge --squash --auto "$PR_URL"
+          # gh pr merge --squash --auto "$PR_URL"
