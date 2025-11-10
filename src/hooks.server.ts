@@ -14,6 +14,7 @@ const handleParaglide: Handle = ({ event, resolve }) =>
       transformPageChunk: ({ html }) => html.replace('%paraglide.lang%', locale)
     });
   });
+
 const handleRoom: Handle = async ({ event, resolve }) => {
   const roomPathRegex = new RegExp(`^/[${ROOM_ID_ALPHABET}]{${ROOM_ID_LENGTH}}$`);
   if (roomPathRegex.test(event.url.pathname)) {

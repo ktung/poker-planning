@@ -196,24 +196,16 @@
 
   async function sendShowVotes() {
     roomChannel
-      .send({
-        type: 'broadcast',
-        event: 'showVotes',
-        payload: {}
-      })
+      .send({ type: REALTIME_LISTEN_TYPES.BROADCAST, event: 'showVotes' })
       .then(() => pushMessage({ roomId, userId, message: `${username} ${m.showVotesMessage()}` }))
       .then(async () => {
-        handleShowVotes();
+        await handleShowVotes();
       });
   }
 
   function sendClearVotes() {
     roomChannel
-      .send({
-        type: 'broadcast',
-        event: 'clearVotes',
-        payload: {}
-      })
+      .send({ type: REALTIME_LISTEN_TYPES.BROADCAST, event: 'clearVotes' })
       .then(() => pushMessage({ roomId, userId, message: `${username} ${m.clearVotesMessage()}` }))
       .then(async () => {
         await resetVotesByRoomId(roomId);
