@@ -1,17 +1,24 @@
-import { browser, dev } from '$app/environment';
+// import { browser, dev } from '$app/environment';
 
 export const logger = {
+  debug: (message?: unknown, ...optionalParams: unknown[]) => {
+    // if (browser && !dev) {
+    //   return;
+    // }
+
+    console.log(message, optionalParams);
+  },
   info: (message?: unknown, ...optionalParams: unknown[]) => {
-    if (browser && !dev) {
-      return;
-    }
+    // if (browser && !dev) {
+    //   return;
+    // }
 
     console.log(message, optionalParams);
   },
   error: (message?: unknown, ...optionalParams: unknown[]) => {
-    if (browser && !dev) {
-      return;
-    }
+    // if (browser && !dev) {
+    //   return;
+    // }
 
     console.error(message, optionalParams);
   }

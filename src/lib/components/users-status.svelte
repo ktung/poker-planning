@@ -12,14 +12,15 @@
   onMount(() => {
     const votesChannel = supabase
       .channel(`votes:${roomId}`)
-      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, async () => {
-        logger.info('Reconnected to votes channel');
+      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, async (payload) => {
+        logger.debug(`Listen votes channel reconnect : ${JSON.stringify(payload)}`);
         statuses = (await fetchVotesAndUsersByRoomId(roomId)).votes;
       })
       .on(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.ALL, schema: 'public', table: 'votes' },
-        async () => {
+        async (payload) => {
+          logger.debug(`Listen votes channel postgres : ${JSON.stringify(payload)}`);
           statuses = (await fetchVotesAndUsersByRoomId(roomId)).votes;
         }
       )
