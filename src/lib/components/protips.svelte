@@ -30,6 +30,8 @@
   {#if protipsToggles.complexity}
     <div>
       <h3>{m.complexity()}</h3>
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
       <span onclick={() => toggleProtips('complexity')}><CircleX /></span>
       <ul>
         {#each protipsTexts.complexity as key (key)}
@@ -41,6 +43,8 @@
   {#if protipsToggles.effort}
     <div>
       <h3>{m.effort()}</h3>
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
       <span onclick={() => toggleProtips('effort')}><CircleX /></span>
       <ul>
         {#each protipsTexts.effort as key (key)}
@@ -52,6 +56,8 @@
   {#if protipsToggles.uncertainty}
     <div>
       <h3>{m.uncertainty()}</h3>
+      <!-- svelte-ignore a11y_click_events_have_key_events -->
+      <!-- svelte-ignore a11y_no_static_element_interactions -->
       <span onclick={() => toggleProtips('uncertainty')}><CircleX /></span>
       <ul>
         {#each protipsTexts.uncertainty as key (key)}
