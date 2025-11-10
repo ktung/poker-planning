@@ -1,6 +1,7 @@
+import { error } from '@sveltejs/kit';
 import { fetchVotesAndUsersByRoomId } from '$lib/remote/votes.remote';
 import { fetchRoom } from '$lib/server/db/rooms';
-import { supabase } from '$lib/server/supabaseClient';
+import { findUser } from '$lib/server/db/users';
 import { logger } from '$lib/util/logger';
 import type { PageServerLoad } from './$types';
 
@@ -13,16 +14,16 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     throw new Error('Missing slug or userId');
   }
 
-  const { data: room, error } = await fetchRoom(slug);
-  if (error || !room) {
+  const { data: room, error: fetchError } = await fetchRoom(slug);
+  if (fetchError || !room) {
     logger.error('Error fetching room', error);
-    throw new Error('Error fetching room');
+    error(404, 'Error fetching room');
   }
 
-  const { data: currentUser, error: userError } = await supabase.from('users').select().eq('id', userId).single();
+  const { data: currentUser, error: userError } = await findUser(userId);
   if (userError || !currentUser) {
     logger.error('Error fetching user', userError);
-    throw new Error('Error fetching user');
+    error(404, 'Error fetching user');
   }
 
   const currentVotes = (await fetchVotesAndUsersByRoomId(room.id)).votes;
