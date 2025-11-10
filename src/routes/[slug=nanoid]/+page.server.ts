@@ -1,4 +1,3 @@
-import { m } from '$lib/paraglide/messages';
 import { fetchVotesAndUsersByRoomId } from '$lib/remote/votes.remote';
 import { fetchRoom } from '$lib/server/db/rooms';
 import { supabase } from '$lib/server/supabaseClient';
@@ -33,20 +32,6 @@ export const load: PageServerLoad = async ({ params, cookies }) => {
     roomId: room.id,
     userId: currentUser.id,
     username: currentUser.username,
-    protipsTexts: protipsTexts,
     currentVotes: currentVotes
   };
 };
-
-type ProtipsType = keyof typeof m;
-const protipsTexts = {
-  complexity: getTips('protips.complexity'),
-  effort: getTips('protips.effort'),
-  uncertainty: getTips('protips.uncertainty')
-};
-
-function getTips(prefix: string) {
-  return Object.keys(m)
-    .filter((key) => key.startsWith(prefix))
-    .map((key) => <ProtipsType>key);
-}
