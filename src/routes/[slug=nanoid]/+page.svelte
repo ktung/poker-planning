@@ -14,6 +14,7 @@
   import { pointsValues, tableData } from '$lib/assets/data';
   import Chat from '$lib/components/chat.svelte';
   import CopiableText from '$lib/components/copiable-text.svelte';
+  import Protips, { toggleProtips } from '$lib/components/protips.svelte';
   import UsersStatus from '$lib/components/users-status.svelte';
   import Voters from '$lib/components/voters.svelte';
   import VotesStats from '$lib/components/votes-stats.svelte';
@@ -24,12 +25,12 @@
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
   import { getJoinUrl } from '$lib/util/routes';
-  import { CircleQuestionMark, CircleX } from 'lucide-svelte';
+  import { CircleQuestionMark } from 'lucide-svelte';
   import { onDestroy, onMount } from 'svelte';
   import type { PageData } from './$types';
 
   const { data }: { data: PageData } = $props();
-  const { roomId, slug, userId, currentVotes, username, protipsTexts } = data;
+  const { roomId, slug, userId, currentVotes, username } = data;
   let voteShown = $state(false);
   let roomChannel: RealtimeChannel;
   let voteChannel: RealtimeChannel;
@@ -37,7 +38,7 @@
 
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
-    if (!!sessionRoomId && sessionRoomId === slug) {
+    if (sessionRoomId && sessionRoomId === slug) {
       logger.error('Redirecting to join url if its a refresh');
       goto(resolve('/[slug=nanoid]/join', { slug: slug }));
     } else {
@@ -54,8 +55,8 @@
     });
 
     channelPresence
-      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, () => {
-        logger.info('Reconnected to presence channel');
+      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, (payload) => {
+        logger.debug(`Listen presence channel reconnect : ${JSON.stringify(payload)}`);
         const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
         const users = state[slug];
 
@@ -71,6 +72,7 @@
         }
       })
       .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
+        logger.debug(`Listen presence channel sync`);
         const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
         const users = state[slug];
 
@@ -105,10 +107,12 @@
       });
 
     roomChannel
-      .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, () => {
+      .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, (payload) => {
+        logger.debug(`Listen room channel clearVotes : ${JSON.stringify(payload)}`);
         clearVotes();
       })
-      .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'showVotes' }, async () => {
+      .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'showVotes' }, async (payload) => {
+        logger.debug(`Listen room channel showVotes : ${JSON.stringify(payload)}`);
         handleShowVotes();
       })
       .subscribe();
@@ -175,8 +179,8 @@
     }
     voteChannel = supabase
       .channel(`votes:${slug}`)
-      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, async () => {
-        logger.info('Reconnected to votes channel');
+      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, async (payload) => {
+        logger.debug(`Listen votes channel reconnect : ${JSON.stringify(payload)}`);
         const data = await fetchVotesAndUsersByRoomId(roomId);
         savedVotes = data.votes;
         stats = data.stats;
@@ -184,7 +188,8 @@
       .on(
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
-        async () => {
+        async (payload) => {
+          logger.debug(`Listen votes channel postgres : ${JSON.stringify(payload)}`);
           const data = await fetchVotesAndUsersByRoomId(roomId);
           savedVotes = data.votes;
           stats = data.stats;
@@ -195,39 +200,21 @@
 
   async function sendShowVotes() {
     roomChannel
-      .send({
-        type: 'broadcast',
-        event: 'showVotes',
-        payload: {}
-      })
+      .send({ type: REALTIME_LISTEN_TYPES.BROADCAST, event: 'showVotes' })
       .then(() => pushMessage({ roomId, userId, message: `${username} ${m.showVotesMessage()}` }))
       .then(async () => {
-        handleShowVotes();
+        await handleShowVotes();
       });
   }
 
   function sendClearVotes() {
     roomChannel
-      .send({
-        type: 'broadcast',
-        event: 'clearVotes',
-        payload: {}
-      })
+      .send({ type: REALTIME_LISTEN_TYPES.BROADCAST, event: 'clearVotes' })
       .then(() => pushMessage({ roomId, userId, message: `${username} ${m.clearVotesMessage()}` }))
       .then(async () => {
         await resetVotesByRoomId(roomId);
         clearVotes();
       });
-  }
-
-  let protipsToggles: ProtipsToggleModel = $state({
-    complexity: false,
-    effort: false,
-    uncertainty: false
-  });
-
-  function toggleProtips(event: MouseEvent, type: VoteType) {
-    protipsToggles[type] = !protipsToggles[type];
   }
 
   function clearVotes() {
@@ -268,52 +255,18 @@
   <div class="infos">
     <Chat {roomId} {slug} {userId} />
     <UsersStatus usersStatuses={currentVotes} {roomId} />
-    <VotesStats {pointsValues} myVotes={selectedPointsValues} {stats} teamVotes={savedVotes} />
+    <VotesStats {pointsValues} myVotes={selectedPointsValues} {stats} />
   </div>
 
-  <section class="protips">
-    {#if protipsToggles.complexity}
-      <div>
-        <h3>{m.complexity()}</h3>
-        <span onclick={(ev) => toggleProtips(ev, 'complexity')}><CircleX /></span>
-        <ul>
-          {#each protipsTexts.complexity as key (key)}
-            <li>{m[key]()}</li>
-          {/each}
-        </ul>
-      </div>
-    {/if}
-    {#if protipsToggles.effort}
-      <div>
-        <h3>{m.effort()}</h3>
-        <span onclick={(ev) => toggleProtips(ev, 'effort')}><CircleX /></span>
-        <ul>
-          {#each protipsTexts.effort as key (key)}
-            <li>{m[key]()}</li>
-          {/each}
-        </ul>
-      </div>
-    {/if}
-    {#if protipsToggles.uncertainty}
-      <div>
-        <h3>{m.uncertainty()}</h3>
-        <span onclick={(ev) => toggleProtips(ev, 'uncertainty')}><CircleX /></span>
-        <ul>
-          {#each protipsTexts.uncertainty as key (key)}
-            <li>{m[key]()}</li>
-          {/each}
-        </ul>
-      </div>
-    {/if}
-  </section>
+  <Protips />
 
   <table>
     <thead>
       <tr>
         <th>{m.points()}</th>
-        <th>{m.complexity()}<span onclick={(ev) => toggleProtips(ev, 'complexity')}><CircleQuestionMark /></span></th>
-        <th>{m.effort()}<span onclick={(ev) => toggleProtips(ev, 'effort')}><CircleQuestionMark /></span></th>
-        <th>{m.uncertainty()}<span onclick={(ev) => toggleProtips(ev, 'uncertainty')}><CircleQuestionMark /></span></th>
+        <th>{m.complexity()}<span onclick={() => toggleProtips('complexity')}><CircleQuestionMark /></span></th>
+        <th>{m.effort()}<span onclick={() => toggleProtips('effort')}><CircleQuestionMark /></span></th>
+        <th>{m.uncertainty()}<span onclick={() => toggleProtips('uncertainty')}><CircleQuestionMark /></span></th>
       </tr>
     </thead>
     <tbody>
@@ -378,29 +331,6 @@
     display: flex;
     justify-content: space-between;
     gap: 1rem;
-  }
-
-  .protips {
-    h3 {
-      color: var(--primary-color);
-      display: inline;
-    }
-
-    span {
-      cursor: pointer;
-      margin-left: 0.5rem;
-      vertical-align: middle;
-    }
-    span:hover {
-      color: var(--primary-color-active);
-    }
-
-    div {
-      background: white;
-      border-radius: var(--radius-small);
-      box-shadow: var(--shadow-100);
-      padding: 1rem;
-    }
   }
 
   table {
