@@ -140,24 +140,28 @@
   });
 
   async function handleClick(event: MouseEvent, type: VoteType, index: number) {
-    if (activeCell[type] === index) {
-      activeCell[type] = null;
-      selectedPointsValues[type] = null;
-    } else {
-      activeCell[type] = index;
+    let selectedIndex = null;
+    let selectedValue = null;
+
+    // click to on
+    if (activeCell[type] !== index) {
+      selectedIndex = index;
       const target = event.target as HTMLTableCellElement;
       const row = target.closest('tr');
       if (row) {
         const pointValue = row.children[0].textContent;
         if (pointValue) {
-          selectedPointsValues[type] = parseFloat(pointValue);
+          selectedValue = parseFloat(pointValue);
         }
       }
     }
 
-    const { error } = await upsertVote({ userId, roomId, type, value: selectedPointsValues[type] });
+    const { error } = await upsertVote({ userId, roomId, type, value: selectedValue });
     if (error) {
       logger.error('Error upserting vote', error);
+    } else {
+      activeCell[type] = selectedIndex;
+      selectedPointsValues[type] = selectedValue;
     }
   }
 
