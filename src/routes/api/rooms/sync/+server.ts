@@ -1,4 +1,4 @@
-import { json } from '@sveltejs/kit';
+import { error, json } from '@sveltejs/kit';
 // import { insertMessage } from '$lib/server/db/messages';
 // import { deleteUserByUserIdAndRoomId, selectUsers } from '$lib/server/db/users';
 import { selectUsers } from '$lib/server/db/users';
@@ -20,11 +20,13 @@ export const POST: RequestHandler = async ({ request }) => {
     throw error(400, 'Invalid request body');
   }
 
-  const { data: usersDb, error } = await selectUsers(data.roomId);
-  if (error || !usersDb) {
-    // return json({ error: 'Error fetching users' }, { status: 500 });
+  const { data: usersDb, error: selectUserError } = await selectUsers(data.roomId);
+  if (selectUserError || !usersDb) {
+    logger.error('Error fetching users', selectUserError);
     return json({});
   }
+
+  logger.info('usersDb', usersDb);
 
   // const usersDbIds = usersDb.map((user) => user.id);
   // const usersIds = data.users.map((user) => user.userId);

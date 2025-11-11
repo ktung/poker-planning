@@ -56,7 +56,7 @@
 
     channelPresence
       .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, (payload) => {
-        logger.debug(`Listen presence channel reconnect : ${JSON.stringify(payload)}`);
+        logger.debug('Listen presence channel reconnect', payload);
         const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
         const users = state[slug];
 
@@ -72,8 +72,8 @@
         }
       })
       .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
-        logger.debug(`Listen presence channel sync`);
         const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
+        logger.debug('Listen presence channel sync', state);
         const users = state[slug];
 
         if (users && users.length !== 0 && users[0].userId === userId) {
@@ -108,11 +108,11 @@
 
     roomChannel
       .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'clearVotes' }, (payload) => {
-        logger.debug(`Listen room channel clearVotes : ${JSON.stringify(payload)}`);
+        logger.debug('Listen room channel clearVotes', payload);
         clearVotes();
       })
       .on(REALTIME_LISTEN_TYPES.BROADCAST, { event: 'showVotes' }, async (payload) => {
-        logger.debug(`Listen room channel showVotes : ${JSON.stringify(payload)}`);
+        logger.debug('Listen room channel showVotes', payload);
         handleShowVotes();
       })
       .subscribe();
@@ -180,7 +180,7 @@
     voteChannel = supabase
       .channel(`votes:${slug}`)
       .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, async (payload) => {
-        logger.debug(`Listen votes channel reconnect : ${JSON.stringify(payload)}`);
+        logger.debug('Listen votes channel reconnect', payload);
         const data = await fetchVotesAndUsersByRoomId(roomId);
         savedVotes = data.votes;
         stats = data.stats;
@@ -189,7 +189,7 @@
         REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
         { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.UPDATE, schema: 'public', table: 'votes', filter: `room_id=eq.${roomId}` },
         async (payload) => {
-          logger.debug(`Listen votes channel postgres : ${JSON.stringify(payload)}`);
+          logger.debug('Listen votes channel postgres', payload);
           const data = await fetchVotesAndUsersByRoomId(roomId);
           savedVotes = data.votes;
           stats = data.stats;

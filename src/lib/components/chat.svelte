@@ -39,13 +39,13 @@
         chatChannel = supabase
           .channel(`messages:${slug}`)
           .on(REALTIME_LISTEN_TYPES.SYSTEM, {}, (payload) => {
-            logger.debug(`Listen message channel : ${JSON.stringify(payload)}`);
+            logger.debug('Listen message channel', payload);
           })
           .on(
             REALTIME_LISTEN_TYPES.POSTGRES_CHANGES,
             { event: REALTIME_POSTGRES_CHANGES_LISTEN_EVENT.INSERT, schema: 'public', table: 'messages', filter: `room_id=eq.${roomId}` },
             (payload) => {
-              logger.debug(`Listen message postgres channel : ${JSON.stringify(payload)}`);
+              logger.debug('Listen message postgres channel', payload);
               if (messages.some((msg) => msg.id === payload.new.id)) {
                 return;
               }
