@@ -118,13 +118,16 @@
       .subscribe();
 
     return () => {
+      logger.info('Removing room channel');
       supabase.removeChannel(roomChannel);
+      logger.info('Removing presence channel');
       channelPresence.untrack();
       supabase.removeChannel(channelPresence);
     };
   });
 
   onDestroy(() => {
+    logger.info('Removing all channels');
     supabase.removeAllChannels();
   });
 
@@ -169,6 +172,7 @@
 
   $effect(() => {
     if (!voteShown && !!voteChannel) {
+      logger.info('Removing votes channel');
       supabase.removeChannel(voteChannel);
     }
 
@@ -179,6 +183,7 @@
 
   function subscribeVotesChanges() {
     if (voteChannel) {
+      logger.info('Removing votes channel');
       supabase.removeChannel(voteChannel);
     }
     voteChannel = supabase

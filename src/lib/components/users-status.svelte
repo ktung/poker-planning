@@ -27,6 +27,7 @@
       .subscribe();
 
     return () => {
+      logger.info('Removing votes channel');
       supabase.removeChannel(votesChannel);
     };
   });
