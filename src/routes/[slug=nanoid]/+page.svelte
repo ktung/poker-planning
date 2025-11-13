@@ -383,7 +383,7 @@
 
   tbody td:not(:first-child) {
     cursor: pointer;
-    transition: all 0.2s ease;
+    /* transition: all 0.2s ease; */
   }
 
   tbody td:not(:first-child).active,
