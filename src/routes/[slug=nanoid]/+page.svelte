@@ -90,7 +90,6 @@
       .subscribe(async (status) => {
         if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
           logger.error(`Error subscribing to presence channel: ${status}`);
-          channelPresence.subscribe();
           // goto(resolve('/[slug=nanoid]/join', { slug: slug }));
           // return;
         }
