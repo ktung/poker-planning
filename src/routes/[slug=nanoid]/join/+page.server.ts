@@ -9,7 +9,7 @@ export const load: PageServerLoad = async ({ params }) => {
   const { data, error } = await fetchRoom(slug);
 
   if (!data || error) {
-    logger.error(`Error joining room`, error);
+    logger.error('Error joining room', error);
     redirect(302, '/');
   }
 

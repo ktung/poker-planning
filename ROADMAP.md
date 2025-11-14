@@ -1,3 +1,11 @@
+# 1.2.1
+
+- tests: add automated e2e tests
+- fix: autoreconnect channels (remove server hook handleRoom and fetch data on reconnect)
+- refactor: move protips to dedicated component
+- fix: set cookie userId maxAge
+- feat: can rejoin the room using the same userId
+
 # 1.2.0
 
 - Fix username mandatory (insert user on create/join)

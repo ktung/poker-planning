@@ -6,6 +6,8 @@
 pnpm supabase start
 # fill .env.local
 pnpm run dev
+
+pnpx cypress run
 ```
 
 - Localhost URL : http://localhost:5173
