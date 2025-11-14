@@ -89,7 +89,7 @@
       })
       .subscribe(async (status) => {
         if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
-          logger.error(`Error subscribing to presence channel: ${status}`);
+          logger.error('Error subscribing to presence channel', status);
           // goto(resolve('/[slug=nanoid]/join', { slug: slug }));
           // return;
         }
@@ -188,7 +188,7 @@
     voteChannel = supabase
       .channel(`votes:${slug}`)
       .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, async (payload) => {
-        logger.debug('Listen votes channel reconnect', payload);
+        logger.debug('Listen votes channel reconnect (room)', payload);
         const data = await fetchVotesAndUsersByRoomId(roomId);
         savedVotes = data.votes;
         stats = data.stats;
@@ -283,30 +283,36 @@
           <td>{row.pointValue}</td>
           <td class:active={!voteShown && activeCell.complexity === index} onclick={(ev) => handleClick(ev, 'complexity', index)}>
             {row.complexity}
-            <Voters
-              votes={savedVotes}
-              selectedType="complexity"
-              selectedValue={row.pointValue}
-              recommandedValue={stats?.complexityRecommandation}
-            />
+            {#if voteShown}
+              <Voters
+                votes={savedVotes}
+                selectedType="complexity"
+                selectedValue={row.pointValue}
+                recommandedValue={stats?.complexityRecommandation}
+              />
+            {/if}
           </td>
           <td class:active={!voteShown && activeCell.effort === index} onclick={(ev) => handleClick(ev, 'effort', index)}
             >{row.effort}
-            <Voters
-              votes={savedVotes}
-              selectedType="effort"
-              selectedValue={row.pointValue}
-              recommandedValue={stats?.effortRecommandation}
-            />
+            {#if voteShown}
+              <Voters
+                votes={savedVotes}
+                selectedType="effort"
+                selectedValue={row.pointValue}
+                recommandedValue={stats?.effortRecommandation}
+              />
+            {/if}
           </td>
           <td class:active={!voteShown && activeCell.uncertainty === index} onclick={(ev) => handleClick(ev, 'uncertainty', index)}
             >{row.uncertainty}
-            <Voters
-              votes={savedVotes}
-              selectedType="uncertainty"
-              selectedValue={row.pointValue}
-              recommandedValue={stats?.uncertaintyRecommandation}
-            />
+            {#if voteShown}
+              <Voters
+                votes={savedVotes}
+                selectedType="uncertainty"
+                selectedValue={row.pointValue}
+                recommandedValue={stats?.uncertaintyRecommandation}
+              />
+            {/if}
           </td>
         </tr>
       {/each}

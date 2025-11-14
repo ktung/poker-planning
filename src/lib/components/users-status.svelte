@@ -13,7 +13,7 @@
     const votesChannel = supabase
       .channel(`votes:${roomId}`)
       .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, async (payload) => {
-        logger.debug('Listen votes channel reconnect', payload);
+        logger.debug('Listen votes channel reconnect (users status)', payload);
         statuses = (await fetchVotesAndUsersByRoomId(roomId)).votes;
       })
       .on(
