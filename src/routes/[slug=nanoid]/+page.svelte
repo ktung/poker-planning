@@ -344,7 +344,6 @@
     border-radius: var(--radius-small);
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.2s ease;
   }
 
   button:hover {
@@ -404,7 +403,6 @@
 
   tbody td:not(:first-child) {
     cursor: pointer;
-    /* transition: all 0.2s ease; */
   }
 
   tbody td:not(:first-child).active,
