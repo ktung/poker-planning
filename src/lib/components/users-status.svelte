@@ -101,7 +101,6 @@
 
   tbody td:not(:first-child) {
     cursor: pointer;
-    transition: all 0.2s ease;
   }
 
   @media (max-width: 768px) {
