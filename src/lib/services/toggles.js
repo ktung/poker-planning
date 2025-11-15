@@ -20,7 +20,7 @@ class Toggle {
    */
   initToggles(localStorage) {
     for (const [key, defaultValue] of Object.entries(this.#defaultToggles)) {
-      this.#togglesState.set(key, localStorage.getItem(key) === 'on' || defaultValue);
+      this.#togglesState.set(key, localStorage.getItem(key) || defaultValue);
     }
   }
 }
