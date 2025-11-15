@@ -15,6 +15,7 @@ interface VoteModel {
 }
 
 interface UservoteModel extends VoteModel {
+  userId: string;
   username: string;
 }
 
