@@ -2,6 +2,7 @@
 
 - how to use
 - affichage banner avec animation if channel error
+- display user presence
 
 # 1.2.1
 
@@ -65,6 +66,8 @@
   - Reset on clear votes
 - chose another preset on create room (use another scale/color)
 - Password protected rooms
+- do 500 and 400 error page
+
 - use ReadableStream / EventSource
 - conventional commit again
   - https://dev.to/ghacosta/definitive-guide-for-commitizen-commitlint-husky-3of9

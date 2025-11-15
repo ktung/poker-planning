@@ -7,7 +7,8 @@
   import { onMount } from 'svelte';
   import { clearMessages } from './status-banner.svelte';
 
-  let { usersStatuses, roomId }: { usersStatuses: UservoteModel[]; roomId: string } = $props();
+  let { usersStatuses, roomId, userPresence }: { usersStatuses: UservoteModel[]; roomId: string; userPresence: UserTrackModel[] } =
+    $props();
   let statuses = $state(usersStatuses);
 
   onMount(() => {
@@ -41,6 +42,10 @@
 
     return '✅';
   }
+
+  function isInactive(userId: string) {
+    return !userPresence.some((user) => user.userId === userId);
+  }
 </script>
 
 <div>
@@ -54,9 +59,9 @@
       </tr>
     </thead>
     <tbody>
-      {#each statuses as user, i (i)}
+      {#each statuses as user (user.userId)}
         <tr>
-          <td>{user.username}</td>
+          <td class:inactive={isInactive(user.userId)}>{user.username}</td>
           <td>{displayVote(user.complexity)}</td>
           <td>{displayVote(user.effort)}</td>
           <td>{displayVote(user.uncertainty)}</td>
@@ -83,6 +88,10 @@
     text-align: center;
     border-bottom: 1px solid #ddd;
     word-break: break-all;
+  }
+
+  .inactive {
+    color: grey;
   }
 
   tr:nth-child(even) {

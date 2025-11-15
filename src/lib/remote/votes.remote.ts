@@ -52,6 +52,7 @@ export const fetchVotesAndUsersByRoomId = query(v.string(), async (roomId) => {
       complexity: vote.complexity,
       effort: vote.effort,
       uncertainty: vote.uncertainty,
+      userId: vote.userid,
       username: vote.username
     })),
     mean,

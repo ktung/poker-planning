@@ -37,6 +37,7 @@
   let roomChannel: RealtimeChannel;
   let voteChannel: RealtimeChannel;
   let stats: VoteStats = $state(defaultVoteStats);
+  let userPresenceState: UserTrackModel[] = $state([]);
 
   onMount(() => {
     const sessionRoomId = window.sessionStorage.getItem('roomId');
@@ -57,7 +58,8 @@
     });
 
     channelPresence
-      .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, (payload) => {
+      // TODO remove
+      .on(REALTIME_LISTEN_TYPES.SYSTEM, {}, (payload) => {
         logger.debug('Listen presence channel reconnect', payload);
         const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
         const users = state[slug];
@@ -76,18 +78,18 @@
       .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
         const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
         logger.debug('Listen presence channel sync', state);
-        const users = state[slug];
+        userPresenceState = state[slug];
 
-        if (users && users.length !== 0 && users[0].userId === userId) {
-          fetch(`/api/rooms/sync`, {
-            method: 'POST',
-            body: JSON.stringify({
-              roomId: roomId,
-              userId: userId,
-              users: users
-            })
-          });
-        }
+        // if (users && users.length !== 0 && users[0].userId === userId) {
+        //   fetch(`/api/rooms/sync`, {
+        //     method: 'POST',
+        //     body: JSON.stringify({
+        //       roomId: roomId,
+        //       userId: userId,
+        //       users: users
+        //     })
+        //   });
+        // }
       })
       .subscribe(async (status) => {
         if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
@@ -277,7 +279,7 @@
 
   <div class="infos">
     <Chat {roomId} {slug} {userId} />
-    <UsersStatus usersStatuses={currentVotes} {roomId} />
+    <UsersStatus usersStatuses={currentVotes} {roomId} userPresence={userPresenceState} />
     <VotesStats {pointsValues} myVotes={selectedPointsValues} {stats} />
   </div>
 
@@ -287,8 +289,14 @@
     <thead>
       <tr>
         <th>{m.points()}</th>
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
         <th>{m.complexity()}<span onclick={() => toggleProtips('complexity')}><CircleQuestionMark /></span></th>
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
         <th>{m.effort()}<span onclick={() => toggleProtips('effort')}><CircleQuestionMark /></span></th>
+        <!-- svelte-ignore a11y_click_events_have_key_events -->
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
         <th>{m.uncertainty()}<span onclick={() => toggleProtips('uncertainty')}><CircleQuestionMark /></span></th>
       </tr>
     </thead>
