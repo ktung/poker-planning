@@ -15,6 +15,7 @@
   import Chat from '$lib/components/chat.svelte';
   import CopiableText from '$lib/components/copiable-text.svelte';
   import Protips, { toggleProtips } from '$lib/components/protips.svelte';
+  import StatusBanner, { addMessage } from '$lib/components/status-banner.svelte';
   import UsersStatus from '$lib/components/users-status.svelte';
   import Voters from '$lib/components/voters.svelte';
   import VotesStats from '$lib/components/votes-stats.svelte';
@@ -22,6 +23,7 @@
   import { pushMessage } from '$lib/remote/messages.remote';
   import { fetchVotesAndUsersByRoomId, resetVotesByRoomId, upsertVote } from '$lib/remote/votes.remote';
   import { defaultVoteStats, type VoteStats } from '$lib/remote/votes.schemas';
+  import { ToggleConfig } from '$lib/services/toggles';
   import { supabase } from '$lib/supabaseClient';
   import { logger } from '$lib/util/logger';
   import { getJoinUrl } from '$lib/util/routes';
@@ -90,8 +92,11 @@
       .subscribe(async (status) => {
         if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
           logger.error('Error subscribing to presence channel', status);
+          if (ToggleConfig.isActive('CONFIG_BANNER')) {
+            addMessage('Cannot connect, check your connection.');
+          }
           // goto(resolve('/[slug=nanoid]/join', { slug: slug }));
-          // return;
+          return;
         }
 
         const userStatus: UserTrackModel = {
@@ -101,6 +106,9 @@
         const presenceTrackStatus: RealtimeChannelSendResponse = await channelPresence.track(userStatus);
         if (presenceTrackStatus === 'error') {
           logger.error('track presence', presenceTrackStatus);
+          if (ToggleConfig.isActive('CONFIG_BANNER')) {
+            addMessage('User offline, check your connection.');
+          }
           // goto(resolve('/[slug=nanoid]/join', { slug: slug }));
         }
       });
@@ -161,6 +169,9 @@
     const { error } = await upsertVote({ userId, roomId, type, value: selectedValue });
     if (error) {
       logger.error('Error upserting vote', error);
+      if (ToggleConfig.isActive('CONFIG_BANNER')) {
+        addMessage('Failed to register vote, check your connection.');
+      }
     } else {
       activeCell[type] = selectedIndex;
       selectedPointsValues[type] = selectedValue;
@@ -181,10 +192,10 @@
   });
 
   function subscribeVotesChanges() {
-    if (voteChannel) {
-      logger.info('Removing votes channel');
-      supabase.removeChannel(voteChannel);
-    }
+    // if (voteChannel) {
+    //   logger.info('Removing votes channel');
+    //   supabase.removeChannel(voteChannel);
+    // }
     voteChannel = supabase
       .channel(`votes:${slug}`)
       .on(REALTIME_LISTEN_TYPES.SYSTEM, { event: 'reconnect' }, async (payload) => {
@@ -252,6 +263,10 @@
 <svelte:head>
   <title>{m.votingSession()} {slug} | Poker Planning</title>
 </svelte:head>
+
+{#if ToggleConfig.isActive('CONFIG_BANNER')}
+  <StatusBanner />
+{/if}
 
 <section>
   <div>
