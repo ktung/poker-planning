@@ -110,7 +110,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-height: 300px;
+    height: 300px;
   }
 
   .message {
