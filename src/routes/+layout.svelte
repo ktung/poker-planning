@@ -1,8 +1,10 @@
 <script>
+  import { browser } from '$app/environment';
   import { resolve } from '$app/paths';
   import Footer from '$lib/components/footer.svelte';
   import LanguageSelector from '$lib/components/language-selector.svelte';
   import { m } from '$lib/paraglide/messages';
+  import { ToggleConfig } from '$lib/services/toggles';
   import '../app.css';
   import { injectAnalytics } from '@vercel/analytics/sveltekit';
   import { injectSpeedInsights } from '@vercel/speed-insights';
@@ -11,6 +13,9 @@
 
   injectAnalytics();
   injectSpeedInsights();
+  if (browser) {
+    ToggleConfig.initToggles(localStorage);
+  }
 </script>
 
 <svelte:head>

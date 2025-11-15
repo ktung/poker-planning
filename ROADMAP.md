@@ -1,3 +1,8 @@
+# 1.2.1 (next)
+
+- how to use
+- affichage banner avec animation if channel error
+
 # 1.2.1
 
 - tests: add automated e2e tests
@@ -60,9 +65,6 @@
   - Reset on clear votes
 - chose another preset on create room (use another scale/color)
 - Password protected rooms
-- Add a how to use section in about page
-  - Click on table
-  - Discuss to reach consensus
 - use ReadableStream / EventSource
 - conventional commit again
   - https://dev.to/ghacosta/definitive-guide-for-commitizen-commitlint-husky-3of9

@@ -31,9 +31,12 @@
     "uncertainty100": "Je ne peux pas estimer avec certitude"
   },
   "about": "A Propos",
-  "aboutPage": {
-    "text": "Vos données ne sont pas collectées et chaque session de vote est supprimée tous les jours."
-  },
+  "about_data_title": "A propos de mes données",
+  "about_data": "Vos données ne sont pas collectées et chaque session de vote est supprimée tous les jours.",
+  "about_howto_title": "Comment ça fonctionne ?",
+  "about_howto_recommanded_value": "La valeur recommandée est égale à la moyenne arrondi au point supérieur.",
+  "about_howto_minmax": "Les indicateurs min et max suggèrent à ces participants de discuter sur leur réflexion.",
+  "about_howto_red": "Le nom du participant affiché en rouge signifie qu'il est différent de plus d'une valeur de la moyenne sur la catégorie.",
   "createRoom": "Créer une nouvelle salle",
   "joinRoom": "Rejoignez la salle {roomName}",
   "username": "Nom d'utilisateur",

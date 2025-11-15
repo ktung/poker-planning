@@ -7,5 +7,13 @@
 </svelte:head>
 
 <section>
-  {m['aboutPage.text']()}
+  <h2>{m.about_data_title()}</h2>
+  <p>{m.about_data()}</p>
+
+  <h2>{m.about_howto_title()}</h2>
+  <ul>
+    <li>{m.about_howto_recommanded_value()}</li>
+    <li>{m.about_howto_minmax()}</li>
+    <li>{m.about_howto_red()}</li>
+  </ul>
 </section>
