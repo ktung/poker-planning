@@ -2,7 +2,7 @@ describe('template spec', () => {
   it('passes', () => {
     cy.visit('https://poker-planning-101.vercel.app/');
 
-    cy.get('input#username').should('be.visible').clear().type('cy-press').should('contain.value', 'cy-press');
+    cy.get('input#username').should('be.visible').clear().type('cy-press', { delay: 0 }).should('contain.value', 'cy-press');
 
     cy.intercept('_app/remote/*/createRoom').as('createRoom');
     cy.get('button').contains('Créer une nouvelle salle').click();
