@@ -44,7 +44,7 @@
   }
 
   function isInactive(userId: string) {
-    return !userPresence.some((user) => user.userId === userId);
+    return userPresence && !userPresence.some((user) => user.userId === userId);
   }
 </script>
 
