@@ -26,10 +26,10 @@ describe('template spec', () => {
         .should('contain', '🤔');
 
       cy.contains('Une seule tâche simple').click();
-      cy.get('table.users-status tbody tr td', { timeout: 60000 })
+      cy.get('table.users-status tbody tr td')
         .first()
         .should('have.text', 'cy-press')
-        .next()
+        .next({ timeout: 60000 })
         .should('contain', '✅')
         .next()
         .should('contain', '🤔')
