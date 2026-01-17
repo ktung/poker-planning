@@ -58,38 +58,10 @@
     });
 
     channelPresence
-      // TODO remove
-      .on(REALTIME_LISTEN_TYPES.SYSTEM, {}, (payload) => {
-        logger.debug('Listen presence channel reconnect', payload);
-        const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
-        const users = state[slug];
-
-        if (users && users.length !== 0 && users[0].userId === userId) {
-          fetch(`/api/rooms/sync`, {
-            method: 'POST',
-            body: JSON.stringify({
-              roomId: roomId,
-              userId: userId,
-              users: users
-            })
-          });
-        }
-      })
       .on(REALTIME_LISTEN_TYPES.PRESENCE, { event: REALTIME_PRESENCE_LISTEN_EVENTS.SYNC }, () => {
-        const state: RealtimePresenceState<UserTrackModel> = channelPresence.presenceState();
+        const state: RealtimePresenceState = channelPresence.presenceState();
         logger.debug('Listen presence channel sync', state);
         userPresenceState = state[slug];
-
-        // if (users && users.length !== 0 && users[0].userId === userId) {
-        //   fetch(`/api/rooms/sync`, {
-        //     method: 'POST',
-        //     body: JSON.stringify({
-        //       roomId: roomId,
-        //       userId: userId,
-        //       users: users
-        //     })
-        //   });
-        // }
       })
       .subscribe(async (status) => {
         if (status === REALTIME_SUBSCRIBE_STATES.TIMED_OUT || status === REALTIME_SUBSCRIBE_STATES.CHANNEL_ERROR) {
@@ -97,7 +69,6 @@
           if (ToggleConfig.isActive('CONFIG_BANNER')) {
             addMessage('Cannot connect, check your connection.');
           }
-          // goto(resolve('/[slug=nanoid]/join', { slug: slug }));
           return;
         }
 
@@ -111,7 +82,6 @@
           if (ToggleConfig.isActive('CONFIG_BANNER')) {
             addMessage('User offline, check your connection.');
           }
-          // goto(resolve('/[slug=nanoid]/join', { slug: slug }));
         }
       });
 
